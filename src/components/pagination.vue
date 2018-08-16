@@ -5,7 +5,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[15, 30, 50, 100]"
-        :page-size="100"
+        :page-size="15"
         layout="total, sizes, prev, pager, next, jumper"
         :total="AllList">
       </el-pagination>
@@ -15,17 +15,17 @@
 export default {
   name: 'pagination',
   props: ['AllList'],
-  data() {
+  data () {
     return {
       currentPage: 1
     }
   },
   methods: {
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
+      console.log(`当前页: ${val}`)
     }
   }
 }

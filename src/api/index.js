@@ -1,4 +1,5 @@
 import axios from 'axios'
+import vue from '../main.js'
 import promiseFinally from 'promise.prototype.finally'
 promiseFinally.shim()
 
@@ -13,6 +14,22 @@ axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
 axios.defaults.timeout = 3000
 const baseAutoUrl = 'http://192.168.0.209:9999/api'
 const baseWareUrl = ''
+
+// 响应拦截器
+axios.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  switch (error.response.status) {
+    default:
+      vue.$notify.error({
+        title: '错误',
+        message: `未知错误 ${error.response.status}`
+      })
+      return Promise.reject(error)
+      break
+  }
+  return
+})
 
 export default {
   axios,

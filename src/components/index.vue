@@ -22,6 +22,10 @@
             <i class="el-icon-d-caret"></i>
             <span slot="title">自动化</span>
           </el-menu-item>
+          <el-menu-item index="">
+            <i class="el-icon-search"></i>
+            <span slot="title">当前</span>
+          </el-menu-item>
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-menu"></i>

@@ -12,10 +12,12 @@ Vue.prototype.$api = api
 Vue.prototype.global = Global
 Vue.config.productionTip = false
 
-new Vue({
+var vue = new Vue({
   el: '#app',
   router,
   Store,
   components: { App },
   template: '<App/>'
 })
+
+export default vue
