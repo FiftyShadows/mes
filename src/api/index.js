@@ -9,7 +9,7 @@ promiseFinally.shim()
 // 这个token只能测试用，正式代码里不要用，后台密钥不同，会验证不成功
 const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
 
-axios.defaults.headers.common['Authorization'] = 'Bearer1 ' + Token;
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
 axios.defaults.timeout = 3000
 const baseAutoUrl = 'http://192.168.0.209:9999/api'
 const baseWareUrl = ''
