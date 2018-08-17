@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import Store from './store/store'
+import store from './store/store.js'
 import api from './api/index.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -15,7 +15,7 @@ Vue.config.productionTip = false
 var vue = new Vue({
   el: '#app',
   router,
-  Store,
+  store,
   components: { App },
   template: '<App/>'
 })

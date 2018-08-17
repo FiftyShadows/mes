@@ -20,6 +20,17 @@ axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   switch (error.response.status) {
+    case 401:
+      console.log('登录信息过期，跳转登陆页')
+      // router.replace('/login');
+      break;
+    case 403:
+      vue.$notify.error({
+          title: '错误',
+          message: '您没有权限进行此操作'
+      });
+      // store.state.pageLoading = false;
+      break;
     default:
       vue.$notify.error({
         title: '错误',
@@ -34,7 +45,7 @@ axios.interceptors.response.use(function (response) {
 export default {
   axios,
   /* --------------自动化--------------- */
-  // 车间管理--数据
+  // 车间管理--获取数据
   getWorkShopsLine () {
     return axios.get(`${baseAutoUrl}/workshops`)
   },
@@ -49,5 +60,23 @@ export default {
   // 车间管理--删除
   deleteWorkshop (data) {
     return axios.delete(`${baseAutoUrl}/workshops/${data}`)
+  },
+
+  // 线别控制--获取数据
+  getLines (data) {
+    return axios.get(`${baseAutoUrl}/workshops/${data}/lines`)
+  },
+  // 线别控制--新增
+  creatSingleLine (data) {
+    return axios.post(`${baseAutoUrl}/lines`, data)
+  },
+  // 线别控制--修改
+  saveLine (data) {
+    return axios.put(`${baseAutoUrl}/lines/${data.id}`, data)
+  },
+  
+  // 机台管理--获取数据
+  getSelected () {
+    return axios.get(`${baseAutoUrl}/lines`)
   }
 }
