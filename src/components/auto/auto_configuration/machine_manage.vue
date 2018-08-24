@@ -1,16 +1,15 @@
 <!-- 机台管理 -->
 <template>
   <div class="machine">
-    <el-select v-model="name" clearable placeholder="请选择" style="float:left;">
+    <el-select v-model="name" clearable placeholder="请选择" style="float: left;margin-bottom: 10px;" @change="getMachine()">
       <el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>
     </el-select>
-    <el-button type="primary" style="float:right;" @click="dialogVisibleAdd = true">批量新增</el-button>
-    <el-button type="primary" @click="dialogVisibleSingleAdd = true" style="float: right; margin-right: 10px;">新增</el-button>
-
+    <el-button type="primary" style="float:right;margin-bottom: 10px;" @click="dialogVisibleAdd = true">批量新增</el-button>
+    <el-button type="primary" @click="dialogVisibleSingleAdd = true" style="float: right; margin-right: 10px;margin-bottom: 10px;">新增</el-button>
     <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="id" label="ID">
       </el-table-column>
-      <el-table-column prop="name" label="线别">
+      <el-table-column prop="line.name" label="线别">
       </el-table-column>
       <el-table-column prop="item" label="机台位号">
       </el-table-column>
@@ -18,10 +17,58 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">修 改</el-button>
+          <el-button @click="openSave(scope.row)" type="text" size="small">修 改</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog title="新 增" :visible.sync="dialogVisibleSingleAdd" width="40%">
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="线别" :label-width="formLabelWidth" prop="name" required>
+          <el-select v-model="form.name" placeholder="选择线别.." style="float: left;" >
+            <el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="机台位号" :label-width="formLabelWidth" prop="item" required>
+          <el-input-number v-model="form.item" :min="1" label="输入锭数..." style="float: left;"></el-input-number>
+        </el-form-item>
+        <el-form-item label="锭数" :label-width="formLabelWidth" prop="spindleNum" required>
+          <el-input-number v-model="form.spindleNum" :min="1" label="输入锭数..." style="float: left;"></el-input-number>
+        </el-form-item>
+        <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
+          <el-tag title="" type="info" v-for="index in form.spindleNum" :key="index" :closable="false" style="width: 100%;text-align: left;">
+            {{index}}
+            <div style="float: right;">
+              <i class="el-icon-upload2 icon" @click="up()"></i>
+              <i class="el-icon-download icon" @click="down()"></i>
+            </div> 
+          </el-tag>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleSingleAdd = false">取 消</el-button>
+        <el-button type="primary" @click="AddMachine()">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="修 改" :visible.sync="dialogVisibleSave" width="40%">
+      <el-form :model="form1" :rules="rules" ref="form">
+        <el-form-item label="线别" :label-width="formLabelWidth">
+          <el-select v-model="form1.line.name" placeholder="选择线别.." prop="name" style="float: left;" required>
+            <el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="机台位号" :label-width="formLabelWidth">
+          <el-input v-model="form1.item" prop="item" auto-complete="off" style="float: left; width: 65%;" required></el-input>
+        </el-form-item>
+        <el-form-item label="锭数" :label-width="formLabelWidth">
+          <el-input v-model="form1.spindleNum" prop="spindleNum" auto-complete="off" style="float: left; width: 65%;" required></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleSave = false">取 消</el-button>
+        <el-button type="primary" @click="saveMachine()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -33,7 +80,34 @@ export default {
       arrLineName: [],
       tableData: [],
       dialogVisibleAdd: false,
-      dialogVisibleSingleAdd: false
+      dialogVisibleSingleAdd: false,
+      dialogVisibleSave: false,
+      seachMachine: {},
+      form: {
+        name: '',
+        item: '',
+        spindleNum: 10,
+        spindleSeq: [],
+        line: {}
+      },
+      form1: {
+        name: '',
+        item: '',
+        spindleNum: '',
+        spindleSeq: [],
+        line: {}
+      },
+      rules: {
+        name: { required: true, message: '请选择线别...', trigger: 'blur' },
+        item: [
+          { required: true, message: '请输入...', trigger: 'blur' }
+        ],
+        spindleNum: [
+          { required: true, message: '请输入...', trigger: 'blur' },
+          { min: 1, message: '不能为空', trigger: 'blur' }
+        ],
+      },
+      formLabelWidth: '150px'
     }
   },
   created () {
@@ -54,11 +128,55 @@ export default {
       })
     },
     getMachine () {
+      for (let i = 0; i < this.arrLineName.length; i++) {
+        if (this.arrLineName[i].name === this.name) {
+          this.seachMachine = this.arrLineName[i]
+        }
+      }
+      this.$api.getMachines(this.seachMachine.id).then(res => {
+        console.log(res)
+        this.tableData = res.data
+      })
+    },
+    AddMachine () {
+      this.dialogVisibleSingleAdd = true
+    },
+    openSave (row) {
+      console.log(row)
+      this.form1.line = row.line
+      this.form1.item = row.item
+      this.form1.spindleNum = row.spindleNum
+      this.form1.spindleSeq = row.spindleSeq
+      this.dialogVisibleSave = true
+    },
+    saveMachine () {
 
+    },
+    up () {
+      console.log('up')
+    },
+    down () {
+      console.log('down')
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-
+.el-alert--info {
+  height: 40px;
+}
+.el-alert__content {
+  width: 100px;
+}
+.el-alert {
+  margin-bottom: 5px;
+}
+.icon {
+  font-size: 20px;
+  &:hover{
+    cursor: pointer;
+    font-size: 22px;
+    color: red;
+  }
+}
 </style>

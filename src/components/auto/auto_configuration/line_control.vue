@@ -119,7 +119,7 @@ export default {
       rules: {
         name: [
           { required: true, message: '必输项', trigger: 'blur' },
-          { min: 1, trigger: 'blur'  }
+          { min: 1, trigger: 'blur' }
         ],
         resource: [
           { required: true, message: '请选择', trigger: 'change' }
@@ -139,7 +139,7 @@ export default {
   },
   methods: {
     getLine (value) {
-      for (let i=0; i<this.options.length; i++) {
+      for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].name === value) {
           this.keyId = this.options[i].id
         }
@@ -148,7 +148,7 @@ export default {
         console.log(res)
         this.tableData = res.data
         this.$store.state.Lines = res.data
-        for (let i=0; i<this.tableData.length; i++) {
+        for (let i = 0; i < this.tableData.length; i++) {
           if (this.tableData[i].doffingType === 'AUTO') {
             this.tableData[i].doffingType = '自动落桶'
           } else {
@@ -160,7 +160,7 @@ export default {
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
-          done();
+          done()
         })
         .catch(_ => {});
     },
@@ -171,7 +171,7 @@ export default {
       } else {
         this.ruleForm.resource = 'MANUAL'
       }
-      for (let i=0; i<this.options.length; i++) {
+      for (let i = 0; i < this.options.length; i++) {
         if (this.$store.state.workShops[i].name === this.ruleForm.value) {
           this.workshop = this.$store.state.workShops[i]
           this.workshop.createDateTime = new Date().getTime()
@@ -189,7 +189,7 @@ export default {
           title: '成功',
           message: '新建成功',
           type: 'success'
-        });
+        })
         this.getLine(this.ruleForm.value)
         this.dialogVisibleSingleAdd = false
       })
@@ -219,7 +219,7 @@ export default {
           title: '成功',
           message: '修改成功',
           type: 'success'
-        });
+        })
         this.getLine(this.ruleForm.value)
         this.dialogVisibleSave = false
       })
@@ -230,7 +230,7 @@ export default {
       } else {
         this.ruleForm.resource = 'MANUAL'
       }
-      for (let i=0; i<this.options.length; i++) {
+      for (let i = 0; i < this.options.length; i++) {
         if (this.$store.state.workShops[i].name === this.ruleForm.value) {
           this.workshop = this.$store.state.workShops[i]
           this.workshop.createDateTime = new Date().getTime()
@@ -239,7 +239,7 @@ export default {
       }
       this.AddNum = this.ruleForm.name
       this.str = this.ruleForm.name.match(/\w+/)
-      for (let i=0; i<this.num; i++) {
+      for (let i = 0; i < this.num; i++) {
         this.AddNum = toString(parseInt(this.AddNum)+1)
         console.log(this.str, this.AddNum)
       }

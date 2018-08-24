@@ -15,6 +15,7 @@ import Grade from '@/components/auto/auto_configuration/grade_manage'
 import LineControl from '@/components/auto/auto_configuration/line_control'
 import Machine from '@/components/auto/auto_configuration/machine_manage'
 import Product from '@/components/auto/auto_configuration/product_manage'
+import Configurat from '@/components/auto/auto_configuration/product_configurat'
 import SlikCar from '@/components/auto/auto_configuration/silkCar_manage'
 import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage'
 
@@ -67,6 +68,10 @@ export default new Router({
           path: '/configuration/Product',
           name: 'Product',
           component: Product
+        }, {// 产品管理--配置
+          path: '/configuration/Product/configurat',
+          name: 'Configurat',
+          component: Configurat
         }, {// 丝车管理
           path: '/configuration/SlikCar',
           name: 'SlikCar',

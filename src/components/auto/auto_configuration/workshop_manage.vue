@@ -13,7 +13,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <Pagination :AllList='tableData.length'></Pagination>
     <el-dialog title="新 增" :visible.sync="dialogVisibleAdd" width="30%">
       <el-form :model="form1">
         <el-form-item label="公司" :label-width="formLabelWidth">
@@ -45,12 +44,8 @@
   </div>
 </template>
 <script>
-import Pagination from '../../pagination.vue'
 export default {
   name: 'workshops',
-  components: {
-    'Pagination': Pagination
-  },
   data () {
     return {
       tableData: [],
@@ -97,7 +92,7 @@ export default {
           title: '成功',
           message: '新增成功',
           type: 'success'
-        });
+        })
         this.WorkShopLine()
         this.dialogVisibleAdd = false
       })
@@ -121,7 +116,7 @@ export default {
           title: '成功',
           message: '修改成功',
           type: 'success'
-        });
+        })
         this.WorkShopLine()
         this.dialogVisibleSave = false
       })

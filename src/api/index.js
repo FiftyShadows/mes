@@ -78,5 +78,119 @@ export default {
   // 机台管理--获取数据
   getSelected () {
     return axios.get(`${baseAutoUrl}/lines`)
+  },
+  getMachines (data) {
+    return axios.get(`${baseAutoUrl}/lines/${data}/lineMachines`)
+  },
+
+  // 产品管理--获取数据
+  getProduct () {
+    return axios.get(`${baseAutoUrl}/products`)
+  },
+  // 产品管理--修改
+  saveProduct (data) {
+    return axios.put(`${baseAutoUrl}/products`, data)
+  },
+  // 产品管理--添加
+  addProduct (data) {
+    return axios.post(`${baseAutoUrl}/products`, data)
+  },
+  // 产品管理--配置--获取数据
+  getTabData (data) {
+    return axios.get(`${baseAutoUrl}/products/${data}/productProcesses`)
+  },
+
+  // 丝车管理--获取数据
+  getSilks (data) {
+    return axios.get(`${baseAutoUrl}/silkCars?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)
+  },
+  getCorporations () {
+    return axios.get(`${baseAutoUrl}/corporations`)
+  },
+  // 丝车管理--添加
+  addSilks (data) {
+    return axios.post(`${baseAutoUrl}/silkCars`, data)
+  },
+  // 丝车管理--修改
+  saveSilks (data) {
+    return axios.put(`${baseAutoUrl}/silkCars/${data.id}`, data)
+  },
+
+  // 等级管理--获取数据
+  getGrades () {
+    return axios.get(`${baseAutoUrl}/grades`)
+  },
+  // 等级管理--增加数据
+  AddGrades (data) {
+    return axios.post(`${baseAutoUrl}/grades`, data)
+  },
+  // 等级管理--修改数据
+  SaveGrades (data) {
+    return axios.put(`${baseAutoUrl}/grades/${data.id}`, data)
+  },
+
+  // 车间生产计划
+  getLinePlans (data) {
+    return axios.get(`${baseAutoUrl}/reports/workshopProductPlanReport?workshopId=${data}`)
+  },
+
+  // 批号管理--获取数据
+  getBatches (data) {
+    return axios.get(`${baseAutoUrl}/batches?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)
+  },
+  // 批号管理--新增
+  addBatch (data) {
+    return axios.post(`${baseAutoUrl}/batches`, data)
+  },
+  // 批号管理--删除
+  deleteBatch (data) {
+    return axios.delete(`${baseAutoUrl}/batches/${data}`)
+  },
+  // 批号管理--修改
+  SaveBatches (data) {
+    return axios.put(`${baseAutoUrl}/batches/${data.id}`, data)
+  },
+
+  // 管理员权限--获取数据
+  getAdmins () {
+    return axios.get(`${baseAutoUrl}/permissions`)
+  },
+  // 管理员权限-添加
+  addAdmins (data) {
+    return axios.post(`${baseAutoUrl}/permissions`, data)
+  },
+  // 管理员权限-修改
+  saveAdmin (data) {
+    return axios.put(`${baseAutoUrl}/permissions/${data.id}`, data)
+  },
+  // 管理员权限-删除
+  deleteAdmin (data) {
+    return axios.delete(`${baseAutoUrl}/permissions/${data}`)
+  },
+
+  // 用户组--获取数据
+  getUsergroups () {
+    return axios.get(`${baseAutoUrl}/operatorGroups`)
+  },
+  // 用户组--创建
+  addUsergroups (data) {
+    return axios.post(`${baseAutoUrl}/operatorGroups`, data)
+  },
+  // 用户组--修改
+  saveUsergroups (data) {
+    return axios.put(`${baseAutoUrl}/operatorGroups/${data.id}`, data)
+  },
+
+  // 用户--获取
+  getUser (data) {
+    return axios.get(`${baseAutoUrl}/operators?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)
+  },
+  // 用户--搜索所有用户
+  getAllUsers (data) {
+    return axios.get(`${baseAutoUrl}/suggestOperators?q=${data}`)
+  },
+  // 用户--添加用户
+  addUser (data) {
+    return axios.post(`${baseAutoUrl}/operators`, data)
   }
 }
