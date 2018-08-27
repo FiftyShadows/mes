@@ -17,27 +17,33 @@ const baseWareUrl = ''
 
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
-  return response;
+  return response
 }, function (error) {
   switch (error.response.status) {
     case 401:
-      console.log('登录信息过期，跳转登陆页')
+      console.log('登录信息未认证')
       // router.replace('/login');
-      break;
+      break
     case 403:
       vue.$notify.error({
           title: '错误',
           message: '您没有权限进行此操作'
       });
       // store.state.pageLoading = false;
-      break;
+      break
+    case 404:
+    vue.$notify.error({
+        title: '错误',
+        message: '未找到接口数据'
+    });
+    // store.state.pageLoading = false;
+    break
     default:
       vue.$notify.error({
         title: '错误',
         message: `未知错误 ${error.response.status}`
       })
       return Promise.reject(error)
-      break
   }
   return
 })
@@ -81,6 +87,14 @@ export default {
   },
   getMachines (data) {
     return axios.get(`${baseAutoUrl}/lines/${data}/lineMachines`)
+  },
+  // 机台管理--添加
+  AddMachine (data) {
+    return axios.post(`${baseAutoUrl}/lineMachines`, data)
+  },
+  // 机台管理--修改
+  saveMachine (data) {
+    return axios.put(`${baseAutoUrl}/lineMachines/${data.id}`, data)
   },
 
   // 产品管理--获取数据
@@ -141,6 +155,10 @@ export default {
   // 通知单--执行情况
   getPerforms (data) {
     return axios.get(`${baseAutoUrl}/productPlanNotifies/${data}/exeInfo`)
+  },
+  // 通知单--结束执行
+  finishNotice (data) {
+    return axios.put(`${baseAutoUrl}/productPlanNotifies/${data}/finish`)
   },
 
   // 批号管理--获取数据

@@ -24,7 +24,7 @@
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
           <el-button @click="openSaveBatch(scope.row)" type="text" size="small">修 改</el-button>
-          <el-button @click="deleteBatch(scope.row)" type="text" size="small">删 除</el-button>
+          <!-- <el-button @click="deleteBatch(scope.row)" type="text" size="small">删 除</el-button> -->
         </template>
       </el-table-column>
     </el-table>

@@ -32,15 +32,15 @@
           <el-input-number v-model="form.item" :min="1" label="输入锭数..." style="float: left;"></el-input-number>
         </el-form-item>
         <el-form-item label="锭数" :label-width="formLabelWidth" prop="spindleNum" required>
-          <el-input-number v-model="form.spindleNum" :min="1" label="输入锭数..." style="float: left;"></el-input-number>
+          <el-input-number v-model="form.spindleNum" :min="1" label="输入锭数..."  @change="setSpindleSeq" style="float: left;"></el-input-number>
         </el-form-item>
         <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
-          <el-tag title="" type="info" v-for="index in form.spindleNum" :key="index" :closable="false" style="width: 100%;text-align: left;">
-            {{index}}
+          <el-tag title="" type="info" v-model="form.spindleSeq" v-for="(item,index) in form.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
+            <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
             <div style="float: right;">
-              <i class="el-icon-upload2 icon" @click="up()"></i>
-              <i class="el-icon-download icon" @click="down()"></i>
-            </div> 
+              <i class="el-icon-upload2 icon" v-if="form.spindleSeq.indexOf(item) != 0" @click="up(index)"></i>
+              <i class="el-icon-download icon" v-if="form.spindleSeq.indexOf(item) != form.spindleNum-1" @click="down(index)"></i>
+            </div>
           </el-tag>
         </el-form-item>
       </el-form>
@@ -57,11 +57,20 @@
             <el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="机台位号" :label-width="formLabelWidth">
-          <el-input v-model="form1.item" prop="item" auto-complete="off" style="float: left; width: 65%;" required></el-input>
+        <el-form-item label="机台位号" :label-width="formLabelWidth" prop="item" required>
+          <el-input-number v-model="form1.item" :min="1" label="输入锭数..." style="float: left;"></el-input-number>
         </el-form-item>
-        <el-form-item label="锭数" :label-width="formLabelWidth">
-          <el-input v-model="form1.spindleNum" prop="spindleNum" auto-complete="off" style="float: left; width: 65%;" required></el-input>
+        <el-form-item label="锭数" :label-width="formLabelWidth" prop="spindleNum" required>
+          <el-input-number v-model="form1.spindleNum" :min="1" label="输入锭数..."  @change="setSpindleSeq" style="float: left;"></el-input-number>
+        </el-form-item>
+        <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
+          <el-tag title="" type="info" v-model="form1.spindleSeq" v-for="(item,index) in form1.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
+            <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
+            <div style="float: right;">
+              <i class="el-icon-upload2 icon" v-if="form1.spindleSeq.indexOf(item) != 0" @click="saveUp(index)"></i>
+              <i class="el-icon-download icon" v-if="form1.spindleSeq.indexOf(item) != form1.spindleNum-1" @click="saveDown(index)"></i>
+            </div>
+          </el-tag>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -86,7 +95,7 @@ export default {
       form: {
         name: '',
         item: '',
-        spindleNum: 10,
+        spindleNum: '',
         spindleSeq: [],
         line: {}
       },
@@ -107,11 +116,20 @@ export default {
           { min: 1, message: '不能为空', trigger: 'blur' }
         ],
       },
-      formLabelWidth: '150px'
+      formLabelWidth: '180px'
     }
   },
   created () {
     this.getSelected()
+    this.getMachine()
+  },
+  computed: {
+    // spindleSeq (i) {
+    //   let temp = this.form.spindleSeq[i]
+    //   this.form.spindleSeq[i] = this.form.spindleSeq[i - 1]
+    //   this.form.spindleSeq[i - 1] = temp
+    //   return this.form.spindleSeq
+    // }
   },
   methods: {
     getSelected () { // 获取selet
@@ -139,24 +157,98 @@ export default {
       })
     },
     AddMachine () {
-      this.dialogVisibleSingleAdd = true
+      for (let i = 0; i < this.arrLineName.length; i++) {
+        if (this.form.name === this.arrLineName[i].name) {
+          this.form.line = this.arrLineName[i]
+        }
+      }
+      console.log(this.form)
+      this.$api.AddMachine(this.form).then(res => {
+        console.log(res)
+        this.$notify({
+          title: '成功',
+          message: '新增成功',
+          type: 'success'
+        })
+        this.dialogVisibleSingleAdd = false
+        this.getMachine()
+      })
     },
     openSave (row) {
       console.log(row)
+      this.form1.id = row.id
+      this.form1.name = row.line.name
       this.form1.line = row.line
       this.form1.item = row.item
       this.form1.spindleNum = row.spindleNum
       this.form1.spindleSeq = row.spindleSeq
       this.dialogVisibleSave = true
-    },
-    saveMachine () {
 
     },
-    up () {
-      console.log('up')
+    saveMachine () {
+      console.log(this.form1)
+      this.$api.saveMachine(this.form1).then(res => {
+        this.$notify({
+          title: '成功',
+          message: '修改成功',
+          type: 'success'
+        })
+        this.dialogVisibleSave = false
+        this.getMachine()
+      })
     },
-    down () {
-      console.log('down')
+    setSpindleSeq (val) {
+      this.form.spindleSeq = []
+      for (let i = 1; i < val+1; i++) {
+        this.form.spindleSeq.push(i)
+      }
+    },
+    // 添加
+    up (i) {
+      let arr = this.form.spindleSeq
+      this.form.spindleSeq = []
+      let temp = arr[i]
+      arr[i] = arr[i - 1]
+      arr[i - 1] = temp
+      // this.form.spindleSeq = arr
+      for (let j = 0; j < arr.length; j++) {
+        this.form.spindleSeq.push(arr[j])
+      }
+      // console.log(this.form.spindleSeq)
+    },
+    down (i) {
+      let arr = this.form.spindleSeq
+      this.form.spindleSeq = []
+      let temp = arr[i]
+      arr[i] = arr[i + 1]
+      arr[i + 1] = temp
+      for (let j = 0; j < arr.length; j++) {
+        this.form.spindleSeq.push(arr[j])
+      }
+      // console.log(this.form.spindleSeq)
+    },
+    // 修改
+    saveUp (i) {
+      let arr = this.form1.spindleSeq
+      this.form1.spindleSeq = []
+      let temp = arr[i]
+      arr[i] = arr[i - 1]
+      arr[i - 1] = temp
+      // this.form.spindleSeq = arr
+      for (let j = 0; j < arr.length; j++) {
+        this.form1.spindleSeq.push(arr[j])
+      }
+    },
+    saveDown (i) {
+      let arr = this.form1.spindleSeq
+      this.form1.spindleSeq = []
+      let temp = arr[i]
+      arr[i] = arr[i + 1]
+      arr[i + 1] = temp
+      for (let j = 0; j < arr.length; j++) {
+        this.form1.spindleSeq.push(arr[j])
+      }
+      // console.log(this.form.spindleSeq)
     }
   }
 }
@@ -175,8 +267,8 @@ export default {
   font-size: 20px;
   &:hover{
     cursor: pointer;
-    font-size: 22px;
-    color: red;
+    font-size: 24px;
+    color: #F56C6C;
   }
 }
 </style>
