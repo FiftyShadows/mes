@@ -134,6 +134,15 @@ export default {
     return axios.get(`${baseAutoUrl}/reports/workshopProductPlanReport?workshopId=${data}`)
   },
 
+  // 通知单--获取数据
+  getNotices (data) {
+    return axios.get(`${baseAutoUrl}/productPlanNotifies?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)
+  },
+  // 通知单--执行情况
+  getPerforms (data) {
+    return axios.get(`${baseAutoUrl}/productPlanNotifies/${data}/exeInfo`)
+  },
+
   // 批号管理--获取数据
   getBatches (data) {
     return axios.get(`${baseAutoUrl}/batches?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)

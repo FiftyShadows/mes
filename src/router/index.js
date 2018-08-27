@@ -9,6 +9,7 @@ import UserGroups from '@/components/auto/auto_admin/user_groups'
 // 生产计划
 import Batch from '@/components/auto/auto_production_plan/Batch_manage'
 import Notice from '@/components/auto/auto_production_plan/notice'
+import NoticePerform from '@/components/auto/auto_production_plan/notice_perform'
 import WorkPlan from '@/components/auto/auto_production_plan/workshop_product_plan'
 // 自动化配置
 import Grade from '@/components/auto/auto_configuration/grade_manage'
@@ -48,6 +49,10 @@ export default new Router({
           path: '/productPlan/Notice',
           name: 'Notice',
           component: Notice
+        }, {// 通知单--执行情况
+          path: '/productPlan/Notice-perform',
+          name: 'Notice-perform',
+          component: NoticePerform
         }, {// 车间生产计划
           path: '/productPlan/WorkPlan',
           name: 'WorkPlan',
