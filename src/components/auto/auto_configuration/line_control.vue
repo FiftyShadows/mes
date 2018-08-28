@@ -58,8 +58,9 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="ruleForm.name" style="width: 100px; margin-bottom: 10px; float: left;" placeholder="起始名称"></el-input>
-          <el-input-number v-model="num" :min="1" label="创建" style="float:left; margin-left:10px;"></el-input-number>
+          <el-input v-model="ruleForm.startItem" auto-complete="off" style="width: 80px; float: left;"></el-input> 
+          <span style="float: left;"> —— </span> 
+          <el-input v-model="ruleForm.endItem" auto-complete="off" style="width: 80px; float: left;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -113,13 +114,14 @@ export default {
         value: '',
         name: '',
         resource: '自动落桶',
-        id: ''
+        id: '',
+        startItem: '',
+        endItem: ''
       },
       workshop: {}, // 创建车间的的参数
       rules: {
         name: [
-          { required: true, message: '必输项', trigger: 'blur' },
-          { min: 1, trigger: 'blur' }
+          { required: true, message: '必输项', trigger: 'blur' }
         ],
         resource: [
           { required: true, message: '请选择', trigger: 'change' }
@@ -128,14 +130,16 @@ export default {
     }
   },
   created () {
-    this.options = this.$store.state.workShops.map(workShop => {
-      return {
-        id: workShop.id,
-        name: workShop.name
-      }
+    // this.options = this.$store.state.workShops.map(workShop => {
+    //   return {
+    //     id: workShop.id,
+    //     name: workShop.name
+    //   }
+    // })
+    this.$api.getWorkShopsLine().then(res => {
+      this.options = res.data
+      console.log(this.options)
     })
-    console.log(this.options)
-    // this.getLine (this.value)
   },
   methods: {
     getLine (value) {
@@ -157,13 +161,6 @@ export default {
         }
       })
     },
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {});
-    },
     createSingleLine () {
       console.log(this.ruleForm)
       if (this.ruleForm.resource === '自动落桶') {
@@ -172,8 +169,8 @@ export default {
         this.ruleForm.resource = 'MANUAL'
       }
       for (let i = 0; i < this.options.length; i++) {
-        if (this.$store.state.workShops[i].name === this.ruleForm.value) {
-          this.workshop = this.$store.state.workShops[i]
+        if (this.options[i].name === this.ruleForm.value) {
+          this.workshop = this.options[i]
           this.workshop.createDateTime = new Date().getTime()
           this.workshop.modifyDateTime = this.workshop.createDateTime
         }
@@ -231,17 +228,60 @@ export default {
         this.ruleForm.resource = 'MANUAL'
       }
       for (let i = 0; i < this.options.length; i++) {
-        if (this.$store.state.workShops[i].name === this.ruleForm.value) {
-          this.workshop = this.$store.state.workShops[i]
+        if (this.options[i].name === this.ruleForm.value) {
+          this.workshop = this.options[i]
           this.workshop.createDateTime = new Date().getTime()
           this.workshop.modifyDateTime = this.workshop.createDateTime
         }
       }
-      this.AddNum = this.ruleForm.name
-      this.str = this.ruleForm.name.match(/\w+/)
-      for (let i = 0; i < this.num; i++) {
-        this.AddNum = toString(parseInt(this.AddNum)+1)
-        console.log(this.str, this.AddNum)
+      console.log(this.workshop)
+      // 处理批量
+      let reg1 = /[0-9]+$/g
+      let reg2 = /^[a-zA-Z]+/g
+      let startword = this.ruleForm.startItem.match(reg2)
+      let startnum = this.ruleForm.startItem.match(reg1)
+      console.log(startword,this.ruleForm.startItem.match(reg1))
+
+      let endword = this.ruleForm.endItem.match(reg2)
+      let endnum = this.ruleForm.endItem.match(reg1)
+      console.log(endword,endnum)
+      if (startword || endword) {
+        if ((startword == null && endword != null) || (startword != null && endword == null) || (startword[0] !== endword[0]) ) {
+          this.$message.error("批量输入错误，前缀不同！")
+          return 
+        }
+      }
+
+      if (startnum && endnum) {
+        // if ((startnum == null && endnum != null) || (startnum != null && endnum == null)) {
+        //   this.$message.error("批量输入错误，没有数字进行批量操作！");
+        // }
+        if (Number(endnum) < Number(startnum)) {
+          this.$message.error("批量输入错误，后部数字应大于前部数字！")
+          return 
+        } else if (endnum[0].length != startnum[0].length) {
+          this.$message.error("批量输入错误，数字位数不相等！")
+          return 
+        }
+      } else {
+        this.$message.error("批量输入错误，没有数字进行批量操作！")
+          return 
+      }
+      
+      let arr = []
+      for (let i = 0; i <= Number(endnum[0]) - Number(startnum[0]); i++) {
+        let num = Number(startnum[0]) + i
+        this.ruleForm.name = startword[0] + num.toString()
+        this.$api.creatSingleLine({
+          doffingType: this.ruleForm.resource,
+          name: this.ruleForm.name,
+          workshop: this.workshop
+        }).then(res => {
+          console.log(res)
+          this.dialogVisibleAdd = false
+          this.value = this.workshop.name
+          this.getLine(this.workshop.name)
+        })
       }
     }
   }

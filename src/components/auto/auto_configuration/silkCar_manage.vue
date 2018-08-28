@@ -5,7 +5,8 @@
       <el-input v-model.trim="silk" placeholder="请输入..." style="width: 200px;"></el-input>
       <el-button type="primary" icon="el-icon-search" circle @click="getSilks()" ></el-button>
     </div>
-    <el-button type="primary" @click="openAddSilk()" style="float: right; margin-bottom: 10px;">新 增</el-button>
+    <el-button type="primary" @click="dialogVisibleBatchAdd = true" style="float: right; margin-bottom: 10px;">批量新增</el-button>
+    <el-button type="primary" @click="dialogFormVisibleAdd = true" style="float: right; margin-bottom: 10px; margin-right: 10px;">新 增</el-button>
 
     <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="code" label="丝车条码">
@@ -58,6 +59,36 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="批量新增" :visible.sync="dialogVisibleBatchAdd" @close="getSilks()" width="40%">
+      <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="公司" :label-width="formLabelWidth">
+          <el-input v-model="form.name" auto-complete="off" style="width: 60%; float: left;" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="行" :label-width="formLabelWidth">
+          <el-input-number size="small" v-model="form.row" style="width: 120px; float: left;"></el-input-number>
+        </el-form-item>
+        <el-form-item label="列" :label-width="formLabelWidth">
+          <el-input-number size="small" v-model="form.col" style="width: 120px; float: left;"></el-input-number>
+        </el-form-item>
+        <el-form-item label="" :label-width="formLabelWidth">
+          <el-radio-group v-model="form.type" style="width: 60%; float: left;">
+            <el-radio-button label="普通丝车"></el-radio-button>
+            <el-radio-button label="大 丝 车"></el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="批量" :label-width="formLabelWidth" prop="items" required>
+          <el-input v-model="form.items.startItem" auto-complete="off" style="width: 80px; float: left;"></el-input> 
+          <span style="float: left;"> —— </span> 
+          <el-input v-model="form.items.endItem" auto-complete="off" style="width: 80px; float: left;"></el-input>
+          <!-- <span style="color: red;">*首字母需要相同</span> -->
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="closeDialog()">取 消</el-button>
+        <el-button type="primary" @click="AddBatchSilk()">确 定</el-button>
+      </div>
+    </el-dialog>
+
     <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave" @close="getSilks()" width="40%">
       <el-form :model="form1" :rules="rules" ref="form1" label-width="100px" class="demo-ruleForm">
         <el-form-item label="公司" :label-width="formLabelWidth">
@@ -76,7 +107,7 @@
           <el-input-number size="small" v-model="form1.col" style="width: 120px; float: left;"></el-input-number>
         </el-form-item>
         <el-form-item label="" :label-width="formLabelWidth">
-          <el-radio-group v-model="form1.type" style="width: 60%; float: left;">
+          <el-radio-group v-model="form1.type" style="width: 50%; float: left;">
             <el-radio-button label="普通丝车"></el-radio-button>
             <el-radio-button label="大丝车"></el-radio-button>
           </el-radio-group>
@@ -95,6 +126,7 @@ export default {
   data () {
     return {
       tableData: [],
+      dialogVisibleBatchAdd: false,
       currentPage: 5,
       total: 0,
       silk: '',
@@ -106,7 +138,11 @@ export default {
         code: '',
         row: 3,
         col: 4,
-        type: '普通丝车'
+        type: '普通丝车',
+        items: {
+          startItem: '',
+          endItem: ''
+        }
       },
       formLabelWidth: '120px',
       dialogFormVisibleAdd: false,
@@ -150,6 +186,7 @@ export default {
     closeDialog () {
       this.dialogFormVisibleAdd = false
       this.dialogFormVisibleSave = false
+      this.dialogVisibleBatchAdd = false
       this.getSilks ()
     },
     seacrhSilk () {},
@@ -164,9 +201,6 @@ export default {
       } else {
         this.form1.code = `3000${this.form1.number}`
       }
-    },
-    openAddSilk () {
-      this.dialogFormVisibleAdd = true
     },
     addSilks () {
       if (this.form.type === '普通丝车') {
@@ -183,6 +217,73 @@ export default {
           type: 'success'
         })
         this.dialogFormVisibleAdd = false
+      })
+    },
+    AddBatchSilk () {
+      if (this.form.type === '普通丝车') {
+        this.form.type = 'DEFAULT'
+      } else {
+        this.form.type = 'BIG_SILK_CAR'
+      }
+      // console.log(this.form)
+      let reg1 = /[0-9]+$/g
+      let reg2 = /^[a-zA-Z]+/g
+      let startword = this.form.items.startItem.match(reg2)
+      let startnum = this.form.items.startItem.match(reg1)
+      console.log(startword,this.form.items.startItem.match(reg1))
+
+      let endword = this.form.items.endItem.match(reg2)
+      let endnum = this.form.items.endItem.match(reg1)
+      console.log(endword,endnum)
+      if (startword || endword) {
+        if ((startword == null && endword != null) || (startword != null && endword == null) || (startword[0] !== endword[0]) ) {
+          this.$message.error("批量输入错误，前缀不同！")
+          return 
+        }
+      }
+
+      if (startnum && endnum) {
+        // if ((startnum == null && endnum != null) || (startnum != null && endnum == null)) {
+        //   this.$message.error("批量输入错误，没有数字进行批量操作！");
+        // }
+        if (Number(endnum) < Number(startnum)) {
+          this.$message.error("批量输入错误，后部数字应大于前部数字！")
+          return 
+        } else if (endnum[0].length != startnum[0].length) {
+          this.$message.error("批量输入错误，数字位数不相等！")
+          return 
+        }
+      } else {
+        this.$message.error("批量输入错误，没有数字进行批量操作！")
+          return 
+      }
+      
+      let arr = []
+      for (let i = 0; i <= Number(endnum[0]) - Number(startnum[0]); i++) {
+        let num = Number(startnum[0]) + i
+        this.form.item = startword[0] + num.toString()
+        if (this.form.item === '') {
+          this.form.code = ''
+        } else {
+          this.form.code = `3000${this.form.item}`
+        }
+        if (this.form1.item === '') {
+          this.form1.code = ''
+        } else {
+          this.form1.code = `3000${this.form1.item}`
+        }
+        arr.push({
+          code: this.form.code,
+          col: this.form.col,
+          row: this.form.row,
+          number: this.form.item,
+          type: this.form.type
+        })
+      }
+        console.log(arr)
+      this.$api.addBatchSilks(arr).then(res => {
+        this.getSilks()
+        this.dialogVisibleBatchAdd = false
       })
     },
     openSaveSilk (row) {

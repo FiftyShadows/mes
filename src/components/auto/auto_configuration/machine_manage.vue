@@ -38,8 +38,10 @@
           <el-tag title="" type="info" v-model="form.spindleSeq" v-for="(item,index) in form.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
             <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
             <div style="float: right;">
-              <i class="el-icon-upload2 icon" v-if="form.spindleSeq.indexOf(item) != 0" @click="up(index)"></i>
-              <i class="el-icon-download icon" v-if="form.spindleSeq.indexOf(item) != form.spindleNum-1" @click="down(index)"></i>
+              <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="form.spindleSeq.indexOf(item) != 0" @click="up(index)" circle></el-button>
+              <!-- <i class="el-icon-upload2 icon" v-if="form.spindleSeq.indexOf(item) != 0" @click="up(index)"></i> -->
+              <!-- <i class="el-icon-download icon" v-if="form.spindleSeq.indexOf(item) != form.spindleNum-1" @click="down(index)"></i> -->
+              <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="form.spindleSeq.indexOf(item) != form.spindleNum-1" @click="down(index)" circle></el-button>
             </div>
           </el-tag>
         </el-form-item>
@@ -47,6 +49,40 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleSingleAdd = false">取 消</el-button>
         <el-button type="primary" @click="AddMachine()">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="批量新增" :visible.sync="dialogVisibleAdd" width="40%">
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="线别" :label-width="formLabelWidth" prop="name" required>
+          <el-select v-model="form.name" placeholder="选择线别.." style="float: left;" >
+            <el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <el-form-item label="机台位号" :label-width="formLabelWidth" prop="item" required>
+          <el-input-number v-model="form.item" :min="1" label="输入锭数..." style="float: left;"></el-input-number>
+        </el-form-item> -->
+        <el-form-item label="批量机台(num)" :label-width="formLabelWidth" prop="items" required>
+          <el-input v-model.number="form.items.startItem" auto-complete="off" style="width: 80px; float: left;"></el-input> 
+          <span style="float: left;"> —— </span> 
+          <el-input v-model.number="form.items.endItem" auto-complete="off" style="width: 80px; float: left;"></el-input>
+        </el-form-item>
+        <el-form-item label="锭数" :label-width="formLabelWidth" prop="spindleNum" required>
+          <el-input-number v-model="form.spindleNum" :min="1" label="输入锭数..."  @change="setSpindleSeq" style="float: left;"></el-input-number>
+        </el-form-item>
+        <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
+          <el-tag title="" type="info" v-model="form.spindleSeq" v-for="(item,index) in form.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
+            <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
+            <div style="float: right;">
+              <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="form.spindleSeq.indexOf(item) != 0" @click="up(index)" circle></el-button>
+              <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="form.spindleSeq.indexOf(item) != form.spindleNum-1" @click="down(index)" circle></el-button>
+            </div>
+          </el-tag>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleSingleAdd = false">取 消</el-button>
+        <el-button type="primary" @click="AddBatchMachine()">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -97,7 +133,12 @@ export default {
         item: '',
         spindleNum: '',
         spindleSeq: [],
-        line: {}
+        line: {},
+        items: {
+          startItem: '',
+          endItem: ''
+        },
+        
       },
       form1: {
         name: '',
@@ -107,13 +148,13 @@ export default {
         line: {}
       },
       rules: {
-        name: { required: true, message: '请选择线别...', trigger: 'blur' },
+        name: { required: true, message: '请选择线别...', trigger: 'change' },
         item: [
-          { required: true, message: '请输入...', trigger: 'blur' }
+          { required: true, message: '请输入...', trigger: 'change' }
         ],
         spindleNum: [
-          { required: true, message: '请输入...', trigger: 'blur' },
-          { min: 1, message: '不能为空', trigger: 'blur' }
+          { required: true, message: '请输入...', trigger: 'change' },
+          { min: 1, message: '不能为空', trigger: 'change' }
         ],
       },
       formLabelWidth: '180px'
@@ -157,12 +198,12 @@ export default {
       })
     },
     AddMachine () {
-      for (let i = 0; i < this.arrLineName.length; i++) {
-        if (this.form.name === this.arrLineName[i].name) {
-          this.form.line = this.arrLineName[i]
+      for (let j = 0; j < this.arrLineName.length; j++) {
+        if (this.form.name === this.arrLineName[j].name) {
+          this.form.line = this.arrLineName[j]
         }
       }
-      console.log(this.form)
+      // console.log(this.form)
       this.$api.AddMachine(this.form).then(res => {
         console.log(res)
         this.$notify({
@@ -174,6 +215,38 @@ export default {
         this.getMachine()
       })
     },
+    AddBatchMachine () {
+      console.log(this.form.items.endItem, this.form.items.startItem)
+      let regPos = /^\d+$/
+      if (regPos.test(this.form.items.endItem) && regPos(this.form.items.startItem.toString())) {
+        for (let i = 0; i <= this.form.items.endItem - this.form.items.startItem; i++) {
+          this.form.item = this.form.items.startItem + i
+          console.log(this.form.item)
+          for (let j = 0; j < this.arrLineName.length; j++) {
+            if (this.form.name === this.arrLineName[j].name) {
+              this.form.line = this.arrLineName[j]
+            }
+          }
+          this.$api.AddMachine({
+            item: this.form.item,
+            line: this.form.line,
+            spindleNum: this.form.spindleNum,
+            spindleSeq: this.form.spindleSeq
+          }).then(res => {
+            this.dialogVisibleAdd = false
+            this.getMachine()
+          })
+        }
+      } else {
+        this.$message.error('机台需要输入数字！')
+      }
+      // if () {
+          
+      // } else {
+      //   this.$message.error('错了哦，这是一条错误消息');
+      // }
+
+    },
     openSave (row) {
       console.log(row)
       this.form1.id = row.id
@@ -183,7 +256,6 @@ export default {
       this.form1.spindleNum = row.spindleNum
       this.form1.spindleSeq = row.spindleSeq
       this.dialogVisibleSave = true
-
     },
     saveMachine () {
       console.log(this.form1)

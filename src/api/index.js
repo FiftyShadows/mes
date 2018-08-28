@@ -125,6 +125,10 @@ export default {
   addSilks (data) {
     return axios.post(`${baseAutoUrl}/silkCars`, data)
   },
+  // 丝车管理--批量添加
+  addBatchSilks (data) {
+    return axios.post(`${baseAutoUrl}/batchSilkCars`, data)
+  },
   // 丝车管理--修改
   saveSilks (data) {
     return axios.put(`${baseAutoUrl}/silkCars/${data.id}`, data)

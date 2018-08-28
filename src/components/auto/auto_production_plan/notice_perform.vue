@@ -50,7 +50,7 @@ export default {
         this.notice = res.data.productPlanNotify
         this.tableData = res.data.lineMachineProductPlans
         for (let i = 0; i < this.tableData.length; i++) {
-          let date = new Date(this.tableData[i].startDate);
+          let date = new Date(this.tableData[i].startDate)
           let Y = date.getFullYear() + '-'
           let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'
           let D = date.getDate() + ' '
