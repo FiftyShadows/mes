@@ -15,6 +15,9 @@
       <el-table-column prop="batch.tubeColor" label="纸管颜色">
       </el-table-column>
       <el-table-column prop="" label="机台">
+        <template>
+
+        </template>
       </el-table-column>
       <el-table-column prop="lineMachines.length" label="机台数">
       </el-table-column>
@@ -26,18 +29,19 @@ export default {
   name: 'workshopPlan',
   data () {
     return {
-      seachName: '',
+      seachName: 'A车间',
       seachId: '',
       LinesTable: [],
       tableData: [],
       lineMachines: {}, // 机台数
-      MachinesNum: '',
+      MachinesNum: [],
       allData: {},
       options: {}
     }
   },
   created () {
     this.getPlan()
+    this.getLinePlans()
   },
   methods: {
     getPlan () { // 获取select数据
@@ -57,15 +61,17 @@ export default {
         }
       }
       this.$api.getLinePlans(this.seachId).then(res => {
-        // console.log(res)
+        console.log(res)
         this.allData = res.data
         this.tableData = res.data.items
-        this.tableData.MachinesNum = this.tableData.lineMachines
-
-        // this.lineMachines = this.tableData.map(machine => {
-        //   return machine.lineMachines
-        // })
-        // console.log(this.lineMachines)
+        for (let j = 0; j < this.tableData.length; j++) {
+          this.MachinesNum = this.tableData[j].lineMachines
+          let arr = []
+          for (let i = 0; i < this.MachinesNum.length; i++) {
+            arr.push(this.MachinesNum[i].item)
+          }
+          console.log(arr.sort())
+        }
       })
     }
   }

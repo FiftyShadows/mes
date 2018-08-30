@@ -28,11 +28,11 @@
       </el-form-item>
     </el-form>
     <hr>
-    <el-button type="info" style="margin-left: 20px;" disabled>添加权限</el-button>
+    <el-button type="primary" style="margin-left: 20px;" disabled>添加权限</el-button>
     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
     <div style="margin: 15px 0;"></div>
     <el-checkbox-group v-model="checkedOptions" @change="handleCheckedOptionsChange" style="width: 80%; margin:auto;">
-      <el-checkbox v-for="item in options2" :label="item" :key="item" border>{{item}}</el-checkbox>
+      <el-checkbox v-for="item in permissions" :label="item" :key="item" border>{{item}}</el-checkbox>
     </el-checkbox-group>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisibleADD = false">取 消</el-button>
@@ -40,34 +40,34 @@
     </div>
   </el-dialog>
 
-    <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave">
-    <el-form :model="form2" :rules="rules" ref="form2">
+  <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave">
+
+    <el-form :model="saveForm" :rules="rules" ref="saveForm">
       <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
-        <el-input v-model="form2.name" auto-complete="off" required></el-input>
+        <el-input v-model="saveForm.name" auto-complete="off" required></el-input>
       </el-form-item>
-      <!-- <el-form-item label="roles" :label-width="formLabelWidth" prop="roles" required>
-        <el-select v-model="form2.roles" multiple placeholder="请选择" style="width: 100%;">
-          <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.name"></el-option>
-        </el-select>
-      </el-form-item> -->
     </el-form>
-    <el-button type="info" style="margin-left: 20px;" disabled>roles</el-button>
+
+    <el-button type="primary" style="margin-left: 20px;" disabled>roles</el-button>
     <div style="margin: 15px 0;"></div>
-    <el-checkbox :indeterminate="isIndeterminate1" v-model="checkAll1" @change="handleCheckAllChange1">全选</el-checkbox>
-    <el-checkbox-group v-model="checkedOptions1" @change="handleCheckedOptionsChange1" style="width: 80%; margin:auto;">
+    <el-checkbox :indeterminate="isIndeterminateRoles" v-model="checkAllRoles" @change="handleCheckAllChange1">全选</el-checkbox>
+    <el-checkbox-group v-model="checkedOptionsRoles" @change="handleCheckedOptionsChange1" style="width: 80%; margin:auto;">
       <el-checkbox v-for="item in options" :label="item.value" :key="item.value" border>{{item.name}}</el-checkbox>
     </el-checkbox-group>
     <hr>
-    <el-button type="info" style="margin-left: 20px;" disabled>添加权限</el-button>
+
+    <el-button type="primary" style="margin-left: 20px;" disabled>添加权限</el-button>
     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
     <div style="margin: 15px 0;"></div>
     <el-checkbox-group v-model="checkedOptions" @change="handleCheckedOptionsChange" style="width: 80%; margin:auto;">
-      <el-checkbox v-for="item in options2" :label="item" :key="item" border>{{item}}</el-checkbox>
+      <el-checkbox v-for="item in permissions" :label="item" :key="item" border>{{item}}</el-checkbox>
     </el-checkbox-group>
+
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisibleSave = false">取 消</el-button>
       <el-button type="primary" @click="saveUserGroups()">确 定</el-button>
     </div>
+
   </el-dialog>
 
 </div>
@@ -87,7 +87,7 @@ export default {
         roles: [],
         permissions: []
       },
-      form2: {
+      saveForm: {
         name: '',
         roles: [],
         permissions: []
@@ -100,12 +100,12 @@ export default {
         {name: '等级确认', value: 'SUBMIT_GRADE'},
         {name: '标样丝', value: 'SUBMIT_DYEING_SAMPLE'}
       ],
-      options3: [],
-      checkAll1: false,
-      checkedOptions1: [],
-      isIndeterminate1: true,
+      optionsRoles: [],
+      checkAllRoles: false,
+      checkedOptionsRoles: [],
+      isIndeterminateRoles: true,
       // 权限
-      options2: [],
+      permissions: [], // 所有权限
       checkedOptions: [],
       isIndeterminate: true,
       checkAll: false,
@@ -118,7 +118,7 @@ export default {
   },
   created () {
     this.getUsergroups()
-    this.getOptions2()
+    this.getPermissions() // 获取权限列表
   },
   methods: {
     getUsergroups () {
@@ -127,11 +127,14 @@ export default {
         console.log(this.tableData)
       })
     },
-    seach () {
-      
+    getPermissions () {
+      this.$api.getAdmins().then(res => {
+        this.totalData = res.data
+        console.log(this.totalData)
+      })
     },
     openAddgroup () {
-      this.options2 = this.totalData.map(item => {
+      this.permissions = this.totalData.map(item => {
         return item.name
       })
       this.dialogFormVisibleADD = true
@@ -170,20 +173,20 @@ export default {
     },
     openSavegroups (row) {
       console.log(row)
-      console.log(this.options)
-      this.form2 = row
-      this.options2 = this.totalData.map(item => {
+      // console.log(this.options)
+      this.saveForm = row
+      this.permissions = this.totalData.map(item => {
         return item.name
       })
-      this.options3 = this.options.map(item => {
+      this.optionsRoles = this.options.map(item => {
         return item.value
       })
-      this.checkedOptions = this.form2.permissions.map(item => {
+      this.checkedOptions = this.saveForm.permissions.map(item => {
         return item.name
       })
-      this.checkedOptions1 = this.form2.roles
-      console.log(this.options2)
-      console.log(this.checkedOptions1)
+      this.checkedOptionsRoles = this.saveForm.roles
+      // console.log(this.options2)
+      console.log(this.checkedOptionsRoles)
       // var item = []
       // if(this.checkedOptions1) {
       //   for (let j = 0; j < this.checkedOptions1.length; j++) {
@@ -199,7 +202,7 @@ export default {
       this.dialogFormVisibleSave = true
     },
     saveUserGroups () {
-      this.form2.modifyDateTime = new Date().getTime()
+      this.saveForm.modifyDateTime = new Date().getTime()
       // let item = []
       // for (let j = 0; j < this.checkedOptions1.length; j++) {
       //   for (let i = 0; i < this.options.length; i++) {
@@ -208,9 +211,20 @@ export default {
       //     }
       //   }
       // }
-      this.form2.roles = this.checkedOptions1
-      console.log(this.form2.roles)
-      this.$api.saveUsergroups(this.form2).then(res => {
+      this.saveForm.roles = this.checkedOptionsRoles // roles
+      this.saveForm.permissions = this.checkedOptions // 权限
+      // console.log(this.totalData)
+      // console.log(this.saveForm.permissions)
+      for (let j = 0; j < this.saveForm.permissions.length; j++) {
+        for (let i = 0; i < this.totalData.length; i++) {
+          if (this.totalData[i].name === this.saveForm.permissions[j]) {
+            this.saveForm.permissions[j] = this.totalData[i]
+          }
+        }
+      }
+
+      console.log(this.saveForm)
+      this.$api.saveUsergroups(this.saveForm).then(res => {
         console.log(res)
         this.getUsergroups()
         this.$notify({
@@ -221,31 +235,23 @@ export default {
         this.dialogFormVisibleSave = false
       })
     },
-    getOptions2 () {
-      this.$api.getAdmins().then(res => {
-        this.totalData = res.data
-        console.log(this.totalData)
-      })
-    },
     handleCheckAllChange (val) {
-      this.checkedOptions = val ? this.options2 : [];
+      this.checkedOptions = val ? this.permissions : [];
       this.isIndeterminate = false;
     },
     handleCheckedOptionsChange (value) {
       let checkedCount = value.length;
-      this.checkAll = checkedCount === this.options2.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.options2.length;
+      this.checkAll = checkedCount === this.permissions.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.permissions.length;
     },
     handleCheckAllChange1 (val) {
-      console.log(this.options3)
-      this.checkedOptions1 = val ? this.options3 : [];
-      this.isIndeterminate1 = false;
+      this.checkedOptionsRoles = val ? this.optionsRoles : [];
+      this.isIndeterminateRoles = false;
     },
     handleCheckedOptionsChange1 (value) {
-      console.log(value)
       let checkedCount = value.length;
-      this.checkAll1 = checkedCount === this.options3.length;
-      this.isIndeterminate1 = checkedCount > 0 && checkedCount < this.options3.length;
+      this.checkAllRoles = checkedCount === this.optionsRoles.length;
+      this.isIndeterminateRoles = checkedCount > 0 && checkedCount < this.optionsRoles.length;
     }
   }
 }

@@ -32,7 +32,7 @@
       :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
     </el-pagination>
 
-    <el-dialog title="新 增" :visible.sync="dialogVisibleAdd" width="30%">
+    <el-dialog title="新 增" :visible.sync="dialogVisibleAdd" width="40%">
       <el-form :model="form">
         <el-form-item label="车间" :label-width="formLabelWidth" prop="workshopName">
           <el-select v-model="form.workshopName" clearable placeholder="请选择" style="float: left;">
@@ -74,7 +74,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="修 改" :visible.sync="dialogVisibleSave" width="30%" @close="closeDialog()">
+    <el-dialog title="修 改" :visible.sync="dialogVisibleSave" width="40%" @close="closeDialog()">
       <el-form :model="form2">
         <el-form-item label="车间" :label-width="formLabelWidth" prop="workshopName">
           <el-select v-model="form2.workshopName" clearable placeholder="请选择" style="float: left;">
@@ -202,7 +202,10 @@ export default {
       this.getBatch(this.pageSize, this.first, this.seacrhBatch)
     },
     openSaveBatch (row) {
+      console.log(row)
       this.form2 = row
+      this.form2.workshopName = row.workshop.name
+      this.form2.productName = row.product.name
       this.dialogVisibleSave = true
     },
     SaveBatch () {

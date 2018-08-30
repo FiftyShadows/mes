@@ -57,7 +57,7 @@
             <el-radio label="手动落桶" border></el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="批量名称" prop="name">
           <el-input v-model="ruleForm.startItem" auto-complete="off" style="width: 80px; float: left;"></el-input> 
           <span style="float: left;"> —— </span> 
           <el-input v-model="ruleForm.endItem" auto-complete="off" style="width: 80px; float: left;"></el-input>
@@ -240,7 +240,7 @@ export default {
       let reg2 = /^[a-zA-Z]+/g
       let startword = this.ruleForm.startItem.match(reg2)
       let startnum = this.ruleForm.startItem.match(reg1)
-      console.log(startword,this.ruleForm.startItem.match(reg1))
+      console.log(startword,startnum)
 
       let endword = this.ruleForm.endItem.match(reg2)
       let endnum = this.ruleForm.endItem.match(reg1)
@@ -250,6 +250,8 @@ export default {
           this.$message.error("批量输入错误，前缀不同！")
           return 
         }
+      } else {
+        this.$message.error("批量输入错误，请输入前缀！")
       }
 
       if (startnum && endnum) {

@@ -21,21 +21,24 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   switch (error.response.status) {
     case 401:
-      console.log('登录信息未认证')
+      vue.$notify.error({
+        title: '错误',
+        message: '登录信息未认证'
+      })
       // router.replace('/login');
       break
     case 403:
       vue.$notify.error({
-          title: '错误',
-          message: '您没有权限进行此操作'
-      });
+        title: '错误',
+        message: '您没有权限进行此操作'
+      })
       // store.state.pageLoading = false;
       break
     case 404:
-    vue.$notify.error({
+      vue.$notify.error({
         title: '错误',
         message: '未找到接口数据'
-    });
+      })
     // store.state.pageLoading = false;
     break
     default:
@@ -164,6 +167,18 @@ export default {
   finishNotice (data) {
     return axios.put(`${baseAutoUrl}/productPlanNotifies/${data}/finish`)
   },
+  // 通知单--添加
+  addNotices (data) {
+    return axios.post(`${baseAutoUrl}/productPlanNotifies`, data)
+  },
+  // 通知单--执行操作
+  exeNotices (data) {
+    return axios.post(`${baseAutoUrl}/productPlanNotifies/${data.id}/exe`, data)
+  },
+  // 通知单--修改通知单
+  saveNotice (data) {
+    return axios.put(`${baseAutoUrl}/productPlanNotifies/${data.id}`, data)
+  },
 
   // 批号管理--获取数据
   getBatches (data) {
@@ -223,5 +238,9 @@ export default {
   // 用户--添加用户
   addUser (data) {
     return axios.post(`${baseAutoUrl}/operators`, data)
+  },
+  // 用户--修改权限
+  saveUserpermissions (data) {
+    return axios.put(`${baseAutoUrl}/operators/${data.id}`, data)
   }
 }

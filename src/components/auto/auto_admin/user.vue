@@ -41,7 +41,8 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="form.name" :visible.sync="dialogSetAdmin">
+    <el-dialog :title="`${form.name}——权限设置`" :visible.sync="dialogSetAdmin">
+
       <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
         <el-form-item label="活动名称" prop="name" :label-width="formLabelWidth">
           <el-input v-model="form.name" auto-complete="off" style="width: 200px;float: left;" required></el-input>
@@ -63,7 +64,7 @@
 
         <hr>
         <el-button type="info" style="margin-left: 20px;" disabled>roles</el-button>
-        <el-checkbox :indeterminate="isIndeterminate1" v-model="workersCheckAll" @change="workersCheckAllChange">全选</el-checkbox>
+        <!-- <el-checkbox :indeterminate="isIndeterminate1" v-model="workersCheckAll" @change="workersCheckAllChange">全选</el-checkbox> -->
         <div style="margin: 15px 0;"></div>
         <el-checkbox-group v-model="checkedWorkers" @change="handleCheckedWorkersChange">
           <el-checkbox v-for="item in workersOptions" :label="item.value" :key="item.value" border>{{item.name}}</el-checkbox>
@@ -79,10 +80,10 @@
 
       </div>
 
-
       <div slot="footer" class="dialog-footer" style="margin-top: 20px">
-        <el-button type="primary" @click="setAdmin()">完 成</el-button>
+        <el-button type="primary" @click="setAdmin()">修 改</el-button>
       </div>
+      
     </el-dialog>
 
   </div>
@@ -137,7 +138,6 @@ export default {
     }
   },
   created () {
-    
     this.getUsers()
   },
   methods: {
@@ -212,7 +212,34 @@ export default {
       this.dialogSetAdmin = true
     },
     setAdmin () {
-
+      this.form.groups = this.checkedOperators
+      this.form.roles = this.checkedWorkers
+      this.form.permissions = this.checkedPermissions
+      for (let j = 0; j < this.form.groups.length; j++) {
+        for (let i = 0; i < this.usergroups.length; i++) {
+          if (this.usergroups[i].name === this.form.groups[j]) {
+            this.form.groups[j] = this.usergroups[i]
+          }
+        }
+      }
+      for (let j = 0; j < this.form.permissions.length; j++) {
+        for (let i = 0; i < this.adminPermissions.length; i++) {
+          if (this.adminPermissions[i].name === this.form.permissions[j]) {
+            this.form.permissions[j] = this.adminPermissions[i]
+          }
+        }
+      }
+      console.log(this.form)
+      this.$api.saveUserpermissions(this.form).then(res => {
+        console.log(res)
+        this.getUsers()
+        this.$notify({
+          title: '成功',
+          message: '权限设置成功',
+          type: 'success'
+        })
+        this.dialogSetAdmin = false
+      })
     },
 
     // operator
@@ -227,14 +254,14 @@ export default {
     },
 
     // workers
-    workersCheckAllChange(val) {
-      this.checkedWorkers = val ? this.workersOptions : [];
-      this.isIndeterminate1 = false;
-      console.log(this.checkedWorkers)
-    },
+    // workersCheckAllChange(val) {
+    //   this.checkedWorkers = val ? this.workersOptions : [];
+    //   this.isIndeterminate1 = false;
+    //   console.log(this.checkedWorkers)
+    // },
     handleCheckedWorkersChange(value) {
       let checkedCount = value.length;
-      this.workersCheckAll = checkedCount === this.workersOptions.length;
+      // this.workersCheckAll = checkedCount === this.workersOptions.length;
       this.isIndeterminate1 = checkedCount > 0 && checkedCount < this.workersOptions.length;
     },
 

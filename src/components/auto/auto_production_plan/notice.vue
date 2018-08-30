@@ -16,6 +16,10 @@
     <el-table-column prop="startDate" label="开始日期">
     </el-table-column>
     <el-table-column prop="endDate" label="结束日期">
+      <template slot-scope="scope">
+        <span v-if="scope.row.endDate">{{scope.row.endDate}}</span>
+        <el-button v-else type="danger" @click="finish(scope.row)" size="mini">结束</el-button>
+      </template>
     </el-table-column>
     <el-table-column fixed="right" label="操作" width="160">
       <template slot-scope="scope">
@@ -27,8 +31,8 @@
   <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" 
     :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
   </el-pagination>
-
-  <el-dialog title="新 增" :visible.sync="dialogFormVisibleAdd" width="35%">
+  <!-- 第一层 -->
+  <el-dialog title="新 增" :visible.sync="dialogFormVisibleAdd" width="50%">
     <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
       <el-form-item label="名称" :label-width="formLabelWidth" required>
         <el-input v-model="form.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
@@ -40,36 +44,59 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="批号" :label-width="formLabelWidth" required>
-        <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input>
+        <!-- <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
+        <el-select v-model="form.batch" filterable remote reserve-keyword placeholder="请输入位号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
+          <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="开始日期" :label-width="formLabelWidth" required>
-        <el-date-picker v-model="form.startDate" type="date" placeholder="选择日期" style="float: left;"></el-date-picker>
+        <el-date-picker v-model="form.startDate" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="timestamp" style="float: left;"></el-date-picker>
       </el-form-item>
       <el-form-item label="" :label-width="formLabelWidth" required>
         <el-tag type="info" style="float: left; width: 80%;text-align: left;">
           机台 *
           <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="saveWorkshops()"></el-button>
         </el-tag>
+        <ul class="item">
+          <li v-for="item in form.lineMachines" :key="item.id">{{item.line.workshop.name}}--{{item.line.name}}--{{item.item}}</li>
+        </ul>
       </el-form-item>
     </el-form>
-
+    <!-- 第二层 -->
     <el-dialog width="50%" title="* 选择机台" :visible.sync="innerVisible" tooltip-effect="dark" append-to-body>
-
+      <!-- 第三层 -->
       <el-dialog width="50%" title="新增机台" :visible.sync="addLine" append-to-body>
         <el-form :model="Lines" :rules="rules" ref="Lines" class="demo-ruleForm">
           <el-form-item label="线别" :label-width="formLabelWidth" required>
-            <el-input v-model="Lines.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
+            <!-- <el-input v-model="Lines.name" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
+            <el-select v-model="Lines.name" clearable placeholder="请选择" style="float: left;">
+              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="机台位号" :label-width="formLabelWidth" required>
-            <el-input-number v-model="Lines.item" :min="1" :max="10" label="输入位号..."></el-input-number>
+            <el-input-number v-model="Lines.item" :min="1" label="输入位号..."></el-input-number>
           </el-form-item>
           <el-form-item label="锭数" :label-width="formLabelWidth" required>
-            <el-input-number v-model="Lines.num" :min="1" :max="10" label="输入锭数..."></el-input-number>
+            <el-input-number v-model="Lines.spindleNum" :min="1" label="输入锭数..." @change="setSpindleSeq"></el-input-number>
+          </el-form-item>
+          <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
+            <el-tag title="" type="info" v-model="Lines.spindleSeq" v-for="(item,index) in Lines.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
+              <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
+              <div style="float: right;">
+                <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="Lines.spindleSeq.indexOf(item) != 0" @click="up(index)" circle></el-button>
+                <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="Lines.spindleSeq.indexOf(item) != Lines.spindleNum-1" @click="down(index)" circle></el-button>
+              </div>
+            </el-tag>
           </el-form-item>
         </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addLine = false">取 消</el-button>
+          <el-button type="primary" @click="addLines()">确 定</el-button>
+        </span>
       </el-dialog>
 
-      <el-button type="primary" @click="addLine = true">新 增</el-button>
+      <el-button type="primary" @click="createLines()">新 增</el-button>
       <el-table ref="multipleTable" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
         <el-table-column type="selection" width="55">
         </el-table-column>
@@ -80,15 +107,104 @@
         <el-table-column prop="item" label="机台">
         </el-table-column>
       </el-table>
+
       <span slot="footer" class="dialog-footer">
         <el-button @click="innerVisible = false">取 消</el-button>
-        <el-button type="primary" @click="innerVisible = false">确 定</el-button>
+        <el-button type="primary" @click="selectItem()">确 定</el-button>
       </span>
     </el-dialog>
 
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
-      <el-button type="primary" @click="dialogFormVisibleAdd = false">确 定</el-button>
+      <el-button type="primary" @click="addNotice()">确 定</el-button>
+    </div>
+  </el-dialog>
+
+  <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave" width="50%">
+    <el-form :model="form1" :rules="rules" ref="form" class="demo-ruleForm">
+      <el-form-item label="名称" :label-width="formLabelWidth" required>
+        <el-input v-model="form1.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
+      </el-form-item>
+      <el-form-item label="类型" :label-width="formLabelWidth">
+        <el-radio-group v-model="form1.type" style="float: left;">
+          <el-radio-button label="样品"></el-radio-button>
+          <el-radio-button label="改批"></el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="批号" :label-width="formLabelWidth" required>
+        <!-- <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
+        <el-select v-model="form1.batch.batchNo" filterable remote reserve-keyword placeholder="请输入位号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
+          <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="开始日期" :label-width="formLabelWidth" required>
+        <el-date-picker v-model="form1.startDate" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="float: left;"></el-date-picker>
+      </el-form-item>
+      <el-form-item label="" :label-width="formLabelWidth" required>
+        <el-tag type="info" style="float: left; width: 80%;text-align: left;">
+          机台 *
+          <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="saveWorkshops()"></el-button>
+        </el-tag>
+        <ul class="item">
+          <li v-for="item in form1.lineMachines" :key="item.id">{{item.line.workshop.name}}--{{item.line.name}}--{{item.item}}</li>
+        </ul>
+      </el-form-item>
+    </el-form>
+    <!-- 第二层 -->
+    <el-dialog width="50%" title="* 选择机台" :visible.sync="innerVisible" tooltip-effect="dark" append-to-body>
+      <!-- 第三层 -->
+      <el-dialog width="50%" title="新增机台" :visible.sync="addLine" append-to-body>
+        <el-form :model="Lines" :rules="rules" ref="Lines" class="demo-ruleForm">
+          <el-form-item label="线别" :label-width="formLabelWidth" required>
+            <!-- <el-input v-model="Lines.name" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
+            <el-select v-model="Lines.name" clearable placeholder="请选择" style="float: left;">
+              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="机台位号" :label-width="formLabelWidth" required>
+            <el-input-number v-model="Lines.item" :min="1" label="输入位号..."></el-input-number>
+          </el-form-item>
+          <el-form-item label="锭数" :label-width="formLabelWidth" required>
+            <el-input-number v-model="Lines.spindleNum" :min="1" label="输入锭数..." @change="setSpindleSeq"></el-input-number>
+          </el-form-item>
+          <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
+            <el-tag title="" type="info" v-model="Lines.spindleSeq" v-for="(item,index) in Lines.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
+              <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
+              <div style="float: right;">
+                <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="Lines.spindleSeq.indexOf(item) != 0" @click="up(index)" circle></el-button>
+                <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="Lines.spindleSeq.indexOf(item) != Lines.spindleNum-1" @click="down(index)" circle></el-button>
+              </div>
+            </el-tag>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addLine = false">取 消</el-button>
+          <el-button type="primary" @click="addLines()">确 定</el-button>
+        </span>
+      </el-dialog>
+
+      <el-button type="primary" @click="createLines()">新 增</el-button>
+      <el-table ref="multipleTable" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
+        <el-table-column type="selection" width="55">
+        </el-table-column>
+        <el-table-column prop="line.workshop.name" label="车间" width="180">
+        </el-table-column>
+        <el-table-column prop="line.name" label="线别" width="180">
+        </el-table-column>
+        <el-table-column prop="item" label="机台">
+        </el-table-column>
+      </el-table>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="innerVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveItem()">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+      <el-button type="primary" @click="saveNotice()">确 定</el-button>
     </div>
   </el-dialog>
 
@@ -99,40 +215,68 @@ export default {
   name: 'notice',
   data () {
     return {
-      data: [],
-      transferData: [],
+      data: [], // 添加表格 数据
+      options: [], // workshop数据
+      options2: [],
       renderFunc(h, option) {
         return <span>{ option.key } - { option.label }</span>;
       },
-      tableData: [],
+      tableData: [],// 主表格数据
       pageSize: 20,
       first: 0,
       q: '',
       total: 0,
       currentPage: 5,
-      form: {
+      optionsItem: [], // 输入机台号搜索列表
+      list: [],
+      loading: false,
+      states: [],
+      form: { 
         name: '',
         type: '改批',
-        batchNo: '',
+        batch: {},
         startDate: '',
-        line: []
+        lineMachines: []
       },
-      Lines: {},
+      Lines: {
+        name: '',
+        item: '',
+        spindleNum: 0,
+        spindleSeq: [],
+        line: {}
+      },
+      // 弹窗控制
       dialogFormVisibleAdd: false,
       innerVisible: false,
       addLine: false,
-      formLabelWidth: '120px',
+
+      formLabelWidth: '180px',
       rules: {
         name: [{ required: true, message: '必输项...', trigger: 'blur' }],
         batchNo: [{ required: true, message: '必输项...', trigger: 'blur' }],
         startDate: [{ required: true, message: '必输项...', trigger: 'change' }]
+      },
+      // 修改
+      dialogFormVisibleSave: false,
+      form1: {
+        name: '',
+        type: '改批',
+        batch: {},
+        startDate: '',
+        lineMachines: []
       }
     }
   },
   created () {
     this.getNotice()
   },
+  mounted() {
+    // this.list = this.states.map(item => {
+    //   return { value: item, label: item };
+    // });
+  },
   methods: {
+    // 获取列表数据
     getNotice () {
       this.$api.getNotices({
         pageSize: this.pageSize,
@@ -141,18 +285,20 @@ export default {
       }).then(res => {
         this.total = res.data.count
         this.tableData = res.data.productPlanNotifies
-        for (let i = 0; i < this.tableData.length-1; i++) {
+        for (let i = 0; i < this.tableData.length; i++) {
           let sdate = new Date(this.tableData[i].startDate)//时间戳为10位需*1000，时间戳为13位的话不需乘1000
           let Y = sdate.getFullYear() + '-'
           let M = (sdate.getMonth() + 1 < 10 ? '0' + (sdate.getMonth() + 1) : sdate.getMonth() + 1)
           let D = '-' + sdate.getDate()
           this.tableData[i].startDate = Y + M + D
 
-          let edate = new Date(this.tableData[i].endDate)
-          let eY = edate.getFullYear() + '-'
-          let eM = (edate.getMonth() + 1 < 10 ? '0' + (edate.getMonth() + 1) : edate.getMonth() + 1)
-          let eD = '-' + edate.getDate()
-          this.tableData[i].endDate = eY + eM + eD
+          if (this.tableData[i].endDate) {
+            let edate = new Date(this.tableData[i].endDate)
+            let eY = edate.getFullYear() + '-'
+            let eM = (edate.getMonth() + 1 < 10 ? '0' + (edate.getMonth() + 1) : edate.getMonth() + 1)
+            let eD = '-' + edate.getDate()
+            this.tableData[i].endDate = eY + eM + eD
+          }
 
           if (this.tableData[i].type === 'CHANGE_BATCH') {
             this.tableData[i].type = '改批'
@@ -165,32 +311,180 @@ export default {
         }
       })
     },
+    finish (row) {
+      this.$confirm('确认结束？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(_ => {
+          this.$api.finishNotice(row.id).then(res => {
+            this.$notify({
+              title: '成功',
+              message: '结束',
+              type: 'success'
+            })
+            this.getNotice()
+          })
+        }).catch(_ => {})
+    },
+    // 打开新增弹窗
     openAddNotice () {
       this.dialogFormVisibleAdd = true
+      this.data = []
+      this.form = {}
+    },
+    remoteMethod(query) {
+      if (query !== '') {
+        this.loading = true;
+        console.log(this.form.batch)
+        this.$api.getBatches({
+          pageSize: 10,
+          first: 0,
+          q: query
+        }).then(res => {
+          if (res.errorCode === "E00000") {
+            this.$message.error(res.errorMessage)
+          } else {
+            this.loading = false
+            this.optionsItem = res.data.batches
+          }
+        })
+      } else {
+        this.optionsItem = [];
+      }
     },
     saveWorkshops () {
       this.innerVisible = true
-      this.data = []
     },
-    // toggleSelection(rows) {
-    //   if (rows) {
-    //     rows.forEach(row => {
-    //       this.$refs.multipleTable.toggleRowSelection(row);
-    //     });
-    //   } else {
-    //     this.$refs.multipleTable.clearSelection();
-    //   }
-    // },
+    createLines () {
+      this.$api.getSelected().then(res => {
+        this.options = res.data.lines
+      })
+      this.addLine = true
+    },
     handleSelectionChange (val) {
       this.multipleSelection = val
+      console.log(this.multipleSelection)
     },
+    selectItem () {
+      this.form.lineMachines = this.multipleSelection
+      this.innerVisible = false
+    },
+    setSpindleSeq (val) {
+      this.Lines.spindleSeq = []
+      for (let i = 1; i < val+1; i++) {
+        this.Lines.spindleSeq.push(i)
+      }
+    },
+    addNotice () {
+      if (this.form.type === '改批') {
+        this.form.type = 'CHANGE_BATCH'
+      } else if (this.form.type === '样品') {
+        this.form.type = 'SAMPLE'
+      }
+      console.log(this.optionsItem)
+      for (let i = 0; i < this.optionsItem.length; i++) {
+        if (this.optionsItem[i].batchNo === this.form.batch) {
+          this.form.batch = this.optionsItem[i]
+        }
+      }
+      console.log(this.form)
+      this.$api.addNotices(this.form).then(res => {
+        console.log(res)
+        this.$notify({
+          title: '成功',
+          message: '添加成功',
+          type: 'success'
+        })
+        this.dialogFormVisibleAdd = false
+        this.getNotice()
+      })
+    },
+    // 新增线别
+    addLines () {
+      for (let i = 0; i < this.options.length; i++) {
+        if (this.options[i].name === this.Lines.name) {
+          this.Lines.line = this.options[i]
+        }
+      }
+      console.log(this.Lines)
+      this.$api.AddMachine(this.Lines).then(res => {
+        console.log(res)
+        this.data.push(res.data)
+        this.addLine = false
+      })
+    },
+    up (i) {
+      let arr = this.Lines.spindleSeq
+      this.Lines.spindleSeq = []
+      let temp = arr[i]
+      arr[i] = arr[i - 1]
+      arr[i - 1] = temp
+      // this.form.spindleSeq = arr
+      for (let j = 0; j < arr.length; j++) {
+        this.Lines.spindleSeq.push(arr[j])
+      }
+      console.log(this.Lines.spindleSeq)
+    },
+    down (i) {
+      let arr = this.Lines.spindleSeq
+      this.Lines.spindleSeq = []
+      let temp = arr[i]
+      arr[i] = arr[i + 1]
+      arr[i + 1] = temp
+      for (let j = 0; j < arr.length; j++) {
+        this.Lines.spindleSeq.push(arr[j])
+      }
+      // console.log(this.form.spindleSeq)
+    },
+    // 打开修改弹窗
     openSaveNotice (row) {
       console.log(row)
+      this.dialogFormVisibleSave = true
+      this.form1.id = row.id
+      this.form1.name = row.name
+      this.form1.type = row.type
+      this.form1.batch = row.batch
+      this.form1.startDate = row.startDate
+      this.form1.lineMachines = row.lineMachines
+      console.log(this.form1)
+      this.data = this.form1.lineMachines
     },
     perform (row) {
       console.log(row)
       this.$router.push({path: '/productPlan/Notice-perform', query: {id: row.id, startDate: row.startDate}})
     },
+    saveItem () {
+      this.form1.lineMachines = this.multipleSelection
+      this.innerVisible = false
+    },
+    saveNotice () {
+      if (this.form1.type === '改批') {
+        this.form1.type = 'CHANGE_BATCH'
+      } else if (this.form1.type === '样品') {
+        this.form1.type = 'SAMPLE'
+      }
+      for (let i = 0; i < this.optionsItem.length; i++) {
+        if (this.optionsItem[i].batchNo === this.form1.batch) {
+          this.form1.batch = this.optionsItem[i]
+        }
+      }
+      this.$api.saveNotice(this.form1).then(res => {
+        console.log(res)
+        if (res.errorCode !== 'E00000') {
+          this.$notify({
+            title: '成功',
+            message: '修改成功',
+            type: 'success'
+          })
+          this.dialogFormVisibleSave = false
+          this.getNotice()
+        } else {
+          this.$message.error(res.errorMessage)
+        }
+      })
+    },
+    // 分页配置
     handleSizeChange(val) {
       this.pageSize = val
       this.getNotice (this.pageSize, this.first, this.q)
@@ -209,6 +503,16 @@ export default {
   .transfer-footer {
     margin-left: 20px;
     padding: 6px 5px;
+  }
+  .item {
+    float: left;
+    list-style: none;
+    width: 200px;
+    max-height: 150px;
+    overflow-y: auto;
+    padding: 0;
+    border: 1px solid #409EFF;
+    border-radius: 5px;
   }
 </style>
 

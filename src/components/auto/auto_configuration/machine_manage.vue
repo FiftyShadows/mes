@@ -218,7 +218,7 @@ export default {
     AddBatchMachine () {
       console.log(this.form.items.endItem, this.form.items.startItem)
       let regPos = /^\d+$/
-      if (regPos.test(this.form.items.endItem) && regPos(this.form.items.startItem.toString())) {
+      if (regPos.test(this.form.items.endItem) && regPos.test(this.form.items.startItem.toString())) {
         for (let i = 0; i <= this.form.items.endItem - this.form.items.startItem; i++) {
           this.form.item = this.form.items.startItem + i
           console.log(this.form.item)
