@@ -2,6 +2,11 @@
   <div class="Configurat">
     <el-tabs type="border-card" @tab-click="handleClick">
       <el-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name" :label="tab.name">
+        <el-tag type="info" style="width: 100%;text-align: left;height: 50px;line-height: 50px;">
+          生产管理
+          <el-button size="mini" type="primary" style="float: right; margin: 10px;" @click="openAdd(tab.name)">新增</el-button>
+          <el-button size="mini" type="primary" style="float: right; margin: 10px;" @click="dialogVisibleSort = true">排序</el-button>
+        </el-tag>
         <el-collapse v-model="activeName" accordion>
           <el-collapse-item v-for="(item,index) in totalData" :key="item.id" :title="item.name" :name="item.name">
             <el-form :model="item" :rules="rules" ref="ChangeData" label-width="100px" class="demo-ruleForm">
@@ -14,24 +19,43 @@
               <el-form-item label="排序*" prop="sortBy">
                 <el-input v-model="item.sortBy"></el-input>
               </el-form-item>
-              <el-form-item label="relateRoles :" prop="relateRoles">
+              <el-form-item label="relateRoles:" prop="relateRoles">
                 <el-checkbox-group v-model="item.relateRoles" style="float: left;" @change="checkbox(index)">
                   <el-checkbox v-for="items in options" :label="items.value" :key="items.value" border>{{items.name}}</el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
-              <el-form-item label="*" prop="exceptions">
+              <el-form-item label="" prop="exceptions">
                 <el-tag type="info" style="float: left; width: 100%;text-align: left;">
                   丝锭异常
                   <el-button size="mini" type="danger" style="float: right;" @click="saveExceptions(index)">修改</el-button>
                 </el-tag>
                 <el-button size="mini" type="danger" v-for="list in item.exceptions" plain round :key="list.name">{{list.name}}</el-button>
               </el-form-item>
-              <el-form-item label="*" prop="exceptions">
+              <el-form-item label="" prop="exceptions">
                 <el-tag type="info" style="float: left; width: 100%;text-align: left;">
                   丝锭备注
-                  <el-button size="mini" type="danger" style="float: right;" @click="saveExceptions(index)">修改</el-button>
+                  <el-button size="mini" type="danger" style="float: right;" @click="openNotes(index)">修改</el-button>
                 </el-tag>
                 <el-button size="mini" type="info" v-for="list in item.notes" plain round :key="list.name">{{list.name}}</el-button>
+              </el-form-item>
+              <el-form-item label="" prop="formConfig">
+                <el-tag type="info" style="float: left; width: 100%;text-align: left;">
+                  {{item.formConfig ? item.formConfig.name : '表单模板'}}
+                  <el-button size="mini" type="danger" style="float: right;" @click="openForms(index)">修改</el-button>
+                </el-tag>
+                <template v-if="item.formConfig">
+                  <div class="Form" v-for="item in item.formConfig.formFieldConfigs" :key="item.id">
+                    <el-input-number v-if="item.valueType === 'NUMBER' && item.inputType !== 'SELECTION'" label="请输入"></el-input-number>
+                    <el-input v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容"></el-input>
+                    <el-select v-model="val" v-if="item.inputType === 'SELECTION' && item.valueType !== 'BOOLEAN'" placeholder="请选择">
+                      <el-option v-for="item in item.selectOptions" :key="item" :label="item" :value="item"></el-option>
+                    </el-select>
+                    <el-select v-model="val1" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择">
+                      <el-option label="是" value="true"></el-option>
+                      <el-option label="否" value="false"></el-option>
+                    </el-select>
+                  </div>
+                </template>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="submitForm(index)" style="width: 100%;">保存</el-button>
@@ -41,6 +65,176 @@
         </el-collapse>
       </el-tab-pane>
     </el-tabs>
+    <el-dialog title="新增" :visible.sync="dialogVisibleAddProesses">
+      <el-form :model="productProesses">
+        <el-form-item label="产品" :label-width="formLabelWidthcode">
+          <el-input v-model="productProesses.product" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="名称" :label-width="formLabelWidthcode">
+          <el-input v-model="productProesses.name"></el-input>
+        </el-form-item>
+        <el-form-item label="排序" :label-width="formLabelWidthcode">
+          <el-input-number v-model="productProesses.sortBy" :step="1000" style="float: left;"></el-input-number>
+        </el-form-item>
+        <el-form-item label="role" :label-width="formLabelWidthcode">
+          <el-checkbox-group v-model="productProesses.relateRoles" style="float: left;" @change="checkbox(index)">
+            <el-checkbox v-for="items in options" :label="items.value" :key="items.value" border>{{items.name}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="" prop="exceptions">
+          <el-tag type="info" style="float: left; width: 100%;text-align: left;">
+            丝锭异常
+            <el-button size="mini" type="danger" style="float: right;" @click="saveExceptions(index)">修改</el-button>
+          </el-tag>
+          <el-button size="mini" type="danger" v-for="list in item.exceptions" plain round :key="list.name">{{list.name}}</el-button>
+        </el-form-item>
+        <el-form-item label="" prop="notes">
+          <el-tag type="info" style="float: left; width: 100%;text-align: left;">
+            丝锭备注
+            <el-button size="mini" type="danger" style="float: right;" @click="openNotes(index)">修改</el-button>
+          </el-tag>
+          <el-button size="mini" type="info" v-for="list in item.notes" plain round :key="list.name">{{list.name}}</el-button>
+        </el-form-item>
+        <el-form-item label="" prop="formConfig">
+          <el-tag type="info" style="float: left; width: 100%;text-align: left;">
+            {{item.formConfig ? item.formConfig.name : '表单模板'}}
+            <el-button size="mini" type="danger" style="float: right;" @click="openForms(index)">修改</el-button>
+          </el-tag>
+          <template v-if="item.formConfig">
+            <div class="Form" v-for="item in item.formConfig.formFieldConfigs" :key="item.id">
+              <el-input-number v-if="item.valueType === 'NUMBER' && item.inputType !== 'SELECTION'" label="请输入"></el-input-number>
+              <el-input v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容"></el-input>
+              <el-select v-model="val" v-if="item.inputType === 'SELECTION' && item.valueType !== 'BOOLEAN'" placeholder="请选择">
+                <el-option v-for="item in item.selectOptions" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+              <el-select v-model="val1" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择">
+                <el-option label="是" value="true"></el-option>
+                <el-option label="否" value="false"></el-option>
+              </el-select>
+            </div>
+          </template>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="排 序" :visible.sync="dialogVisibleSort" width="50%" :before-close="handleClose">
+      <el-tag title="" type="info" v-model="sortData" v-for="(item,index) in totalData" :key="index" :closable="false" style="width: 60%; text-align: left; margin-bottom: 5px;">
+        <el-tag type="danger" style="font-weight: bold;">{{item.name}}</el-tag>
+        <div style="float: right;">
+          <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="totalData.indexOf(item) != 0" @click="up(index)" circle></el-button>
+          <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="totalData.indexOf(item) != totalData.length-1" @click="down(index)" circle></el-button>
+        </div>
+      </el-tag>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="sortProesses()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="丝锭异常" :visible.sync="dialogVisibleSilkExceptions" :before-close="handleClose1">
+      <el-checkbox :indeterminate="isIndeterminateSilk" v-model="checkAllSilk" @change="handleCheckAllSilkChange">全选</el-checkbox>
+      <div style="margin: 15px 0;"></div>
+      <el-checkbox-group v-model="checkedSilks" @change="handleCheckedSilksChange">
+        <el-checkbox v-for="item in silkExceptTable" :label="item" :key="item" style="margin:5px;" border>{{item}}</el-checkbox>
+      </el-checkbox-group>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="saveSilk()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="丝锭备注" :visible.sync="dialogVisibleSilkNotes" :before-close="handleClose2">
+      <el-checkbox :indeterminate="isIndeterminateNote" v-model="checkAllNote" @change="handleCheckAllNoteChange">全选</el-checkbox>
+      <div style="margin: 15px 0;"></div>
+      <el-checkbox-group v-model="checkedNotes" @change="handleCheckedNoteChange">
+        <el-checkbox v-for="item in silkNoteTable" :label="item" :key="item" style="margin:5px;" border>{{item}}</el-checkbox>
+      </el-checkbox-group>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="saveNotes()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="表单模板选择" :visible.sync="dialogVisibleForm">
+      <el-select v-model="value" filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod" :loading="loading" @change="choseForm()">
+        <el-option v-for="item in optionsForm" :key="item.id" :label="item.name" :value="item.name"></el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisibleCreate = true">新建表单</el-button>
+        <!-- <el-button type="primary" @click="addForm()">确 定</el-button> -->
+      </span>
+    </el-dialog>
+    <el-dialog title="新建模板" :visible.sync="dialogVisibleCreate">
+      <el-form :model="createform">
+        <el-form-item label="活动名称" :label-width="formLabelWidth">
+          <el-input v-model="createform.name" auto-complete="off" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <div>
+        <h3 class="Formcode">
+          表单字段
+          <el-button class="addBtn" type="danger" icon="el-icon-edit" @click="dialogVisibleNewCode = true; createCode = {}; showSelectOptions = []" circle size="mini"></el-button>
+        </h3>
+        <el-table :data="showCode" border style="100%">
+          <el-table-column fixed prop="name" label="字段名称"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="120">
+            <template slot-scope="scope">
+              <el-button @click="saveCode(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
+              <el-button @click="deletedCode(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addNewFormcode()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="新建表单字段" :visible.sync="dialogVisibleNewCode">
+      <el-form :model="createCode">
+        <el-form-item label="名称" :label-width="formLabelWidthcode">
+          <el-input v-model="createCode.name" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="是否必输" :label-width="formLabelWidthcode">
+          <el-checkbox v-model="createCode.required" label="必输项" border style="float:left;"></el-checkbox>
+        </el-form-item>
+        <el-form-item label="值类型" :label-width="formLabelWidthcode">
+          <el-select v-model="createCode.valueType" placeholder="请选择" style="float:left;">
+            <el-option v-for="item in optionsCode" :label="item.name" :value="item.valueType" :key="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="输入类型" :label-width="formLabelWidthcode">
+          <el-select v-model="createCode.inputType" placeholder="请选择" style="float:left;">
+            <el-option label="默认" value="DEFAULT"></el-option>
+            <el-option label="下拉列表" value="SELECTION"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="createCode.inputType === 'SELECTION'" label="选项值" :label-width="formLabelWidthcode">
+          <h3 class="Formcode">
+            选项值
+            <el-button class="addBtn" type="danger" icon="el-icon-edit" @click="dialogVisibleSelects = true; selectOptions = {}" circle size="mini"></el-button>
+          </h3>
+          <el-table :data="showSelectOptions" border style="100%">
+            <el-table-column fixed prop="name" label="选项值"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="120">
+              <template slot-scope="scope">
+                <el-button @click="saveOptions(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
+                <el-button @click="deletedOptions(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addNewCode()">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="新建选项值" :visible.sync="dialogVisibleSelects">
+      <el-form :model="selectOptions">
+        <el-form-item label="活动名称" :label-width="formLabelWidth">
+          <el-input v-model="selectOptions.name" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addSelectOptions()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -48,12 +242,24 @@ export default {
   name: 'Configurat',
   data () {
     return {
+      val: '',
+      val1: '',
+      index: '',
       selectId: '',
       activeName: '',
       tabs: {},
       tabType: '',
-      tabData: '',
-      totalData: [], // 每个操作的数据
+      tabData: '', // 标题
+      dialogVisibleAddProesses: false, // 新增工序
+      dialogVisibleSort: false, // 排序弹框
+      dialogVisibleSilkExceptions: false, // 丝锭异常弹框
+      dialogVisibleSilkNotes: false, // 丝锭备注
+      dialogVisibleForm: false, // 搜索表单
+      dialogVisibleCreate: false, // 新建表单
+      dialogVisibleNewCode: false, // 添加字段
+      dialogVisibleSelects: false, // 添加下拉列表值
+      totalData: [], // 工艺列表
+      oldData: [], 
       ChangeData: {},
       rules: {},
       options: [
@@ -63,24 +269,74 @@ export default {
         {name: '等级确认', value: 'SUBMIT_GRADE'},
         {name: '标样丝', value: 'SUBMIT_DYEING_SAMPLE'}
       ],
+      // 多选框
       checkAll: false,
       checked: [],
       isIndeterminate: true,
+      // 新增工序
+      productProesses: {
+        product: ''
+      },
+      // 排序
+      sortData: [],
+      // 丝锭异常
+      silkExcepts: [],
+      checkAllSilk: false,
+      isIndeterminateSilk: true,
+      silkExceptTable: [], // 所有丝锭异常列表
+      checkedSilks: [], // 已有异常
+      // 丝锭备注
+      silkNotes: [],
+      checkAllNote: false,
+      isIndeterminateNote: true,
+      silkNoteTable: [], // 所有丝锭备注列表
+      checkedNotes: [], // 已有备注
+      // 表单选择
+      formFieldConfigs: '', // 最终显示的数据
+      formLabelWidth: '',
+      formLabelWidthcode: '120px',
+      optionsForm: [], // 获取数据
+      value: '', // 绑定搜索值
+      loading: false,
+      createform: { // 新建表单
+        name: '',
+        formFieldConfigs: [] // 要添加字段
+      },
+      showCode: [], // 展示新建字段
+      saveIndex: '',
+      isSave: false,
+      createCode: {
+        name: '',
+        multi: false,
+        inputType: '',
+        required: true,
+        selectOptions: [],
+        valueType: ''
+      }, // 新建字段
+      optionsCode: [ // 值类型选择
+        {name: '文本', valueType: 'STRING'},
+        {name: '布尔', valueType: 'BOOLEAN'},
+        {name: '数值', valueType: 'NUMBER'}
+      ],
+      selectOptions: {}, // 新建选项值
+      showSelectOptions: [], // 展示列表
+      isSaveOption: false, // 是否修改下拉值
     }
   },
   created () {
-    console.log(this.$route.query)
     this.selectId = this.$route.query.name
-    // this.activeName = this.$route.query.name
     this.getTabsTitles()
   },
   methods: {
+    openAdd (name) {
+      this.productProesses.product = name
+      this.dialogVisibleAddProesses = true
+    },
     checkbox (index) {
-      console.log(this.totalData[index].relateRoles)
+      console.log(this.totalData[index])
     },
     getTabsTitles () {
       this.$api.getProduct().then(res => {
-        // console.log(res)
         this.tabs = res.data
       })
     },
@@ -97,15 +353,268 @@ export default {
         this.totalData = res.data.sort(function (a,b) {
           return a.sortBy - b.sortBy
         })
+        this.oldData = res.data.sort(function (a,b) {
+          return a.sortBy - b.sortBy
+        })
+         // relateRoles如为null出bug
+        for (let i = 0; i < this.totalData.length; i++) {
+          if (!this.totalData[i].relateRoles) {
+            this.totalData[i].relateRoles = []
+          }
+        }
       })
     },
     submitForm (index) {
-      console.log(index)
-      console.log(this.totalData[index])
+      this.$api.sortProesses(this.totalData[index]).then(res => {
+        console.log(res)
+        this.$notify({
+          title: '成功',
+          message: '保存成功',
+          type: 'success'
+        })
+      })
     },
+    // 关闭弹窗
+    handleClose(done) {
+      for (let i = 0; i < this.tabs.length; i++) {
+        if (this.tabs[i].name === this.tabType) {
+          this.tabData = this.tabs[i]
+        }
+      }
+      this.$api.getTabData(this.tabData.id).then(res => {
+        console.log(res)
+        this.totalData = res.data.sort(function (a,b) {
+          return a.sortBy - b.sortBy
+        })
+         // relateRoles如为null出bug
+        for (let i = 0; i < this.totalData.length; i++) {
+          if (!this.totalData[i].relateRoles) {
+            this.totalData[i].relateRoles = []
+          }
+        }
+      })
+      this.totalData = this.oldData
+      this.dialogVisibleSort = false
+    },
+    handleClose1 (done) {
+      this.checkedSilks = []
+      this.dialogVisibleSilkExceptions = false
+    },
+    handleClose2 (done) {
+      this.checkedNotes = []
+      this.dialogVisibleSilkNotes = false      
+    },
+    // 排序（有修改不能复用）
+    getOldSort() {
+      for (let i = 0; i < this.totalData.length; i++) {
+        this.sortData = this.totalData.map(item => {
+          return item.sortBy
+        })
+      }
+    },
+    up (i) {
+      this.getOldSort()
+      let arr = this.totalData
+      this.totalData = []
+      let temp = arr[i]
+      arr[i] = arr[i - 1]
+      arr[i - 1] = temp
+      for (let j = 0; j < arr.length; j++) {
+        arr[j].sortBy = this.sortData[j]
+        this.totalData.push(arr[j])
+      }
+      console.log(this.totalData)
+    },
+    down (i) {
+      this.getOldSort()
+      let arr = this.totalData
+      this.totalData = []
+      let temp = arr[i]
+      arr[i] = arr[i + 1]
+      arr[i + 1] = temp
+      for (let j = 0; j < arr.length; j++) {
+        arr[j].sortBy = this.sortData[j]
+        this.totalData.push(arr[j])
+      }
+      console.log(this.totalData)
+    },
+    sortProesses () {
+      for (let i = 0; i < this.totalData.length; i++) {
+        this.$api.sortProesses(this.totalData[i]).then(res => {
+          console.log(res)
+          this.dialogVisibleSort = false
+        })
+      }
+    },
+    // 丝锭异常
     saveExceptions (index) {
-
-    }
+      this.index = index
+      this.$api.silkExceptions().then(res => {
+        this.silkExcepts = res.data
+        this.silkExceptTable = res.data.map(item => {
+          return item.name
+        })
+        this.dialogVisibleSilkExceptions = true
+        this.checkedSilks = this.totalData[index].exceptions.map(item => {
+          return item.name
+        })
+      })
+    },
+    handleCheckAllSilkChange(val) {
+      console.log(val)
+      this.checkedSilks = val ? this.silkExceptTable : [];
+      this.isIndeterminateSilk = false;
+    },
+    handleCheckedSilksChange(value) {
+      let checkedCount = value.length;
+      this.checkAllSilk = checkedCount === this.silkExceptTable.length;
+      this.isIndeterminateSilk = checkedCount > 0 && checkedCount < this.silkExceptTable.length;
+    },
+    saveSilk () {
+      for (let j = 0; j < this.checkedSilks.length; j++) {
+        for (let i = 0; i < this.silkExcepts.length; i++) {
+          if (this.checkedSilks[j] === this.silkExcepts[i].name) {
+            this.checkedSilks[j] = this.silkExcepts[i]
+          }
+        }
+      }
+      console.log(this.checkedSilks)
+      this.totalData[this.index].exceptions = this.checkedSilks
+      this.dialogVisibleSilkExceptions = false
+    },
+    // 丝锭备注
+    openNotes (index) {
+      this.index = index
+      this.$api.silkNotes().then(res => {
+        this.silkNotes = res.data
+        this.silkNoteTable = res.data.map(item => {
+          return item.name
+        })
+        this.dialogVisibleSilkNotes = true
+        this.checkedNotes = this.totalData[index].notes.map(item => {
+          return item.name
+        })
+      })
+    },
+    handleCheckAllNoteChange(val) {
+      console.log(val)
+      this.checkedNotes = val ? this.silkNoteTable : [];
+      this.isIndeterminateNote = false;
+    },
+    handleCheckedNoteChange(value) {
+      let checkedCount = value.length;
+      this.checkAllNote = checkedCount === this.silkNoteTable.length;
+      this.isIndeterminateNote = checkedCount > 0 && checkedCount < this.silkNoteTable.length;
+    },
+    saveNotes () {
+      for (let j = 0; j < this.checkedNotes.length; j++) {
+        for (let i = 0; i < this.silkNotes.length; i++) {
+          if (this.checkedNotes[j] === this.silkNotes[i].name) {
+            this.checkedNotes[j] = this.silkNotes[i]
+          }
+        }
+      }
+      this.totalData[this.index].notes = this.checkedNotes
+      this.dialogVisibleSilkNotes = false
+    },
+    // 表单模板选择
+    // addForm () {
+    //   this.dialogVisibleForm = false
+    //   if (this.formFieldConfigs !== '') {
+    //     this.totalData[this.index].formConfig = this.formFieldConfigs
+    //   }
+    // },
+    openForms (i) {
+      this.index = i
+      this.dialogVisibleForm = true
+    },
+    remoteMethod(query) {
+      if (query !== '') {
+        this.loading = true;
+        this.$api.searchForms(query).then(res => {
+          console.log(res)
+          this.loading = false
+          this.optionsForm = res.data
+        })
+      } else {
+        this.optionsForm = [];
+      }
+    },
+    choseForm () {
+      for (let i = 0; i < this.optionsForm.length; i++) {
+        if (this.optionsForm[i].name === this.value) {
+          this.value = this.optionsForm[i]
+        }
+      }
+      this.totalData[this.index].formConfig = this.value
+      this.dialogVisibleForm = false
+      console.log(this.value)
+    },
+    addNewCode () { // 添加新字段
+      this.createCode.selectOptions = this.showSelectOptions.map(item => {return item.name}) // 传入select
+      this.createCode.multi = false
+      if (this.isSave) {
+        this.showCode[this.saveIndex] = this.createCode
+        this.dialogVisibleNewCode = false
+        this.isSave = false
+      } else {
+        this.showCode.push(this.createCode)
+        this.dialogVisibleNewCode = false
+      }
+      console.log(this.showCode)
+    },
+    addNewFormcode () { // 添加方法
+      this.createform.formFieldConfigs = this.showCode
+      this.$api.addCode(this.createform).then(res => {
+        console.log(res)
+        this.$notify({
+          title: '成功',
+          message: '添加成功',
+          type: 'success'
+        })
+        this.formFieldConfigs = res.data // 赋值完成
+        if (this.formFieldConfigs !== '') {
+          this.totalData[this.index].formConfig = this.formFieldConfigs
+        }
+        this.dialogVisibleCreate = false
+        this.dialogVisibleForm = false
+      })
+      // console.log(this.createform)
+    },
+    saveCode (i, row) {
+      console.log(row)
+      this.isSave = true
+      this.saveIndex = i
+      this.createCode = row
+      this.dialogVisibleNewCode = true
+    },
+    deletedCode (i, row) {
+      // this.createform.formFieldConfigs.splice(i, 1)
+      this.showCode.splice(i, 1)
+      console.log(this.createform.formFieldConfigs, this.showCode)
+    },
+    addSelectOptions () {
+      console.log(this.selectOptions)
+      if (this.isSaveOption) {
+        // console.log(this.selectIndex)
+        this.showSelectOptions[this.selectIndex] = this.selectOptions
+        this.isSaveOption = false
+        this.dialogVisibleSelects = false
+      } else {
+        this.showSelectOptions.push(this.selectOptions)
+        this.dialogVisibleSelects = false
+      }
+    },
+    saveOptions (i, row) {
+      this.isSaveOption = true
+      this.selectIndex = i
+      this.selectOptions = row
+      this.dialogVisibleSelects = true
+      console.log(this.selectIndex)
+    },
+    deletedOptions (i, row) {
+      this.showSelectOptions.splice(i, 1)
+    },
   }
 }
 </script>
@@ -113,5 +622,21 @@ export default {
 .el-collapse-item__header {
   text-align: left;
 }
+.Formcode {
+  background: #909399;
+  margin: 0;
+  line-height: 40px;
+  color: white;
+  text-align: left;
+  padding-left: 10px;
+  .addBtn {
+    float: right;
+    margin: 4px;
+  }
+}
+.Form {
+  width: 30%;
+  float: left;
+  margin-top: 10px;
+}
 </style>
-

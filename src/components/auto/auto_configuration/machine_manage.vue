@@ -121,7 +121,7 @@ export default {
   name: 'machine',
   data () {
     return {
-      name: '',
+      name: 'A3',
       arrLineName: [],
       tableData: [],
       dialogVisibleAdd: false,

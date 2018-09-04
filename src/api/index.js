@@ -54,6 +54,23 @@ axios.interceptors.response.use(function (response) {
 export default {
   axios,
   /* --------------自动化--------------- */
+  // 当前--搜索
+  getCurrentSelect (data) {
+    return axios.get(`${baseAutoUrl}/autoComplete/silkCar?q=${data}`)
+  },
+  // 当前--获取搜索数据
+  getSearchData (data) {
+    return axios.get(`${baseAutoUrl}/silkCarRuntimes/${data}`)
+  },
+  // 当前--获取操作员
+  getOperators (data) {
+    return axios.get(`${baseAutoUrl}/operators/${data}`)
+  },
+  // 当前--获取选择器数据
+  getProcesses (data) {
+    return axios.get(`${baseAutoUrl}/products/${data}/productProcesses`)
+  },
+
   // 车间管理--获取数据
   getWorkShopsLine () {
     return axios.get(`${baseAutoUrl}/workshops`)
@@ -115,6 +132,34 @@ export default {
   // 产品管理--配置--获取数据
   getTabData (data) {
     return axios.get(`${baseAutoUrl}/products/${data}/productProcesses`)
+  },
+  // 产品管理--配置--修改顺序
+  sortProesses (data) {
+    return axios.put(`${baseAutoUrl}/productProcesses/${data.id}`, data)
+  },
+  // 产品管理--配置--丝锭异常
+  silkExceptions () {
+    return axios.get(`${baseAutoUrl}/silkExceptions`)
+  },
+  // 产品管理--配置--丝锭备注
+  silkNotes () {
+    return axios.get(`${baseAutoUrl}/silkNotes`)
+  },
+  // 产品管理--配置--表单搜索
+  searchForms (data) {
+    return axios.get(`${baseAutoUrl}/autoComplete/formConfig?q=${data}`)
+  },
+  // 产品管理--配置--新建字段
+  addCode (data) {
+    return axios.post(`${baseAutoUrl}/formConfigs`, data)
+  },
+  // 产品管理--配置--修改字段
+  saveCode (data) {
+    return axios.put(`${baseAutoUrl}/formConfigs/${data.id}`, data)
+  },
+  // 产品管理--配置--添加工序
+  addProductProcesses (data) {
+    return axios.post(`${baseAutoUrl}/productProcesses`, data)
   },
 
   // 丝车管理--获取数据

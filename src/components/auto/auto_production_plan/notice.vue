@@ -45,7 +45,7 @@
       </el-form-item>
       <el-form-item label="批号" :label-width="formLabelWidth" required>
         <!-- <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
-        <el-select v-model="form.batch" filterable remote reserve-keyword placeholder="请输入位号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
+        <el-select v-model="form.batch" filterable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
           <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
         </el-select>
       </el-form-item>

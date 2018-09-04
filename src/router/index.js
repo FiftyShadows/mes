@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import Help from '@/components/help'
+// 当前
+import Current from '@/components/auto/auto-current/index'
 // 管理员
 import Permissions from '@/components/auto/auto_admin/admin_permissions'
 import User from '@/components/auto/auto_admin/user'
@@ -29,6 +31,11 @@ export default new Router({
       name: 'index',
       component: Index,
       children: [
+        {
+          path: '/current/index',
+          name: 'current',
+          component: Current
+        },
         {// 权限
           path: '/admin/perminssions',
           name: 'permissions',

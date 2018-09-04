@@ -22,13 +22,17 @@
             <i class="el-icon-d-caret"></i>
             <span slot="title">自动化</span>
           </el-menu-item>
-          <el-menu-item index="">
+          <el-menu-item index="/current/index">
             <i class="el-icon-search"></i>
             <span slot="title">当前</span>
           </el-menu-item>
+          <el-menu-item index="#">
+            <i class="el-icon-tickets"></i>
+            <span slot="title">历史</span>
+          </el-menu-item>
           <el-submenu index="2">
             <template slot="title">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-location"></i>
               <span slot="title">管理员 </span>
             </template>
             <el-menu-item-group>
@@ -39,7 +43,7 @@
           </el-submenu>
           <el-submenu index="3">
             <template slot="title">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-document"></i>
               <span slot="title">生产计划</span>
             </template>
             <el-menu-item-group>
@@ -50,7 +54,7 @@
           </el-submenu>
           <el-submenu index="4">
             <template slot="title">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-setting"></i>
               <span slot="title">自动化配置</span>
             </template>
             <el-menu-item-group>
