@@ -74,14 +74,14 @@
           <el-input v-model="productProesses.name"></el-input>
         </el-form-item>
         <el-form-item label="排序" :label-width="formLabelWidthcode">
-          <el-input-number v-model="productProesses.sortBy" :step="1000" style="float: left;"></el-input-number>
+          <el-input-number v-model="productProesses.sortBy" :min="0" :step="1000" style="float: left;"></el-input-number>
         </el-form-item>
         <el-form-item label="role" :label-width="formLabelWidthcode">
-          <el-checkbox-group v-model="productProesses.relateRoles" style="float: left;" @change="checkbox(index)">
+          <el-checkbox-group v-model="productProesses.relateRoles" style="float: left;" @change="checkbox()">
             <el-checkbox v-for="items in options" :label="items.value" :key="items.value" border>{{items.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="" prop="exceptions">
+        <!-- <el-form-item label="" prop="exceptions">
           <el-tag type="info" style="float: left; width: 100%;text-align: left;">
             丝锭异常
             <el-button size="mini" type="danger" style="float: right;" @click="saveExceptions(index)">修改</el-button>
@@ -113,7 +113,7 @@
               </el-select>
             </div>
           </template>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
