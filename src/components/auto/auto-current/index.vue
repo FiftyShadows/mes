@@ -15,31 +15,41 @@
           </el-select>
         </div>
         <div class="checkBoxA">
-          <el-checkbox :indeterminateA="isIndeterminateA" v-model="checkAllA" class="checkAll" @change="handleCheckAllAChange">全选</el-checkbox>
+          <el-checkbox :indeterminateA="isIndeterminateA" v-model="checkAllA" class="checkAll" @change="handleCheckAllAChange">A面--全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedBatchA" @change="handleCheckedBatchAChange" size="small">
             <el-checkbox v-if="batch.sideType === 'A'" v-for="(batch,index) in batchOptions" :label="batch" :key="batch" border>
               {{batch.sideType}}-{{batch.row}}-{{batch.col}}
               <br>
-              <span style="color: #F56C6C;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>
+              <span style="color: #E6A23C; font-weight: bolder;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>
             </el-checkbox>
           </el-checkbox-group>
         </div>
         <div class="checkBoxB">
-          <el-checkbox :indeterminateB="isIndeterminateB" v-model="checkAllB" class="checkAll" @change="handleCheckAllBChange">全选</el-checkbox>
+          <el-checkbox :indeterminateB="isIndeterminateB" v-model="checkAllB" class="checkAll" @change="handleCheckAllBChange">B面--全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedBatchB" @change="handleCheckedBatchBChange" size="small">
             <el-checkbox v-if="batch.sideType === 'B'" v-for="(batch,index) in batchOptions" :label="batch" :key="batch" border>
               {{batch.sideType}}-{{batch.row}}-{{batch.col}}
               <br>
-              <span style="color: #F56C6C;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>
+              <span style="color: #F56C6C; font-weight: bolder;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>
             </el-checkbox>
           </el-checkbox-group>
         </div>
       </div>
       <div class="right">
         <ul>
-          <li v-for="i in 100" :key="i">{{i}}</li>
+          <li v-for="i in 100" :key="i">
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span>卡片名称</span>
+                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+              </div>
+              <div v-for="o in 4" :key="o" class="text item">
+                {{'列表内容 ' + o }}
+              </div>
+            </el-card>
+          </li>
         </ul>
       </div>
     </div>
@@ -220,5 +230,23 @@ export default {
 .el-checkbox.is-bordered {
   height: auto;
   width: 22%;
+}
+// 人员操作
+.text {
+  font-size: 14px;
+}
+.item {
+  margin-bottom: 18px;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both
+}
+.box-card {
+  width: 480px;
 }
 </style>

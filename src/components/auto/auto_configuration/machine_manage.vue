@@ -6,7 +6,7 @@
     </el-select>
     <el-button type="primary" style="float:right;margin-bottom: 10px;" @click="dialogVisibleAdd = true">批量新增</el-button>
     <el-button type="primary" @click="dialogVisibleSingleAdd = true" style="float: right; margin-right: 10px;margin-bottom: 10px;">新增</el-button>
-    <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="id" label="ID">
       </el-table-column>
       <el-table-column prop="line.name" label="线别">
@@ -121,6 +121,7 @@ export default {
   name: 'machine',
   data () {
     return {
+      loading: false,
       name: 'A3',
       arrLineName: [],
       tableData: [],
@@ -162,7 +163,6 @@ export default {
   },
   created () {
     this.getSelected()
-    this.getMachine()
   },
   computed: {
     // spindleSeq (i) {
@@ -183,10 +183,22 @@ export default {
         // this.arrLineName = Array.from(new Set(this.arrLineName))
         // console.log(this.arrLineName)
         this.arrLineName = res.data.lines
+        this.startGetMachine()
         console.log(this.arrLineName)
       })
     },
+    startGetMachine () {
+      this.loading = true
+      console.log(this.arrLineName[0])
+      this.name = this.arrLineName[0].name
+      this.$api.getMachines(this.arrLineName[0].id).then(res => {
+        console.log(res)
+        this.tableData = res.data
+        this.loading = false
+      })
+    },
     getMachine () {
+      this.loading = true
       for (let i = 0; i < this.arrLineName.length; i++) {
         if (this.arrLineName[i].name === this.name) {
           this.seachMachine = this.arrLineName[i]
@@ -195,6 +207,7 @@ export default {
       this.$api.getMachines(this.seachMachine.id).then(res => {
         console.log(res)
         this.tableData = res.data
+        this.loading = false
       })
     },
     AddMachine () {

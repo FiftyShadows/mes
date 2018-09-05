@@ -2,7 +2,7 @@
 <template>
   <div class="product">
     <el-button type="primary" @click="openAdd()" style="float: right; margin-right: 10px;margin-bottom: 10px;">新增</el-button>
-    <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="name" label="等级">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
@@ -43,6 +43,7 @@ export default {
   name: 'product',
   data () {
     return {
+      loading: false,
       tableData: [],
       form: {
         name: ''
@@ -63,9 +64,11 @@ export default {
   },
   methods: {
     getProduct () {
+      this.loading = true
       this.$api.getProduct().then(res => {
         this.tableData = res.data
         console.log(res)
+        this.loading = false
       })
     },
     openSave (row) {

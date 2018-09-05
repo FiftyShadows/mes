@@ -2,7 +2,7 @@
 <template>
   <div class="admin">
     <el-button type="primary" @click="openAdd()" style="float: right; margin-bottom: 10px;">添 加</el-button>
-    <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="name" label="名称" width="200">
       </el-table-column>
       <el-table-column prop="code" label="权限CODE">
@@ -14,7 +14,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <el-dialog title="新 建" :visible.sync="dialogFormVisibleADD">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
@@ -30,7 +29,6 @@
         <el-button type="primary" v-else @click="SaveAdmin()">确 定</el-button>
       </div>
     </el-dialog>
-
     <el-dialog title="新 建" :visible.sync="dialogFormVisibleADD">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
@@ -45,7 +43,6 @@
         <el-button type="primary" @click="addAdmin()">确 定</el-button>
       </div>
     </el-dialog>
-
     <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave" @close="closeDialog()">
       <el-form :model="form2" :rules="rules" ref="form2">
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
@@ -67,6 +64,7 @@ export default {
   name: 'admin',
   data () {
     return {
+      loading: false,
       tableData: [],
       isAdd: true,
       formLabelWidth: '120px',
@@ -91,8 +89,10 @@ export default {
   },
   methods: {
     getAdmin () {
+      this.loading = true
       this.$api.getAdmins().then(res => {
         this.tableData = res.data
+        this.loading = false
       })
     },
     closeDialog () {

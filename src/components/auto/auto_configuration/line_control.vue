@@ -7,7 +7,7 @@
     <el-button type="primary" style="float:right;" @click="dialogVisibleAdd = true">批量新增</el-button>
     <el-button type="primary" @click="dialogVisibleSingleAdd = true" style="float: right; margin-right: 10px;">新增</el-button>
 
-    <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="workshop.name" label="车间">
       </el-table-column>
       <el-table-column prop="name" label="名称">
@@ -98,6 +98,7 @@ export default {
   name: 'LineControl',
   data () {
     return {
+      loading: false,
       options: [],
       value: '',
       tableData: [],
@@ -138,11 +139,14 @@ export default {
     // })
     this.$api.getWorkShopsLine().then(res => {
       this.options = res.data
+      this.value = this.options[0].name
+      this.getLine(this.options[0].name)
       console.log(this.options)
     })
   },
   methods: {
     getLine (value) {
+      this.loading = true
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].name === value) {
           this.keyId = this.options[i].id
@@ -159,6 +163,7 @@ export default {
             this.tableData[i].doffingType = '手动落桶'
           }
         }
+        this.loading = false
       })
     },
     createSingleLine () {

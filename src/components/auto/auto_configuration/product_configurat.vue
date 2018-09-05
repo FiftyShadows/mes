@@ -2,7 +2,7 @@
   <div class="Configurat">
     <el-tabs type="border-card" @tab-click="handleClick">
       <el-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name" :label="tab.name">
-        <el-tag type="info" style="width: 100%;text-align: left;height: 50px;line-height: 50px;">
+        <el-tag type="success" style="width: 100%;text-align: left;height: 50px;line-height: 50px;">
           生产管理
           <el-button size="mini" type="primary" style="float: right; margin: 10px;" @click="openAdd(tab.name)">新增</el-button>
           <el-button size="mini" type="primary" style="float: right; margin: 10px;" @click="dialogVisibleSort = true">排序</el-button>

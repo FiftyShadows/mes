@@ -8,7 +8,7 @@
     <el-button type="primary" @click="dialogVisibleBatchAdd = true" style="float: right; margin-bottom: 10px;">批量新增</el-button>
     <el-button type="primary" @click="dialogFormVisibleAdd = true" style="float: right; margin-bottom: 10px; margin-right: 10px;">新 增</el-button>
 
-    <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="code" label="丝车条码">
       </el-table-column>
       <el-table-column prop="number" label="丝车编号">
@@ -125,6 +125,7 @@ export default {
   name: 'silkCar',
   data () {
     return {
+      loading: false,
       tableData: [],
       dialogVisibleBatchAdd: false,
       currentPage: 5,
@@ -165,6 +166,7 @@ export default {
   },
   methods: {
     getSilks () {
+      this.loading = true
       console.log(this.pageSize, this.first, this.silk)
       this.$api.getSilks({
         pageSize: this.pageSize,
@@ -181,6 +183,7 @@ export default {
             this.tableData[i].type = '普通丝车'
           }
         }
+        this.loading = false
       })
     }, 
     closeDialog () {

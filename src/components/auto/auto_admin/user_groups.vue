@@ -6,7 +6,7 @@
     <el-button type="primary" icon="el-icon-search" circle @click="seach()" ></el-button>
   </div>
   <el-button type="primary" @click="openAddgroup()" style="float: right; margin-bottom: 10px;">新 增</el-button>
-  <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+  <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
     <el-table-column fixed prop="name" label="名称">
     </el-table-column>
     <el-table-column fixed="right" label="操作">
@@ -15,7 +15,6 @@
       </template>
     </el-table-column>
   </el-table>
-
   <el-dialog title="新 建" :visible.sync="dialogFormVisibleADD">
     <el-form :model="form" :rules="rules" ref="form">
       <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
@@ -39,15 +38,12 @@
       <el-button type="primary" @click="addUserGroups()">确 定</el-button>
     </div>
   </el-dialog>
-
   <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave">
-
     <el-form :model="saveForm" :rules="rules" ref="saveForm">
       <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
         <el-input v-model="saveForm.name" auto-complete="off" required></el-input>
       </el-form-item>
     </el-form>
-
     <el-button type="primary" style="margin-left: 20px;" disabled>roles</el-button>
     <div style="margin: 15px 0;"></div>
     <el-checkbox :indeterminate="isIndeterminateRoles" v-model="checkAllRoles" @change="handleCheckAllChange1">全选</el-checkbox>
@@ -55,19 +51,16 @@
       <el-checkbox v-for="item in options" :label="item.value" :key="item.value" border>{{item.name}}</el-checkbox>
     </el-checkbox-group>
     <hr>
-
     <el-button type="primary" style="margin-left: 20px;" disabled>添加权限</el-button>
     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
     <div style="margin: 15px 0;"></div>
     <el-checkbox-group v-model="checkedOptions" @change="handleCheckedOptionsChange" style="width: 80%; margin:auto;">
       <el-checkbox v-for="item in permissions" :label="item" :key="item" border>{{item}}</el-checkbox>
     </el-checkbox-group>
-
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisibleSave = false">取 消</el-button>
       <el-button type="primary" @click="saveUserGroups()">确 定</el-button>
     </div>
-
   </el-dialog>
 
 </div>
@@ -77,6 +70,7 @@ export default {
   name: 'usergroups',
   data () {
     return {
+      loading: false,
       seacrhUsergroup: '',
       tableData: [],
       dialogFormVisibleADD: false,
@@ -122,8 +116,10 @@ export default {
   },
   methods: {
     getUsergroups () {
+      this.loading = true
       this.$api.getUsergroups().then(res => {
         this.tableData = res.data
+        this.loading = false
         console.log(this.tableData)
       })
     },

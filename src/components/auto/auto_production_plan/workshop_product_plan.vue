@@ -5,7 +5,7 @@
       <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.name"></el-option>
     </el-select>
 
-    <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="line.name" label="线别">
       </el-table-column>
       <el-table-column prop="batch.batchNo" label="批号">
@@ -29,6 +29,7 @@ export default {
   name: 'workshopPlan',
   data () {
     return {
+      loading: false,
       seachName: 'A车间',
       seachId: '',
       LinesTable: [],
@@ -55,6 +56,7 @@ export default {
       })
     },
     getLinePlans () {
+      this.loading = true
       for (let i = 0; i < this.options.length; i++) {
         if (this.LinesTable[i].name === this.seachName) {
           this.seachId = this.LinesTable[i].id
@@ -72,6 +74,7 @@ export default {
           }
           console.log(arr.sort())
         }
+        this.loading = false
       })
     }
   }

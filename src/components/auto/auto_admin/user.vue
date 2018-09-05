@@ -6,8 +6,7 @@
       <el-button type="primary" icon="el-icon-search" circle @click="seach()" ></el-button>
     </div>
     <el-button type="primary" @click="opendialog()" style="float: right; margin-bottom: 10px;">新 增</el-button>
-
-    <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="name" label="名称">
       </el-table-column>
       <el-table-column fixed prop="hrId" label="hrId">
@@ -23,7 +22,6 @@
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage2" 
       :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
     </el-pagination>
-
     <el-dialog title="添加用户" :visible.sync="dialogSeach">
       <el-input v-model.trim="seacrhAll" @input="seachAllUsers()" placeholder="请输入..." style="width: 60%;"></el-input>
       <el-table ref="singleTable" :data="tableData2" highlight-current-row @current-change="handleChange" style="width: 100%">
@@ -40,9 +38,7 @@
         <el-button type="primary" @click="addUser()">添 加</el-button>
       </div>
     </el-dialog>
-
     <el-dialog :title="`${form.name}——权限设置`" :visible.sync="dialogSetAdmin">
-
       <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
         <el-form-item label="活动名称" prop="name" :label-width="formLabelWidth">
           <el-input v-model="form.name" auto-complete="off" style="width: 200px;float: left;" required></el-input>
@@ -51,9 +47,7 @@
           <el-checkbox v-model="form.admin" style="float: left;" border required>admin</el-checkbox>
         </el-form-item>
       </el-form>
-
       <div style="width: 80%; margin: auto;">
-
         <hr>
         <el-button type="info" style="margin-left: 20px;" disabled>用户组</el-button>
         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
@@ -61,7 +55,6 @@
         <el-checkbox-group v-model="checkedOperators" @change="handleCheckedCitiesChange">
           <el-checkbox v-for="item in operatorOptions" :label="item" :key="item" border>{{item}}</el-checkbox>
         </el-checkbox-group>
-
         <hr>
         <el-button type="info" style="margin-left: 20px;" disabled>roles</el-button>
         <!-- <el-checkbox :indeterminate="isIndeterminate1" v-model="workersCheckAll" @change="workersCheckAllChange">全选</el-checkbox> -->
@@ -69,7 +62,6 @@
         <el-checkbox-group v-model="checkedWorkers" @change="handleCheckedWorkersChange">
           <el-checkbox v-for="item in workersOptions" :label="item.value" :key="item.value" border>{{item.name}}</el-checkbox>
         </el-checkbox-group>
-
         <hr>
         <el-button type="info" style="margin-left: 20px;" disabled>添加权限</el-button>
         <el-checkbox :indeterminate="isIndeterminate2" v-model="permissionsCheckAll" @change="permissionsCheckAllChange">全选</el-checkbox>
@@ -77,15 +69,11 @@
         <el-checkbox-group v-model="checkedPermissions" @change="handleCheckedPermissionsChange">
           <el-checkbox v-for="item in permissions" :label="item" :key="item" border>{{item}}</el-checkbox>
         </el-checkbox-group>
-
       </div>
-
       <div slot="footer" class="dialog-footer" style="margin-top: 20px">
         <el-button type="primary" @click="setAdmin()">修 改</el-button>
       </div>
-      
     </el-dialog>
-
   </div>
 </template>
 <script>
@@ -93,6 +81,7 @@ export default {
   name: 'users',
   data () {
     return {
+      loading: false,
       seacrhUsers: '',
       tableData: [],
       tableData2: [],
@@ -142,6 +131,7 @@ export default {
   },
   methods: {
     getUsers () {
+      this.loading = true
       this.$api.getUser({
         pageSize: '',
         first: '',
@@ -157,9 +147,11 @@ export default {
         console.log(res)
         this.totalData = res.data
         this.tableData = res.data.operators
+        this.loading = false
       })
     },
     seach () {
+      this.loading = true
       this.$api.getUser({
         pageSize: this.pageSize,
         first: this.first,
@@ -167,6 +159,7 @@ export default {
       }).then(res => {
         this.totalData = res.data
         this.tableData = res.data.operators
+        this.loading = false
       })
     },
     addUser () {

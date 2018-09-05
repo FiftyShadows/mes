@@ -6,7 +6,7 @@
       <el-button type="primary" icon="el-icon-search" circle @click="seach()" ></el-button>
     </div>
     <el-button type="primary" @click="openAddBatch()" style="float: right; margin-bottom: 10px;">新 增</el-button>
-    <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="workshop.name" label="车间">
       </el-table-column>
       <el-table-column prop="product.name" label="产品">
@@ -122,6 +122,7 @@ export default {
   name: 'batchManage',
   data () {
     return {
+      loading: false,
       isADD: true,
       currentPage2: 5,
       tableData: [],
@@ -177,6 +178,7 @@ export default {
   },
   methods: {
     getBatch (pageSize, first, q) {
+      this.loading = true
       console.log(pageSize, first)
       this.$api.getBatches({
         pageSize: pageSize,
@@ -184,7 +186,8 @@ export default {
         q: q
       }).then(res => {
         this.tableData = res.data.batches
-        console.log(this.tableData)
+        this.loading = false
+        // console.log(this.tableData)
       })
     },
     seach () {

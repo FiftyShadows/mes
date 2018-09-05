@@ -2,7 +2,7 @@
 <template>
   <div>
     <el-button class="createLine" type="primary" @click="dialogVisibleAdd = true" style="float: right; margin-bottom: 10px;">新 增</el-button>
-    <el-table :data="tableData" border :stripe="true" style="width: 100%" height="500">
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="corporation.name" label="公司">
       </el-table-column>
       <el-table-column prop="name" label="名称">
@@ -48,6 +48,7 @@ export default {
   name: 'workshops',
   data () {
     return {
+      loading: false,
       tableData: [],
       dialogVisibleAdd: false,
       dialogVisibleSave: false,
@@ -70,11 +71,13 @@ export default {
   },
   methods: {
     WorkShopLine () { // 获取数据
+    this.loading = true
       this.$api.getWorkShopsLine().then(res => {
         console.log(res)
         this.tableData = res.data
         this.$store.state.workShops = res.data
         console.log(this.$store.state.workShops)
+        this.loading = false
       })
     },
     createWorkshop () {
