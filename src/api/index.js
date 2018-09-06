@@ -58,17 +58,33 @@ export default {
   getCurrentSelect (data) {
     return axios.get(`${baseAutoUrl}/autoComplete/silkCar?q=${data}`)
   },
-  // 当前--获取搜索数据
+  // 当前--搜索数据
   getSearchData (data) {
     return axios.get(`${baseAutoUrl}/silkCarRuntimes/${data}`)
   },
-  // 当前--获取操作员
+  // 当前--操作员
   getOperators (data) {
     return axios.get(`${baseAutoUrl}/operators/${data}`)
   },
-  // 当前--获取选择器数据
+  // 当前--选择器数据
   getProcesses (data) {
     return axios.get(`${baseAutoUrl}/products/${data}/productProcesses`)
+  },
+  // 当前--操作人生产工序
+  productProcesses (data) {
+    return axios.get(`${baseAutoUrl}/productProcesses/${data}`)
+  },
+  // 当前--丝锭异常
+  getSilkExceptions (data) {
+    return axios.get(`${baseAutoUrl}/silkExceptions/${data}`)
+  },
+  // 当前--丝车备注
+  getSilkNotes (data) {
+    return axios.get(`${baseAutoUrl}/silkNotes/${data}`)
+  },
+  // 当前--操作数据保存
+  ProductProcessSubmitEvents (data) {
+    return axios.post(`${baseAutoUrl}/ProductProcessSubmitEvents`, data)
   },
 
   // 车间管理--获取数据

@@ -18,7 +18,7 @@
           <el-checkbox :indeterminateA="isIndeterminateA" v-model="checkAllA" class="checkAll" @change="handleCheckAllAChange">A面--全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedBatchA" @change="handleCheckedBatchAChange" size="small">
-            <el-checkbox v-if="batch.sideType === 'A'" v-for="(batch,index) in batchOptions" :label="batch" :key="batch" border>
+            <el-checkbox v-if="batch.sideType === 'A'" v-for="(batch,index) in batchOptions" :key="index" :label="batch" style="overflow:hidden;" border>
               {{batch.sideType}}-{{batch.row}}-{{batch.col}}
               <br>
               <span style="color: #E6A23C; font-weight: bolder;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>
@@ -29,7 +29,7 @@
           <el-checkbox :indeterminateB="isIndeterminateB" v-model="checkAllB" class="checkAll" @change="handleCheckAllBChange">B面--全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedBatchB" @change="handleCheckedBatchBChange" size="small">
-            <el-checkbox v-if="batch.sideType === 'B'" v-for="(batch,index) in batchOptions" :label="batch" :key="batch" border>
+            <el-checkbox v-if="batch.sideType === 'B'" v-for="(batch,index) in batchOptions" :label="batch" :key="index" style="overflow:hidden;" border>
               {{batch.sideType}}-{{batch.row}}-{{batch.col}}
               <br>
               <span style="color: #F56C6C; font-weight: bolder;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>
@@ -38,21 +38,46 @@
         </div>
       </div>
       <div class="right">
-        <ul>
-          <li v-for="i in 100" :key="i">
-            <el-card class="box-card">
-              <div slot="header" class="clearfix">
-                <span>卡片名称</span>
-                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-              </div>
-              <div v-for="o in 4" :key="o" class="text item">
-                {{'列表内容 ' + o }}
-              </div>
-            </el-card>
-          </li>
-        </ul>
+        <el-card v-for="(item,index) in eventSources" v-if="item.productProcess" :key="index" class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="float: left;">
+              <span style="font-weight: bold; font-size: 17px; color: #409EFF;">{{item.operator.name}}</span>
+              <i>{{item.fireDateTime}}</i>
+            </span>
+            <el-button style="float: right;" type="warning" size="mini">{{item.productProcess.name}}</el-button>
+          </div>
+          <div class="silk" v-if="item.silkExceptions">
+            <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭异常</el-tag>
+            <el-button size="mini" type="danger" v-for="exceptions in item.silkExceptions" plain round :key="exceptions.id">{{exceptions.name}}</el-button>
+          </div>
+          <div class="notes" v-if="item.silkNotes">
+            <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭备注</el-tag>
+            <el-button size="mini" type="info" v-for="notes in item.silkNotes" plain round :key="notes.id">{{notes.name}}</el-button>
+          </div>
+          <div class="silkform" v-if="item.formConfig">
+            <el-tag type="info" style="float: left; width: 100%;text-align: left;">{{item.formConfig.name}}</el-tag>
+            <!-- <label>{{}}</label> -->
+          </div>
+        </el-card>
       </div>
     </div>
+    <el-dialog title="收货地址" :visible.sync="dialogFormVisibleEvents">
+      <el-form :model="EventsForm">
+        <el-form-item label="" :label-width="formLabelWidth">
+          <el-input v-model="EventsForm.name" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="活动区域" :label-width="formLabelWidth">
+          <el-select v-model="EventsForm.exceptions" multiple placeholder="请选择">
+            <el-option v-for="item in silkOptions" :key="item.id" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -80,6 +105,13 @@ export default {
       checkedBatchB: [], // B
       isIndeterminateB: true,
       checkAllB: false,
+      EventsForm: {
+        name: '',
+        exceptions: []
+      }, // 提交事件数据
+      formLabelWidth: '120px',
+      silkOptions: [], //丝锭异常列表
+      dialogFormVisibleEvents: false,
     }
   },
   created () {},
@@ -100,19 +132,56 @@ export default {
         console.log(res)
         this.searchData = res.data
         this.ifShow = true
-        this.silkCarRecord = this.searchData.silkCarRecord
-        this.eventSources = this.searchData.eventSources
+        this.silkCarRecord = this.searchData.silkCarRecord // 丝车信息
+        this.eventSources = this.searchData.eventSources // 操作员操作
         if (this.silkCarRecord.doffingType === 'MANUAL') {
           this.doffingType = '手动落桶'
         } else {
           this.doffingType = '自动落桶'
         }
         for (let i = 0; i < this.eventSources.length; i++) {
+           // 操作员信息
           this.$api.getOperators(this.eventSources[i].operator.id).then(res => {
-            console.log(res.data)
             this.eventSources[i].operator = res.data
           })
+          // 时间
+          let date = new Date(this.eventSources[i].fireDateTime)//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+          let Y = date.getFullYear() + '-'
+          let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+          let D = date.getDate() + ' '
+          let H = date.getHours() + ':'
+          let m = date.getMinutes() + ' '
+          this.eventSources[i].fireDateTime = Y + M + D + H + m
+          // 工序信息
+          if (this.eventSources[i].productProcess) {// productProcess中存在空的 所以需要判断之后在进行 要不然会报错
+            this.$api.productProcesses(this.eventSources[i].productProcess.id).then(res => {
+              this.eventSources[i].productProcess = res.data
+            })
+          }
+          // 丝锭异常
+          if (this.eventSources[i].silkExceptions) {
+            for (let j = 0; j < this.eventSources[i].silkExceptions.length; j++) {
+              this.$api.getSilkExceptions(this.eventSources[i].silkExceptions[j].id).then(res => {
+                // console.log(res.data)
+                this.eventSources[i].silkExceptions[j] = res.data
+              })
+            }
+          }
+          // 丝锭备注
+          if (this.eventSources[i].silkNotes) {
+            for (let j = 0; j < this.eventSources[i].silkNotes.length; j++) {
+              this.$api.getSilkNotes(this.eventSources[i].silkNotes[j].id).then(res => {
+                console.log(res.data)
+                this.eventSources[i].silkNotes[j] = res.data
+              })
+            }
+          }
+          // 表单
+          if (this.eventSources[i].formConfig) {
+
+          }
         }
+        console.log('eventSources', this.eventSources)
         this.batchOptions = this.searchData.silkRuntimes
         this.getProcesses()
       })
@@ -129,23 +198,23 @@ export default {
           }
         })
       } else {
-        this.options = [];
+        this.options = []
       }
     },
-    handleCheckAllAChange(val) {
+    handleCheckAllAChange (val) {
       this.checkedBatchA = val ? this.batchOptions : []
       this.isIndeterminate = false
     },
-    handleCheckedBatchAChange(value) {
+    handleCheckedBatchAChange (value) {
       let checkedCount = value.length
       this.checkAllA = checkedCount === this.batchOptions.length
       this.isIndeterminateA = checkedCount > 0 && checkedCount < this.batchOptions.length
     },
-    handleCheckAllBChange(val) {
-      this.checkedBatchB = val ? this.batchOptions : [];
+    handleCheckAllBChange (val) {
+      this.checkedBatchB = val ? this.batchOptions : []
       this.isIndeterminate = false
     },
-    handleCheckedBatchBChange(value) {
+    handleCheckedBatchBChange (value) {
       let checkedCount = value.length
       this.checkAllB = checkedCount === this.batchOptions.length
       this.isIndeterminateB = checkedCount > 0 && checkedCount < this.batchOptions.length
@@ -197,6 +266,9 @@ export default {
         }
       }
     }
+    .el-checkbox {
+      font-weight: bold;
+    }
     .right {
       position: absolute;
       width: 50%;
@@ -247,6 +319,6 @@ export default {
   clear: both
 }
 .box-card {
-  width: 480px;
+  width: 100%;
 }
 </style>
