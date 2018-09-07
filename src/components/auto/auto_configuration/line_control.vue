@@ -21,7 +21,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog title="新增" :visible.sync="dialogVisibleSingleAdd" width="30%">
+    <el-dialog title="新增" :visible.sync="dialogVisibleSingleAdd" width="50%">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="车间">
           <el-select v-model="ruleForm.value" placeholder="请选择车间" clearable style="float:left;">
@@ -29,7 +29,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" style="width:50%;float: left;"></el-input>
         </el-form-item>
         <el-form-item label="落桶" prop="resource">
           <el-radio-group v-model="ruleForm.resource" style="float:left;">
@@ -44,7 +44,7 @@
       </span>
     </el-dialog>
     
-    <el-dialog title="批量新增" :visible.sync="dialogVisibleAdd" width="40%">
+    <el-dialog title="批量新增" :visible.sync="dialogVisibleAdd" width="50%">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="车间">
           <el-select v-model="ruleForm.value" placeholder="请选择车间" clearable style="float:left;">
@@ -69,7 +69,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="修改" :visible.sync="dialogVisibleSave" width="30%">
+    <el-dialog title="修改" :visible.sync="dialogVisibleSave" width="50%">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="车间">
           <el-select v-model="ruleForm.value" placeholder="请选择车间" clearable style="float:left;">
@@ -77,7 +77,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" style="width:50%;float: left;"></el-input>
         </el-form-item>
         <el-form-item label="落桶" prop="resource">
           <el-radio-group v-model="ruleForm.resource" style="float:left;">

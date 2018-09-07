@@ -52,7 +52,7 @@ export default {
       tableData: [],
       dialogVisibleAdd: false,
       dialogVisibleSave: false,
-      formLabelWidth: '120px',
+      formLabelWidth: '80px',
       form1: {
         company: '高新',
         name: ''

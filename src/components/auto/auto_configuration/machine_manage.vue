@@ -21,7 +21,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="新 增" :visible.sync="dialogVisibleSingleAdd" width="40%">
+    <el-dialog title="新 增" :visible.sync="dialogVisibleSingleAdd" width="50%">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="线别" :label-width="formLabelWidth" prop="name" required>
           <el-select v-model="form.name" placeholder="选择线别.." style="float: left;" >
@@ -52,7 +52,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="批量新增" :visible.sync="dialogVisibleAdd" width="40%">
+    <el-dialog title="批量新增" :visible.sync="dialogVisibleAdd" width="50%">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="线别" :label-width="formLabelWidth" prop="name" required>
           <el-select v-model="form.name" placeholder="选择线别.." style="float: left;" >
@@ -86,7 +86,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="修 改" :visible.sync="dialogVisibleSave" width="40%">
+    <el-dialog title="修 改" :visible.sync="dialogVisibleSave" width="50%">
       <el-form :model="form1" :rules="rules" ref="form">
         <el-form-item label="线别" :label-width="formLabelWidth">
           <el-select v-model="form1.line.name" placeholder="选择线别.." prop="name" style="float: left;" required>

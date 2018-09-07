@@ -1,13 +1,13 @@
 <template>
   <div class="Configurat">
-    <el-tabs type="border-card" @tab-click="handleClick">
+    <el-tabs type="border-card" v-model="activeTabs" @tab-click="handleClick">
       <el-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name" :label="tab.name">
         <el-tag type="success" style="width: 100%;text-align: left;height: 50px;line-height: 50px;">
           生产管理
           <el-button size="mini" type="primary" style="float: right; margin: 10px;" @click="openAdd(tab.name)">新增</el-button>
           <el-button size="mini" type="primary" style="float: right; margin: 10px;" @click="dialogVisibleSort = true">排序</el-button>
         </el-tag>
-        <el-collapse v-model="activeName" accordion>
+        <el-collapse v-model="activeColapse" accordion>
           <el-collapse-item v-for="(item,index) in totalData" :key="item.id" :title="item.name" :name="item.name">
             <el-form :model="item" :rules="rules" ref="ChangeData" label-width="100px" class="demo-ruleForm">
               <el-form-item label="权限code" prop="id">
@@ -253,7 +253,8 @@ export default {
       val1: '',
       index: '',
       selectId: '',
-      activeName: '',
+      activeColapse: '',
+      activeTabs: '',
       tabs: {},
       tabType: '',
       tabData: '', // 标题
@@ -375,21 +376,28 @@ export default {
     getTabsTitles () {
       this.$api.getProduct().then(res => {
         this.tabs = res.data
+        this.activeTabs = this.selectId
+        console.log(this.activeTabs)
+        let product = {
+          name: this.activeTabs
+        }
+        this.handleClick(product)
       })
     },
     handleClick (tab, event) {
-      // console.log(tab, event)
       this.tabType = tab.name
+      console.log(this.tabType)
       for (let i = 0; i < this.tabs.length; i++) {
         if (this.tabs[i].name === this.tabType) {
           this.tabData = this.tabs[i]
         }
       }
       this.$api.getTabData(this.tabData.id).then(res => {
-        console.log(res)
         this.totalData = res.data.sort(function (a,b) {
           return a.sortBy - b.sortBy
         })
+        this.activeColapse = this.totalData[0].name // 默认打开第一个
+        console.log(this.totalData)
         this.oldData = res.data.sort(function (a,b) {
           return a.sortBy - b.sortBy
         })
