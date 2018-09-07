@@ -4,13 +4,17 @@
       <el-select v-model="code" filterable clearable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" @change="getSearchData" :loading="loading" style="float:left;">
         <el-option v-for="item in options" :key="item.id" :label="item.code" :value="item.number"></el-option>
       </el-select>
+      <el-radio-group v-model="order" style="float: right;" @change="changeOrder">
+        <el-radio-button label="正序"></el-radio-button>
+        <el-radio-button label="逆序"></el-radio-button>
+      </el-radio-group>
     </div>
     <div class="current-main" v-if="ifShow">
       <div class="left">
         <div class="silkCarRecord">
           <h3>丝车条码：{{silkCarRecord.silkCar.code}} — {{silkCarRecord.silkCar.number}} — {{silkCarRecord.batch.spec}}</h3>
           <h4>丝车车次：{{silkCarRecord.id}} <el-tag size="mini">{{doffingType}}</el-tag></h4>
-          <el-select v-model="process" clearable placeholder="请选择" class="selected">
+          <el-select v-model="process" placeholder="请选择" class="selected" @change="productProcess">
             <el-option v-for="item in selected" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
         </div>
@@ -42,40 +46,50 @@
           <div slot="header" class="clearfix">
             <span style="float: left;">
               <span style="font-weight: bold; font-size: 17px; color: #409EFF;">{{item.operator.name}}</span>
-              <i>{{item.fireDateTime}}</i>
+              <span style="font-weight: bold;">{{item.operator.hrId}}</span>
+              <br>
+              <i>{{item.firstTime}}</i>
             </span>
             <el-button style="float: right;" type="warning" size="mini">{{item.productProcess.name}}</el-button>
           </div>
-          <div class="silk" v-if="item.silkExceptions">
+          <div class="silkRuntimes" v-if="item.silkRuntimes[0]">
+            <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭</el-tag>
+            <el-button size="mini" class="btn silkbtn" v-for="runtimes in item.silkRuntimes" plain :key="runtimes.id">
+              {{runtimes.sideType}}面 —— {{runtimes.row}} —— {{runtimes.col}}
+            </el-button>
+          </div>
+          <div class="silkExceptions" v-if="item.silkExceptions">
             <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭异常</el-tag>
-            <el-button size="mini" type="danger" v-for="exceptions in item.silkExceptions" plain round :key="exceptions.id">{{exceptions.name}}</el-button>
+            <el-button size="mini" class="btn" type="danger" v-for="exceptions in item.silkExceptions" plain round :key="exceptions.id">{{exceptions.name}}</el-button>
           </div>
-          <div class="notes" v-if="item.silkNotes">
+          <div class="notes" style="margin-top: 10px;" v-if="item.silkNotes">
             <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭备注</el-tag>
-            <el-button size="mini" type="info" v-for="notes in item.silkNotes" plain round :key="notes.id">{{notes.name}}</el-button>
+            <el-button size="mini" class="btn" type="info" v-for="notes in item.silkNotes" plain round :key="notes.id">{{notes.name}}</el-button>
           </div>
-          <div class="silkform" v-if="item.formConfig">
+          <div class="silkform" style="margin-top: 10px;" v-if="item.formConfig">
             <el-tag type="info" style="float: left; width: 100%;text-align: left;">{{item.formConfig.name}}</el-tag>
-            <!-- <label>{{}}</label> -->
+            <div v-for="config in item.formConfig.formFieldConfigs" :key="config.id">
+              <el-tag class="btn">{{config.name}}</el-tag>
+              <el-tag class="btn">{{config.value}}</el-tag>
+            </div>
           </div>
         </el-card>
       </div>
     </div>
-    <el-dialog title="收货地址" :visible.sync="dialogFormVisibleEvents">
+    <el-dialog :title="dialogName" :visible.sync="dialogFormVisibleEvents">
       <el-form :model="EventsForm">
-        <el-form-item label="" :label-width="formLabelWidth">
-          <el-input v-model="EventsForm.name" disabled></el-input>
+        <el-form-item label="">
+          <el-input style="width: 60%;" v-model="EventsForm.name" disabled></el-input>
         </el-form-item>
-        <el-form-item label="活动区域" :label-width="formLabelWidth">
-          <el-select v-model="EventsForm.exceptions" multiple placeholder="请选择">
-            <el-option v-for="item in silkOptions" :key="item.id" :label="item.label" :value="item.value">
+        <el-form-item label="丝锭异常" :label-width="formLabelWidth">
+          <el-select style="float: left;" v-model="EventsForm.exceptions" multiple placeholder="请选择">
+            <el-option v-for="item in silkOptions" :key="item.id" :label="item.name" :value="item.name">
             </el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="submitEvents()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -87,6 +101,7 @@ export default {
     return {
       loading: false,
       code: '',
+      order: '正序', // 操作员显示顺序
       searchData: {}, // 返回的总数据
       ifShow: false, // 是否显示数据
       options: [],
@@ -112,14 +127,29 @@ export default {
       formLabelWidth: '120px',
       silkOptions: [], //丝锭异常列表
       dialogFormVisibleEvents: false,
+      dialogName: '',
     }
   },
   created () {},
   methods: {
+    changeOrder(val) {
+      console.log(val)
+      if (val === '正序') {
+        this.eventSources.sort(function (a, b) {
+          return a.fireDateTime - b.fireDateTime
+        })
+      } else {
+        this.eventSources.sort(function (a, b) {
+          return b.fireDateTime - a.fireDateTime
+        })
+      }
+      console.log(this.eventSources)
+    },
     getProcesses () {
       this.productsId = this.searchData.silkCarRecord.batch.product.id
       this.$api.getProcesses(this.productsId).then(res => {
         this.selected = res.data
+        console.log(this.selected)
       })
     },
     getSearchData (val) {
@@ -151,7 +181,7 @@ export default {
           let D = date.getDate() + ' '
           let H = date.getHours() + ':'
           let m = date.getMinutes() + ' '
-          this.eventSources[i].fireDateTime = Y + M + D + H + m
+          this.eventSources[i].firstTime = Y + M + D + H + m
           // 工序信息
           if (this.eventSources[i].productProcess) {// productProcess中存在空的 所以需要判断之后在进行 要不然会报错
             this.$api.productProcesses(this.eventSources[i].productProcess.id).then(res => {
@@ -171,20 +201,64 @@ export default {
           if (this.eventSources[i].silkNotes) {
             for (let j = 0; j < this.eventSources[i].silkNotes.length; j++) {
               this.$api.getSilkNotes(this.eventSources[i].silkNotes[j].id).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 this.eventSources[i].silkNotes[j] = res.data
               })
             }
           }
           // 表单
           if (this.eventSources[i].formConfig) {
-
+            let config = this.eventSources[i].formConfig // 要取的数据名
+            let value = this.eventSources[i].formConfigValueData // 对应数据值
+            let key = Object.keys(value)
+            // console.log(key)
+            for (let j = 0; j < config.formFieldConfigs.length; j++) { // 取id值判断数据
+              for (let t = 0; t < key.length; t++) {
+                if (key[t] === config.formFieldConfigs[j].id) {
+                  let keyt = key[t]
+                  // console.log(keyt,value[keyt])
+                  if (value[keyt] === true) {
+                    value[keyt] = '是'
+                  } else if (value[keyt] === false) {
+                    value[keyt] = '否'
+                  }
+                  this.eventSources[i].formConfig.formFieldConfigs[j].value = value[keyt]
+                }
+              }
+            }
+            console.log(this.eventSources[i].formConfig.formFieldConfigs)
           }
         }
         console.log('eventSources', this.eventSources)
         this.batchOptions = this.searchData.silkRuntimes
         this.getProcesses()
       })
+    },
+    productProcess (val) {
+      // console.log(val)
+      this.dialogName = val
+      this.EventsForm.name = this.silkCarRecord.silkCar.code
+      for (let i = 0; i < this.selected.length; i++) {
+        if (this.selected[i].name === this.dialogName) {
+          this.silkOptions = this.selected[i].exceptions
+        }
+      }
+      this.dialogFormVisibleEvents = true
+    },
+    submitEvents () { // 提交操作按钮
+      console.log(this.silkOptions, this.EventsForm.exceptions)
+      // for (let j = 0; j < this.EventsForm.exceptions; j++) {
+      //       console.log(this.EventsForm.exceptions[j])
+      //   for (let i = 0; i < this.silkOptions.length; i++) {
+      //       console.log(this.silkOptions[i].name)
+      //     if (this.silkOptions[i].name === this.EventsForm.exceptions[j]) {
+      //       this.EventsForm.exceptions[j] = this.silkOptions[i]
+      //       console.log(this.silkOptions[i])
+      //     }
+      //   }
+      // }
+      console.log(this.EventsForm)
+      // this.EventsForm.exceptions = []
     },
     remoteMethod(query) {
       if (query !== '') {
@@ -320,5 +394,13 @@ export default {
 }
 .box-card {
   width: 100%;
+  margin-bottom: 10px;
+}
+.btn {
+  margin-top: 10px;
+}
+.silkbtn {
+  display: block;
+  margin-left: 10px;
 }
 </style>

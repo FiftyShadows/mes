@@ -220,4 +220,6 @@ body > .el-container {
 .child_router {
   color: #303133;
 }
+
+/* 公共样式 */
 </style>
