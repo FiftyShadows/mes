@@ -128,11 +128,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.createLine {
-  // position: absolute;
-  // top: 70px;
-  // right: 20px;
-}
 .el-table {
   margin-top: 50px;
 }
