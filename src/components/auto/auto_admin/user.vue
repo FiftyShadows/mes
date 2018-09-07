@@ -19,8 +19,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage2" 
-      :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage2" :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
     </el-pagination>
     <el-dialog title="添加用户" :visible.sync="dialogSeach">
       <el-input v-model.trim="seacrhAll" @input="seachAllUsers()" placeholder="请输入..." style="width: 60%;"></el-input>
@@ -122,8 +121,7 @@ export default {
       permissions: [],
       permissionsCheckAll: false,
       isIndeterminate2: true,
-      checkedPermissions: [],
-      
+      checkedPermissions: []
     }
   },
   created () {
@@ -183,9 +181,9 @@ export default {
         this.tableData2 = res.data
       })
     },
-    handleChange(val) {
+    handleChange (val) {
       console.log(val)
-      this.multipleSelection = val;
+      this.multipleSelection = val
     },
     openSavegroups (val) {
       console.log(val)
@@ -236,14 +234,14 @@ export default {
     },
 
     // operator
-    handleCheckAllChange(val) {
-      this.checkedOperators = val ? this.operatorOptions : [];
-      this.isIndeterminate = false;
+    handleCheckAllChange (val) {
+      this.checkedOperators = val ? this.operatorOptions : []
+      this.isIndeterminate = false
     },
-    handleCheckedCitiesChange(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.operatorOptions.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.operatorOptions.length;
+    handleCheckedCitiesChange (value) {
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.operatorOptions.length
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.operatorOptions.length
     },
 
     // workers
@@ -252,34 +250,33 @@ export default {
     //   this.isIndeterminate1 = false;
     //   console.log(this.checkedWorkers)
     // },
-    handleCheckedWorkersChange(value) {
-      let checkedCount = value.length;
+    handleCheckedWorkersChange (value) {
+      let checkedCount = value.length
       // this.workersCheckAll = checkedCount === this.workersOptions.length;
-      this.isIndeterminate1 = checkedCount > 0 && checkedCount < this.workersOptions.length;
+      this.isIndeterminate1 = checkedCount > 0 && checkedCount < this.workersOptions.length
     },
 
     // permissions
     permissionsCheckAllChange (val) {
-      this.checkedPermissions = val ? this.permissions : [];
-      this.isIndeterminate2 = false;
+      this.checkedPermissions = val ? this.permissions : []
+      this.isIndeterminate2 = false
     },
     handleCheckedPermissionsChange (value) {
-      let checkedCount = value.length;
-      this.permissionsCheckAll = checkedCount === this.permissions.length;
-      this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.permissions.length;
+      let checkedCount = value.length
+      this.permissionsCheckAll = checkedCount === this.permissions.length
+      this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.permissions.length
     },
     // 分页
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
       this.pageSize = val
-      this.getUsers (this.pageSize, this.first, this.seacrhUsers)
+      this.getUsers(this.pageSize, this.first, this.seacrhUsers)
     },
-    handleCurrentChange(val) {
-      this.first = (--val)*this.pageSize
-      console.log(`当前页: ${this.first}`);
-      this.getUsers (this.pageSize, this.first, this.seacrhUsers)
+    handleCurrentChange (val) {
+      this.first = (--val) * this.pageSize
+      console.log(`当前页: ${this.first}`)
+      this.getUsers(this.pageSize, this.first, this.seacrhUsers)
     }
   }
 }
 </script>
-

@@ -232,24 +232,23 @@ export default {
       })
     },
     handleCheckAllChange (val) {
-      this.checkedOptions = val ? this.permissions : [];
-      this.isIndeterminate = false;
+      this.checkedOptions = val ? this.permissions : []
+      this.isIndeterminate = false
     },
     handleCheckedOptionsChange (value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.permissions.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.permissions.length;
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.permissions.length
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.permissions.length
     },
     handleCheckAllChange1 (val) {
-      this.checkedOptionsRoles = val ? this.optionsRoles : [];
-      this.isIndeterminateRoles = false;
+      this.checkedOptionsRoles = val ? this.optionsRoles : []
+      this.isIndeterminateRoles = false
     },
     handleCheckedOptionsChange1 (value) {
-      let checkedCount = value.length;
-      this.checkAllRoles = checkedCount === this.optionsRoles.length;
-      this.isIndeterminateRoles = checkedCount > 0 && checkedCount < this.optionsRoles.length;
+      let checkedCount = value.length
+      this.checkAllRoles = checkedCount === this.optionsRoles.length
+      this.isIndeterminateRoles = checkedCount > 0 && checkedCount < this.optionsRoles.length
     }
   }
 }
 </script>
-

@@ -28,8 +28,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage2" 
-      :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage2" :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
     </el-pagination>
 
     <el-dialog title="新 增" :visible.sync="dialogVisibleAdd" width="40%">
@@ -213,7 +212,7 @@ export default {
     },
     SaveBatch () {
       this.choseName()
-      for (let i = 0; i < this.tableData.length ;i++) {
+      for (let i = 0; i < this.tableData.length; i++) {
         if (this.tableData[i].workshop.name === this.form2.workshopName) {
           this.form2.workshop = this.tableData[i].workshop
         }
@@ -250,7 +249,7 @@ export default {
     },
     AddBatch () {
       this.choseName()
-      for(let i = 0; i < this.tableData.length ; i++) {
+      for (let i = 0; i < this.tableData.length; i++) {
         if (this.tableData[i].workshop.name === this.form.workshopName) {
           this.form.workshop = this.tableData[i].workshop
         }
@@ -280,15 +279,15 @@ export default {
         this.productID = this.POYID
       }
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
       this.pageSize = val
-      this.getBatch (this.pageSize, this.first, this.seacrhBatch)
+      this.getBatch(this.pageSize, this.first, this.seacrhBatch)
     },
-    handleCurrentChange(val) {
-      this.first = (--val)*this.pageSize
-      console.log(`当前页: ${this.first}`);
-      this.getBatch (this.pageSize, this.first, this.seacrhBatch)
+    handleCurrentChange (val) {
+      this.first = (--val) * this.pageSize
+      console.log(`当前页: ${this.first}`)
+      this.getBatch(this.pageSize, this.first, this.seacrhBatch)
     }
   }
 }

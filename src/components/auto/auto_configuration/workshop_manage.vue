@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     WorkShopLine () { // 获取数据
-    this.loading = true
+      this.loading = true
       this.$api.getWorkShopsLine().then(res => {
         console.log(res)
         this.tableData = res.data

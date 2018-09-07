@@ -63,9 +63,9 @@
           <el-input-number v-model="form.item" :min="1" label="输入锭数..." style="float: left;"></el-input-number>
         </el-form-item> -->
         <el-form-item label="批量机台(num)" :label-width="formLabelWidth" prop="items" required>
-          <el-input v-model.number="form.items.startItem" auto-complete="off" style="width: 80px; float: left;"></el-input> 
-          <span style="float: left;"> —— </span> 
-          <el-input v-model.number="form.items.endItem" auto-complete="off" style="width: 80px; float: left;"></el-input>
+          <el-input v-model.number="form.items.startItem" auto-complete="off" style="width: 80px;float: left;"></el-input>
+          <span style="float: left;"> —— </span>
+          <el-input v-model.number="form.items.endItem" auto-complete="off" style="width: 80px;float: left;"></el-input>
         </el-form-item>
         <el-form-item label="锭数" :label-width="formLabelWidth" prop="spindleNum" required>
           <el-input-number v-model="form.spindleNum" :min="1" label="输入锭数..."  @change="setSpindleSeq" style="float: left;"></el-input-number>
@@ -138,8 +138,7 @@ export default {
         items: {
           startItem: '',
           endItem: ''
-        },
-        
+        }
       },
       form1: {
         name: '',
@@ -156,7 +155,7 @@ export default {
         spindleNum: [
           { required: true, message: '请输入...', trigger: 'change' },
           { min: 1, message: '不能为空', trigger: 'change' }
-        ],
+        ]
       },
       formLabelWidth: '180px'
     }
@@ -253,12 +252,6 @@ export default {
       } else {
         this.$message.error('机台需要输入数字！')
       }
-      // if () {
-          
-      // } else {
-      //   this.$message.error('错了哦，这是一条错误消息');
-      // }
-
     },
     openSave (row) {
       console.log(row)
@@ -284,7 +277,7 @@ export default {
     },
     setSpindleSeq (val) {
       this.form.spindleSeq = []
-      for (let i = 1; i < val+1; i++) {
+      for (let i = 1; i < val + 1; i++) {
         this.form.spindleSeq.push(i)
       }
     },

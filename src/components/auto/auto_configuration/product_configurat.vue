@@ -267,7 +267,7 @@ export default {
       dialogVisibleNewCode: false, // 添加字段
       dialogVisibleSelects: false, // 添加下拉列表值
       totalData: [], // 工艺列表
-      oldData: [], 
+      oldData: [],
       ChangeData: {},
       rules: {},
       options: [
@@ -290,7 +290,7 @@ export default {
         sortBy: 0,
         relateRoles: [],
         exceptions: [],
-        notes:[],
+        notes: [],
         formConfig: {
           name: null,
           formFieldConfigs: []
@@ -328,7 +328,7 @@ export default {
         name: '',
         multi: false,
         inputType: '',
-        required: true,
+        required: false,
         selectOptions: [],
         valueType: ''
       }, // 新建字段
@@ -339,7 +339,7 @@ export default {
       ],
       selectOptions: {}, // 新建选项值
       showSelectOptions: [], // 展示列表
-      isSaveOption: false, // 是否修改下拉值
+      isSaveOption: false // 是否修改下拉值
     }
   },
   created () {
@@ -355,7 +355,7 @@ export default {
         sortBy: 0,
         relateRoles: [],
         exceptions: [],
-        notes:[],
+        notes: [],
         formConfig: {
           name: null,
           formFieldConfigs: []
@@ -393,15 +393,15 @@ export default {
         }
       }
       this.$api.getTabData(this.tabData.id).then(res => {
-        this.totalData = res.data.sort(function (a,b) {
+        this.totalData = res.data.sort(function (a, b) {
           return a.sortBy - b.sortBy
         })
         this.activeColapse = this.totalData[0].name // 默认打开第一个
         console.log(this.totalData)
-        this.oldData = res.data.sort(function (a,b) {
+        this.oldData = res.data.sort(function (a, b) {
           return a.sortBy - b.sortBy
         })
-         // relateRoles如为null出bug
+        // relateRoles如为null出bug
         for (let i = 0; i < this.totalData.length; i++) {
           if (!this.totalData[i].relateRoles) {
             this.totalData[i].relateRoles = []
@@ -420,7 +420,7 @@ export default {
       })
     },
     // 关闭弹窗
-    handleClose(done) { // 刷新单个列表
+    handleClose (done) { // 刷新单个列表
       for (let i = 0; i < this.tabs.length; i++) {
         if (this.tabs[i].name === this.tabType) {
           this.tabData = this.tabs[i]
@@ -428,10 +428,10 @@ export default {
       }
       this.$api.getTabData(this.tabData.id).then(res => {
         console.log(res)
-        this.totalData = res.data.sort(function (a,b) {
+        this.totalData = res.data.sort(function (a, b) {
           return a.sortBy - b.sortBy
         })
-         // relateRoles如为null出bug
+        // relateRoles如为null出bug
         for (let i = 0; i < this.totalData.length; i++) {
           if (!this.totalData[i].relateRoles) {
             this.totalData[i].relateRoles = []
@@ -447,7 +447,7 @@ export default {
     },
     handleClose2 (done) {
       this.checkedNotes = []
-      this.dialogVisibleSilkNotes = false      
+      this.dialogVisibleSilkNotes = false
     },
     // 新增
     addExceptions () {
@@ -539,7 +539,7 @@ export default {
       })
     },
     // 排序（有修改不能复用）
-    getOldSort() {
+    getOldSort () {
       for (let i = 0; i < this.totalData.length; i++) {
         this.sortData = this.totalData.map(item => {
           return item.sortBy
@@ -594,17 +594,17 @@ export default {
         })
       })
     },
-    handleCheckAllSilkChange(val) {
+    handleCheckAllSilkChange (val) {
       console.log(val)
-      this.checkedSilks = val ? this.silkExceptTable : [];
-      this.isIndeterminateSilk = false;
+      this.checkedSilks = val ? this.silkExceptTable : []
+      this.isIndeterminateSilk = false
     },
-    handleCheckedSilksChange(value) {
-      let checkedCount = value.length;
-      this.checkAllSilk = checkedCount === this.silkExceptTable.length;
-      this.isIndeterminateSilk = checkedCount > 0 && checkedCount < this.silkExceptTable.length;
+    handleCheckedSilksChange (value) {
+      let checkedCount = value.length
+      this.checkAllSilk = checkedCount === this.silkExceptTable.length
+      this.isIndeterminateSilk = checkedCount > 0 && checkedCount < this.silkExceptTable.length
     },
-    saveSilk () {// 最后赋值异常
+    saveSilk () { // 最后赋值异常
       for (let j = 0; j < this.checkedSilks.length; j++) {
         for (let i = 0; i < this.silkExcepts.length; i++) {
           if (this.checkedSilks[j] === this.silkExcepts[i].name) {
@@ -631,15 +631,15 @@ export default {
         })
       })
     },
-    handleCheckAllNoteChange(val) {
+    handleCheckAllNoteChange (val) {
       console.log(val)
-      this.checkedNotes = val ? this.silkNoteTable : [];
-      this.isIndeterminateNote = false;
+      this.checkedNotes = val ? this.silkNoteTable : []
+      this.isIndeterminateNote = false
     },
-    handleCheckedNoteChange(value) {
-      let checkedCount = value.length;
-      this.checkAllNote = checkedCount === this.silkNoteTable.length;
-      this.isIndeterminateNote = checkedCount > 0 && checkedCount < this.silkNoteTable.length;
+    handleCheckedNoteChange (value) {
+      let checkedCount = value.length
+      this.checkAllNote = checkedCount === this.silkNoteTable.length
+      this.isIndeterminateNote = checkedCount > 0 && checkedCount < this.silkNoteTable.length
     },
     saveNotes () { // 最后赋值备注
       for (let j = 0; j < this.checkedNotes.length; j++) {
@@ -664,16 +664,16 @@ export default {
       this.index = i
       this.dialogVisibleForm = true
     },
-    remoteMethod(query) { // 搜索
+    remoteMethod (query) { // 搜索
       if (query !== '') {
-        this.loading = true;
+        this.loading = true
         this.$api.searchForms(query).then(res => {
           console.log(res)
           this.loading = false
           this.optionsForm = res.data
         })
       } else {
-        this.optionsForm = [];
+        this.optionsForm = []
       }
     },
     choseForm () { // 直接选择表单赋值
@@ -687,7 +687,7 @@ export default {
       console.log(this.value)
     },
     addNewCode () { // 添加新字段
-      this.createCode.selectOptions = this.showSelectOptions.map(item => {return item.name}) // 传入select
+      this.createCode.selectOptions = this.showSelectOptions.map(item => { return item.name }) // 传入select
       this.createCode.multi = false
       if (this.isSave) {
         this.showCode[this.saveIndex] = this.createCode
@@ -749,7 +749,7 @@ export default {
     },
     deletedOptions (i, row) {
       this.showSelectOptions.splice(i, 1)
-    },
+    }
   }
 }
 </script>

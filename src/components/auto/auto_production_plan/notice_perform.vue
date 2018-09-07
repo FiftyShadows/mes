@@ -55,7 +55,7 @@ export default {
         this.tableData = res.data.productPlanNotify.lineMachines // 未执行
         this.notice = res.data.productPlanNotify
         this.batchNo = this.notice.batch.batchNo
-        
+
         if (this.notice.type === 'CHANGE_BATCH') {
           this.notice.type = '改批'
         } else if (this.notice.type === 'SAMPLE') {
@@ -71,12 +71,11 @@ export default {
           }
         }
 
-
         for (let i = 0; i < this.tableData.length; i++) {
           if (this.tableData[i].startDate) {
             let date = new Date(this.tableData[i].startDate)
             let Y = date.getFullYear() + '-'
-            let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'
+            let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
             let D = date.getDate() + ' '
             let H = date.getHours() + ':'
             let m = date.getMinutes() + ' '
@@ -105,7 +104,7 @@ export default {
     perform (row) {
       console.log(row)
       row.extra = {
-        canExe : true
+        canExe: true
       }
       let form = {}
       form.lineMachine = row
@@ -136,8 +135,8 @@ export default {
     text-align: left;
  }
  .closeBth {
-   position: absolute; 
-   top: 70px; 
+   position: absolute;
+   top: 70px;
    right: 20px;
  }
  .performNotice {
@@ -146,4 +145,3 @@ export default {
    right: 100px;
  }
 </style>
-

@@ -131,7 +131,7 @@ export default {
       selected: [], // 选择器数据
       process: '',
       productsId: [], // 产品id
-       // 多选框
+      // 多选框
       checkedBatchA: [], // A
       isIndeterminateA: true,
       batchOptions: [],
@@ -148,17 +148,17 @@ export default {
         silkNotes: null,
         silkRuntimes: [],
         formConfig: null, // 表单
-        formConfigValueData: {} //表单value
+        formConfigValueData: {} // 表单value
       },
       formLabelWidth: '120px',
-      silkOptions: [], //丝锭异常列表
+      silkOptions: [], // 丝锭异常列表
       dialogFormVisibleEvents: false,
-      dialogName: '',
+      dialogName: ''
     }
   },
   created () {},
   methods: {
-    changeOrder(val) {
+    changeOrder (val) {
       console.log(val)
       if (val === '正序') {
         this.eventSources.sort(function (a, b) {
@@ -196,12 +196,12 @@ export default {
           this.doffingType = '自动落桶'
         }
         for (let i = 0; i < this.eventSources.length; i++) {
-           // 操作员信息
+          // 操作员信息
           this.$api.getOperators(this.eventSources[i].operator.id).then(res => {
             this.eventSources[i].operator = res.data
           })
           // 时间
-          let date = new Date(this.eventSources[i].fireDateTime)//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+          let date = new Date(this.eventSources[i].fireDateTime) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
           let Y = date.getFullYear() + '-'
           let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
           let D = date.getDate() + ' '
@@ -209,7 +209,7 @@ export default {
           let m = date.getMinutes() + ' '
           this.eventSources[i].firstTime = Y + M + D + H + m
           // 工序信息
-          if (this.eventSources[i].productProcess) {// productProcess中存在空的 所以需要判断之后在进行 要不然会报错
+          if (this.eventSources[i].productProcess) { // productProcess中存在空的 所以需要判断之后在进行 要不然会报错
             this.$api.productProcesses(this.eventSources[i].productProcess.id).then(res => {
               this.eventSources[i].productProcess = res.data
             })
@@ -286,7 +286,7 @@ export default {
       for (let i in this.EventsForm.silkExceptions) { // 获取异常
         // console.log(this.EventsForm.exceptions[i])
         for (let j in this.silkOptions) {
-            // console.log(this.silkOptions[j].name)
+        // console.log(this.silkOptions[j].name)
           if (this.silkOptions[j].name === this.EventsForm.silkExceptions[i]) {
             this.EventsForm.silkExceptions[i] = this.silkOptions[j]
             // console.log(this.silkOptions[j])
@@ -318,6 +318,8 @@ export default {
         }
       }
       console.log(this.EventsForm)
+      // if (this.EventsForm.formConfig.formFieldConfigs.required) {
+      // }
       this.$api.ProductProcessSubmitEvents(this.EventsForm).then(res => {
         console.log(res)
         this.$notify({
@@ -341,11 +343,11 @@ export default {
       })
       // this.EventsForm.silkExceptions = []
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       if (query !== '') {
-        this.loading = true;
+        this.loading = true
         this.$api.getCurrentSelect(query).then(res => {
-          if (res.errorCode === "E00000") {
+          if (res.errorCode === 'E00000') {
             this.$message.error(res.errorMessage)
           } else {
             this.loading = false

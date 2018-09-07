@@ -28,8 +28,7 @@
       </template>
     </el-table-column>
   </el-table>
-  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" 
-    :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
   </el-pagination>
   <!-- 第一层 -->
   <el-dialog title="新 增" :visible.sync="dialogFormVisibleAdd" width="50%">
@@ -219,10 +218,10 @@ export default {
       data: [], // 添加表格 数据
       options: [], // workshop数据
       options2: [],
-      renderFunc(h, option) {
-        return <span>{ option.key } - { option.label }</span>;
+      renderFunc (h, option) {
+        return <span>{ option.key } - { option.label }</span>
       },
-      tableData: [],// 主表格数据
+      tableData: [], // 主表格数据
       pageSize: 20,
       first: 0,
       q: '',
@@ -232,7 +231,7 @@ export default {
       list: [],
       loading: false,
       states: [],
-      form: { 
+      form: {
         name: '',
         type: '改批',
         batch: {},
@@ -250,7 +249,6 @@ export default {
       dialogFormVisibleAdd: false,
       innerVisible: false,
       addLine: false,
-
       formLabelWidth: '180px',
       rules: {
         name: [{ required: true, message: '必输项...', trigger: 'blur' }],
@@ -271,11 +269,6 @@ export default {
   created () {
     this.getNotice()
   },
-  mounted() {
-    // this.list = this.states.map(item => {
-    //   return { value: item, label: item };
-    // });
-  },
   methods: {
     // 获取列表数据
     getNotice () {
@@ -288,12 +281,11 @@ export default {
         this.total = res.data.count
         this.tableData = res.data.productPlanNotifies
         for (let i = 0; i < this.tableData.length; i++) {
-          let sdate = new Date(this.tableData[i].startDate)//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+          let sdate = new Date(this.tableData[i].startDate) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
           let Y = sdate.getFullYear() + '-'
           let M = (sdate.getMonth() + 1 < 10 ? '0' + (sdate.getMonth() + 1) : sdate.getMonth() + 1)
           let D = '-' + sdate.getDate()
           this.tableData[i].startDate = Y + M + D
-
           if (this.tableData[i].endDate) {
             let edate = new Date(this.tableData[i].endDate)
             let eY = edate.getFullYear() + '-'
@@ -320,15 +312,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(_ => {
-          this.$api.finishNotice(row.id).then(res => {
-            this.$notify({
-              title: '成功',
-              message: '结束',
-              type: 'success'
-            })
-            this.getNotice()
+        this.$api.finishNotice(row.id).then(res => {
+          this.$notify({
+            title: '成功',
+            message: '结束',
+            type: 'success'
           })
-        }).catch(_ => {})
+          this.getNotice()
+        })
+      }).catch(_ => {})
     },
     // 打开新增弹窗
     openAddNotice () {
@@ -336,16 +328,16 @@ export default {
       this.data = []
       this.form = {}
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       if (query !== '') {
-        this.loading = true;
+        this.loading = true
         console.log(this.form.batch)
         this.$api.getBatches({
           pageSize: 10,
           first: 0,
           q: query
         }).then(res => {
-          if (res.errorCode === "E00000") {
+          if (res.errorCode === 'E00000') {
             this.$message.error(res.errorMessage)
           } else {
             this.loading = false
@@ -353,7 +345,7 @@ export default {
           }
         })
       } else {
-        this.optionsItem = [];
+        this.optionsItem = []
       }
     },
     saveWorkshops () {
@@ -375,7 +367,7 @@ export default {
     },
     setSpindleSeq (val) {
       this.Lines.spindleSeq = []
-      for (let i = 1; i < val+1; i++) {
+      for (let i = 1; i < val + 1; i++) {
         this.Lines.spindleSeq.push(i)
       }
     },
@@ -488,16 +480,16 @@ export default {
       })
     },
     // 分页配置
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.pageSize = val
-      this.getNotice (this.pageSize, this.first, this.q)
+      this.getNotice(this.pageSize, this.first, this.q)
     },
-    handleCurrentChange(val) {
-      this.first = (--val)*this.pageSize
-      this.getNotice (this.pageSize, this.first, this.q)
+    handleCurrentChange (val) {
+      this.first = (--val) * this.pageSize
+      this.getNotice(this.pageSize, this.first, this.q)
     },
-    handleChange(value, direction, movedKeys) {
-      console.log(value, direction, movedKeys);
+    handleChange (value, direction, movedKeys) {
+      console.log(value, direction, movedKeys)
     }
   }
 }
@@ -518,4 +510,3 @@ export default {
     border-radius: 5px;
   }
 </style>
-

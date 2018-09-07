@@ -5,8 +5,8 @@
       <el-input v-model.trim="silk" placeholder="请输入..." style="width: 200px;"></el-input>
       <el-button type="primary" icon="el-icon-search" circle @click="getSilks()" ></el-button>
     </div>
-    <el-button type="primary" @click="dialogVisibleBatchAdd = true" style="float: right; margin-bottom: 10px;">批量新增</el-button>
-    <el-button type="primary" @click="dialogFormVisibleAdd = true" style="float: right; margin-bottom: 10px; margin-right: 10px;">新 增</el-button>
+    <el-button type="primary" @click="dialogVisibleBatchAdd = true" style="float: right;margin-bottom: 10px;">批量新增</el-button>
+    <el-button type="primary" @click="dialogFormVisibleAdd = true" style="float: right;margin-bottom: 10px;margin-right: 10px;">新 增</el-button>
 
     <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="code" label="丝车条码">
@@ -25,8 +25,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" 
-      :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
     </el-pagination>
 
     <el-dialog title="新 增" :visible.sync="dialogFormVisibleAdd" @close="getSilks()" width="40%">
@@ -62,13 +61,13 @@
     <el-dialog title="批量新增" :visible.sync="dialogVisibleBatchAdd" @close="getSilks()" width="40%">
       <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
         <el-form-item label="公司" :label-width="formLabelWidth">
-          <el-input v-model="form.name" auto-complete="off" style="width: 60%; float: left;" disabled></el-input>
+          <el-input v-model="form.name" auto-complete="off" style="width: 60%;float: left;" disabled></el-input>
         </el-form-item>
         <el-form-item label="行" :label-width="formLabelWidth">
-          <el-input-number size="small" v-model="form.row" style="width: 120px; float: left;"></el-input-number>
+          <el-input-number size="small" v-model="form.row" style="width: 120px;float: left;"></el-input-number>
         </el-form-item>
         <el-form-item label="列" :label-width="formLabelWidth">
-          <el-input-number size="small" v-model="form.col" style="width: 120px; float: left;"></el-input-number>
+          <el-input-number size="small" v-model="form.col" style="width: 120px;float: left;"></el-input-number>
         </el-form-item>
         <el-form-item label="" :label-width="formLabelWidth">
           <el-radio-group v-model="form.type" style="width: 60%; float: left;">
@@ -77,9 +76,9 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="批量" :label-width="formLabelWidth" prop="items" required>
-          <el-input v-model="form.items.startItem" auto-complete="off" style="width: 80px; float: left;"></el-input> 
-          <span style="float: left;"> —— </span> 
-          <el-input v-model="form.items.endItem" auto-complete="off" style="width: 80px; float: left;"></el-input>
+          <el-input v-model="form.items.startItem" auto-complete="off" style="width: 80px;float:left;"></el-input>
+          <span style="float: left;"> —— </span>
+          <el-input v-model="form.items.endItem" auto-complete="off" style="width: 80px;float:left;"></el-input>
           <!-- <span style="color: red;">*首字母需要相同</span> -->
         </el-form-item>
       </el-form>
@@ -162,7 +161,7 @@ export default {
     }
   },
   created () {
-    this.getSilks ()
+    this.getSilks()
   },
   methods: {
     getSilks () {
@@ -176,7 +175,7 @@ export default {
         console.log(res)
         this.total = res.data.count
         this.tableData = res.data.silkCars
-        for (let i = 0 ; i < this.tableData.length ; i++) {
+        for (let i = 0; i < this.tableData.length; i++) {
           if (this.tableData[i].type === 'BIG_SILK_CAR') {
             this.tableData[i].type = '大丝车'
           } else {
@@ -185,12 +184,12 @@ export default {
         }
         this.loading = false
       })
-    }, 
+    },
     closeDialog () {
       this.dialogFormVisibleAdd = false
       this.dialogFormVisibleSave = false
       this.dialogVisibleBatchAdd = false
-      this.getSilks ()
+      this.getSilks()
     },
     seacrhSilk () {},
     changeCode () {
@@ -233,15 +232,15 @@ export default {
       let reg2 = /^[a-zA-Z]+/g
       let startword = this.form.items.startItem.match(reg2)
       let startnum = this.form.items.startItem.match(reg1)
-      console.log(startword,this.form.items.startItem.match(reg1))
+      console.log(startword, this.form.items.startItem.match(reg1))
 
       let endword = this.form.items.endItem.match(reg2)
       let endnum = this.form.items.endItem.match(reg1)
-      console.log(endword,endnum)
+      console.log(endword, endnum)
       if (startword || endword) {
-        if ((startword == null && endword != null) || (startword != null && endword == null) || (startword[0] !== endword[0]) ) {
-          this.$message.error("批量输入错误，前缀不同！")
-          return 
+        if ((startword == null && endword != null) || (startword != null && endword == null) || (startword[0] !== endword[0])) {
+          this.$message.error('批量输入错误，前缀不同！')
+          return
         }
       }
 
@@ -250,17 +249,16 @@ export default {
         //   this.$message.error("批量输入错误，没有数字进行批量操作！");
         // }
         if (Number(endnum) < Number(startnum)) {
-          this.$message.error("批量输入错误，后部数字应大于前部数字！")
-          return 
-        } else if (endnum[0].length != startnum[0].length) {
-          this.$message.error("批量输入错误，数字位数不相等！")
-          return 
+          this.$message.error('批量输入错误，后部数字应大于前部数字！')
+          return
+        } else if (endnum[0].length !== startnum[0].length) {
+          this.$message.error('批量输入错误，数字位数不相等！')
+          return
         }
       } else {
-        this.$message.error("批量输入错误，没有数字进行批量操作！")
-          return 
+        this.$message.error('批量输入错误，没有数字进行批量操作！')
+        return
       }
-      
       let arr = []
       for (let i = 0; i <= Number(endnum[0]) - Number(startnum[0]); i++) {
         let num = Number(startnum[0]) + i
@@ -283,7 +281,7 @@ export default {
           type: this.form.type
         })
       }
-        console.log(arr)
+      console.log(arr)
       this.$api.addBatchSilks(arr).then(res => {
         this.getSilks()
         this.dialogVisibleBatchAdd = false
@@ -311,17 +309,16 @@ export default {
         this.dialogFormVisibleSave = false
       })
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
       this.pageSize = val
-      this.getSilks (this.pageSize, this.first, this.silk)
+      this.getSilks(this.pageSize, this.first, this.silk)
     },
-    handleCurrentChange(val) {
-      this.first = (--val)*this.pageSize
-      console.log(`当前页: ${this.first}`);
-      this.getSilks (this.pageSize, this.first, this.silk)
+    handleCurrentChange (val) {
+      this.first = (--val) * this.pageSize
+      console.log(`当前页: ${this.first}`)
+      this.getSilks(this.pageSize, this.first, this.silk)
     }
   }
 }
 </script>
-

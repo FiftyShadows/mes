@@ -13,7 +13,7 @@ const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUi
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
 axios.defaults.timeout = 3000
 const baseAutoUrl = 'http://192.168.0.209:9999/api'
-const baseWareUrl = ''
+// const baseWareUrl = ''
 
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
@@ -39,8 +39,8 @@ axios.interceptors.response.use(function (response) {
         title: '错误',
         message: '未找到接口数据'
       })
-    // store.state.pageLoading = false;
-    break
+      // store.state.pageLoading = false;
+      break
     default:
       vue.$notify.error({
         title: '错误',
@@ -48,7 +48,6 @@ axios.interceptors.response.use(function (response) {
       })
       return Promise.reject(error)
   }
-  return
 })
 
 export default {
@@ -116,7 +115,7 @@ export default {
   saveLine (data) {
     return axios.put(`${baseAutoUrl}/lines/${data.id}`, data)
   },
-  
+
   // 机台管理--获取数据
   getSelected () {
     return axios.get(`${baseAutoUrl}/lines`)

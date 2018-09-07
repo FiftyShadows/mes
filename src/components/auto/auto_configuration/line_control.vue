@@ -43,7 +43,7 @@
         <el-button type="primary" @click="createSingleLine()">确 定</el-button>
       </span>
     </el-dialog>
-    
+
     <el-dialog title="批量新增" :visible.sync="dialogVisibleAdd" width="50%">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="车间">
@@ -58,9 +58,9 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="批量名称" prop="name">
-          <el-input v-model="ruleForm.startItem" auto-complete="off" style="width: 80px; float: left;"></el-input> 
-          <span style="float: left;"> —— </span> 
-          <el-input v-model="ruleForm.endItem" auto-complete="off" style="width: 80px; float: left;"></el-input>
+          <el-input v-model="ruleForm.startItem" auto-complete="off" style="width: 80px;float: left;"></el-input>
+          <span style="float: left;"> —— </span>
+          <el-input v-model="ruleForm.endItem" auto-complete="off" style="width: 80px;float: left;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -245,18 +245,18 @@ export default {
       let reg2 = /^[a-zA-Z]+/g
       let startword = this.ruleForm.startItem.match(reg2)
       let startnum = this.ruleForm.startItem.match(reg1)
-      console.log(startword,startnum)
+      console.log(startword, startnum)
 
       let endword = this.ruleForm.endItem.match(reg2)
       let endnum = this.ruleForm.endItem.match(reg1)
-      console.log(endword,endnum)
+      console.log(endword, endnum)
       if (startword || endword) {
-        if ((startword == null && endword != null) || (startword != null && endword == null) || (startword[0] !== endword[0]) ) {
-          this.$message.error("批量输入错误，前缀不同！")
-          return 
+        if ((startword == null && endword != null) || (startword != null && endword == null) || (startword[0] !== endword[0])) {
+          this.$message.error('批量输入错误，前缀不同！')
+          return
         }
       } else {
-        this.$message.error("批量输入错误，请输入前缀！")
+        this.$message.error('批量输入错误，请输入前缀！')
       }
 
       if (startnum && endnum) {
@@ -264,18 +264,17 @@ export default {
         //   this.$message.error("批量输入错误，没有数字进行批量操作！");
         // }
         if (Number(endnum) < Number(startnum)) {
-          this.$message.error("批量输入错误，后部数字应大于前部数字！")
-          return 
-        } else if (endnum[0].length != startnum[0].length) {
-          this.$message.error("批量输入错误，数字位数不相等！")
-          return 
+          this.$message.error('批量输入错误，后部数字应大于前部数字！')
+          return
+        } else if (endnum[0].length !== startnum[0].length) {
+          this.$message.error('批量输入错误，数字位数不相等！')
+          return
         }
       } else {
-        this.$message.error("批量输入错误，没有数字进行批量操作！")
-          return 
+        this.$message.error('批量输入错误，没有数字进行批量操作！')
+        return
       }
-      
-      let arr = []
+
       for (let i = 0; i <= Number(endnum[0]) - Number(startnum[0]); i++) {
         let num = Number(startnum[0]) + i
         this.ruleForm.name = startword[0] + num.toString()
@@ -295,6 +294,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 </style>
-
