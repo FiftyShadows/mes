@@ -47,11 +47,11 @@
                   <div class="Form" v-for="item in item.formConfig.formFieldConfigs" :key="item.id">
                     <el-tag type="info">{{item.name}}</el-tag>
                     <el-input-number v-if="item.valueType === 'NUMBER' && item.inputType !== 'SELECTION'" label="请输入"></el-input-number>
-                    <el-input v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容"></el-input>
-                    <el-select v-model="val" v-if="item.inputType === 'SELECTION' && item.valueType !== 'BOOLEAN'" placeholder="请选择">
+                    <el-input v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容" style="width: 60%;"></el-input>
+                    <el-select v-model="item.val" v-if="item.inputType === 'SELECTION' && item.valueType !== 'BOOLEAN'" placeholder="请选择">
                       <el-option v-for="item in item.selectOptions" :key="item" :label="item" :value="item"></el-option>
                     </el-select>
-                    <el-select v-model="val1" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择">
+                    <el-select v-model="item.val" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择">
                       <el-option label="是" value="true"></el-option>
                       <el-option label="否" value="false"></el-option>
                     </el-select>
@@ -105,11 +105,11 @@
             <div class="Form" v-for="item in productProesses.formConfig.formFieldConfigs" :key="item.id">
               <el-tag type="info">{{item.name}}</el-tag>
               <el-input-number v-if="item.valueType === 'NUMBER' && item.inputType !== 'SELECTION'" label="请输入"></el-input-number>
-              <el-input v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容"></el-input>
-              <el-select v-model="val" v-if="item.inputType === 'SELECTION' && item.valueType !== 'BOOLEAN'" placeholder="请选择">
+              <el-input v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容" style="width: 60%;"></el-input>
+              <el-select v-model="item.val" v-if="item.inputType === 'SELECTION' && item.valueType !== 'BOOLEAN'" placeholder="请选择">
                 <el-option v-for="item in item.selectOptions" :key="item" :label="item" :value="item"></el-option>
               </el-select>
-              <el-select v-model="val1" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择">
+              <el-select v-model="item.val" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择">
                 <el-option label="是" value="true"></el-option>
                 <el-option label="否" value="false"></el-option>
               </el-select>

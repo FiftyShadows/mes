@@ -70,22 +70,41 @@
             <el-tag type="info" style="float: left; width: 100%;text-align: left;">{{item.formConfig.name}}</el-tag>
             <div v-for="config in item.formConfig.formFieldConfigs" :key="config.id">
               <el-tag class="btn">{{config.name}}</el-tag>
-              <el-tag class="btn">{{config.value}}</el-tag>
+              <el-tag v-if="config.value" class="btn">{{config.value}}</el-tag>
             </div>
           </div>
         </el-card>
       </div>
     </div>
     <el-dialog :title="dialogName" :visible.sync="dialogFormVisibleEvents">
-      <el-form :model="EventsForm">
+      <el-form :model="EventsForm" :label-width="formLabelWidth">
         <el-form-item label="">
-          <el-input style="width: 60%;" v-model="EventsForm.name" disabled></el-input>
+          <el-input style="width: 60%;float: left;" v-model="EventsForm.name" disabled></el-input>
         </el-form-item>
         <el-form-item label="丝锭异常" :label-width="formLabelWidth">
-          <el-select style="float: left;" v-model="EventsForm.exceptions" multiple placeholder="请选择">
+          <el-select style="float: left;" v-model="EventsForm.silkExceptions" multiple placeholder="请选择">
             <el-option v-for="item in silkOptions" :key="item.id" :label="item.name" :value="item.name">
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="" v-if="EventsForm.formConfig" :label-width="formLabelWidth">
+          <el-tag type="primary" style="width: 80%;text-align: left;float: left;">
+            {{EventsForm.formConfig.name}}
+          </el-tag>
+          <template>
+            <div class="Form" v-for="item in EventsForm.formConfig.formFieldConfigs" :key="item.id">
+              <el-tag type="info">{{item.name}}</el-tag>
+              <el-input-number v-model="item.valueConfig" v-if="item.valueType === 'NUMBER' && item.inputType !== 'SELECTION'" label="请输入"></el-input-number>
+              <el-input v-model="item.valueConfig" v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容" style="width: 60%;"></el-input>
+              <el-select v-model="item.valueConfig" v-if="item.valueType !== 'BOOLEAN' && item.inputType === 'SELECTION'" placeholder="请选择">
+                <el-option v-for="item in item.selectOptions" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+              <el-select v-model="item.valueConfig" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择">
+                <el-option label="是" value="true"></el-option>
+                <el-option label="否" value="false"></el-option>
+              </el-select>
+            </div>
+          </template>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -120,10 +139,17 @@ export default {
       checkedBatchB: [], // B
       isIndeterminateB: true,
       checkAllB: false,
-      EventsForm: {
-        name: '',
-        exceptions: []
-      }, // 提交事件数据
+      EventsForm: { // 操作数据 // 提交事件数据
+        name: '', // 批号
+        valueConfig: '', // 绑定表单数据
+        silkExceptions: [], // 上传异常
+        productProcess: {}, // 上传工序
+        silkCarRecord: {}, // 单号情况
+        silkNotes: null,
+        silkRuntimes: [],
+        formConfig: null, // 表单
+        formConfigValueData: {} //表单value
+      },
       formLabelWidth: '120px',
       silkOptions: [], //丝锭异常列表
       dialogFormVisibleEvents: false,
@@ -209,20 +235,23 @@ export default {
           // 表单
           if (this.eventSources[i].formConfig) {
             let config = this.eventSources[i].formConfig // 要取的数据名
-            let value = this.eventSources[i].formConfigValueData // 对应数据值
-            let key = Object.keys(value)
-            // console.log(key)
-            for (let j = 0; j < config.formFieldConfigs.length; j++) { // 取id值判断数据
-              for (let t = 0; t < key.length; t++) {
-                if (key[t] === config.formFieldConfigs[j].id) {
-                  let keyt = key[t]
-                  // console.log(keyt,value[keyt])
-                  if (value[keyt] === true) {
-                    value[keyt] = '是'
-                  } else if (value[keyt] === false) {
-                    value[keyt] = '否'
+            console.log(this.eventSources[i])
+            if (this.eventSources[i].formConfigValueData) {
+              let value = this.eventSources[i].formConfigValueData // 对应数据值
+              let key = Object.keys(value)
+              // console.log(key)
+              for (let j = 0; j < config.formFieldConfigs.length; j++) { // 取id值判断数据
+                for (let t = 0; t < key.length; t++) {
+                  if (key[t] === config.formFieldConfigs[j].id) {
+                    let keyt = key[t]
+                    // console.log(keyt,value[keyt])
+                    if (value[keyt] === true) {
+                      value[keyt] = '是'
+                    } else if (value[keyt] === false) {
+                      value[keyt] = '否'
+                    }
+                    this.eventSources[i].formConfig.formFieldConfigs[j].value = value[keyt]
                   }
-                  this.eventSources[i].formConfig.formFieldConfigs[j].value = value[keyt]
                 }
               }
             }
@@ -234,7 +263,7 @@ export default {
         this.getProcesses()
       })
     },
-    productProcess (val) {
+    productProcess (val) { // 打开event弹框
       // console.log(val)
       this.dialogName = val
       this.EventsForm.name = this.silkCarRecord.silkCar.code
@@ -243,22 +272,74 @@ export default {
           this.silkOptions = this.selected[i].exceptions
         }
       }
+      for (let i in this.selected) { // 分辨操作工序
+        if (this.selected[i].name === this.process) {
+          this.EventsForm.productProcess = this.selected[i]
+          this.EventsForm.formConfig = this.selected[i].formConfig
+        }
+      }
+      this.EventsForm.silkCarRecord = this.silkCarRecord
+      this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
       this.dialogFormVisibleEvents = true
     },
     submitEvents () { // 提交操作按钮
-      console.log(this.silkOptions, this.EventsForm.exceptions)
-      // for (let j = 0; j < this.EventsForm.exceptions; j++) {
-      //       console.log(this.EventsForm.exceptions[j])
-      //   for (let i = 0; i < this.silkOptions.length; i++) {
-      //       console.log(this.silkOptions[i].name)
-      //     if (this.silkOptions[i].name === this.EventsForm.exceptions[j]) {
-      //       this.EventsForm.exceptions[j] = this.silkOptions[i]
-      //       console.log(this.silkOptions[i])
-      //     }
+      for (let i in this.EventsForm.silkExceptions) { // 获取异常
+        // console.log(this.EventsForm.exceptions[i])
+        for (let j in this.silkOptions) {
+            // console.log(this.silkOptions[j].name)
+          if (this.silkOptions[j].name === this.EventsForm.silkExceptions[i]) {
+            this.EventsForm.silkExceptions[i] = this.silkOptions[j]
+            // console.log(this.silkOptions[j])
+          }
+        }
+      }
+      // for (let i in this.selected) { // 分辨操作工序
+      //   if (this.selected[i].name === this.process) {
+      //     this.EventsForm.productProcess = this.selected[i]
+      //     this.EventsForm.formConfig = this.selected[i].formConfig
       //   }
       // }
+      // this.EventsForm.silkCarRecord = this.silkCarRecord
+      // this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
+      console.log(this.EventsForm.formConfig.formFieldConfigs) // 数组
+      // console.log(this.EventsForm.formConfig.formFieldConfigs.valueConfig)
+      // if (this.valueConfig === 'true') {
+      //   this.valueConfig = true
+      // } else if (this.valueConfig === 'false') {
+      //   this.valueConfig = false
+      // }
+      for (let i in this.EventsForm.formConfig.formFieldConfigs) {
+        let value = this.EventsForm.formConfig.formFieldConfigs[i]
+        this.EventsForm.formConfigValueData[value.id] = value.valueConfig
+        if (this.EventsForm.formConfigValueData[value.id] === 'true') {
+          this.EventsForm.formConfigValueData[value.id] = true
+        } else if (value.valueConfig === 'false') {
+          this.EventsForm.formConfigValueData[value.id] = false
+        }
+      }
       console.log(this.EventsForm)
-      // this.EventsForm.exceptions = []
+      this.$api.ProductProcessSubmitEvents(this.EventsForm).then(res => {
+        console.log(res)
+        this.$notify({
+          title: '成功',
+          message: '提交成功',
+          type: 'success'
+        })
+        this.dialogFormVisibleEvents = false
+        this.EventsForm = { // 清空数据
+          name: '',
+          valueConfig: '',
+          silkExceptions: [],
+          productProcess: {},
+          silkCarRecord: {},
+          silkNotes: null,
+          silkRuntimes: [],
+          formConfig: null,
+          formConfigValueData: {}
+        }
+        this.getSearchData()
+      })
+      // this.EventsForm.silkExceptions = []
     },
     remoteMethod(query) {
       if (query !== '') {
@@ -280,6 +361,8 @@ export default {
       this.isIndeterminate = false
     },
     handleCheckedBatchAChange (value) {
+      // console.log(value)
+      // console.log(this.checkedBatchA)
       let checkedCount = value.length
       this.checkAllA = checkedCount === this.batchOptions.length
       this.isIndeterminateA = checkedCount > 0 && checkedCount < this.batchOptions.length
@@ -402,5 +485,9 @@ export default {
 .silkbtn {
   display: block;
   margin-left: 10px;
+}
+.Form {
+  float: left;
+  margin-top: 10px;
 }
 </style>
