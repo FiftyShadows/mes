@@ -44,7 +44,6 @@ export default {
   methods: {
     getPlan () { // 获取select数据
       this.$api.getWorkShopsLine().then(res => {
-        console.log(res);
         this.LinesTable = res.data;
         this.options = res.data.map(item => {
           return {name: item.name}
@@ -60,19 +59,10 @@ export default {
         }
       }
       this.$api.getLinePlans(this.seachId).then(res => {
-        console.log(res);
         this.allData = res.data;
         this.tableData = res.data.items;
-        console.log(111);
-        console.log(this.tableData);
-        console.log(111);
         for (let j = 0; j < this.tableData.length; j++) {
           this.MachinesNum = this.tableData[j].lineMachines;
-          // let arr = []
-          // for (let i = 0; i < this.MachinesNum.length; i++) {
-          //   arr.push(this.MachinesNum[i].item)
-          // }
-          // console.log(arr.sort())
           this.tableData[j].machines = this.tableData[j].lineMachines[0].item + '——' + this.tableData[j].lineMachines[this.tableData[j].lineMachines.length - 1].item
         }
         this.loading = false

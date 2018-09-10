@@ -13,9 +13,10 @@
       </el-table-column>
       <el-table-column prop="number" label="丝车编号">
       </el-table-column>
-      <el-table-column prop="row" label="行" width="60">
-      </el-table-column>
-      <el-table-column  prop="col" label="列" width="60">
+      <el-table-column label="行×列" width="60">
+        <template slot-scope="scope">
+          {{scope.row.row}}×{{scope.row.col}}
+        </template>
       </el-table-column>
       <el-table-column prop="type" label="丝车类型">
       </el-table-column>
@@ -165,16 +166,16 @@ export default {
   },
   methods: {
     getSilks () {
-      this.loading = true
-      console.log(this.pageSize, this.first, this.silk)
+      this.loading = true;
+      console.log(this.pageSize, this.first, this.silk);
       this.$api.getSilks({
         pageSize: this.pageSize,
         first: this.first,
         q: this.silk
       }).then(res => {
-        console.log(res)
-        this.total = res.data.count
-        this.tableData = res.data.silkCars
+        console.log(res);
+        this.total = res.data.count;
+        this.tableData = res.data.silkCars;
         for (let i = 0; i < this.tableData.length; i++) {
           if (this.tableData[i].type === 'BIG_SILK_CAR') {
             this.tableData[i].type = '大丝车'
@@ -186,9 +187,9 @@ export default {
       })
     },
     closeDialog () {
-      this.dialogFormVisibleAdd = false
-      this.dialogFormVisibleSave = false
-      this.dialogVisibleBatchAdd = false
+      this.dialogFormVisibleAdd = false;
+      this.dialogFormVisibleSave = false;
+      this.dialogVisibleBatchAdd = false;
       this.getSilks()
     },
     seacrhSilk () {},
@@ -210,14 +211,14 @@ export default {
       } else {
         this.form.type = 'BIG_SILK_CAR'
       }
-      console.log(this.form)
+      console.log(this.form);
       this.$api.addSilks(this.form).then(res => {
-        this.getSilks()
+        this.getSilks();
         this.$notify({
           title: '成功',
           message: '添加成功',
           type: 'success'
-        })
+        });
         this.dialogFormVisibleAdd = false
       })
     },
@@ -228,18 +229,18 @@ export default {
         this.form.type = 'BIG_SILK_CAR'
       }
       // console.log(this.form)
-      let reg1 = /[0-9]+$/g
-      let reg2 = /^[a-zA-Z]+/g
-      let startword = this.form.items.startItem.match(reg2)
-      let startnum = this.form.items.startItem.match(reg1)
-      console.log(startword, this.form.items.startItem.match(reg1))
+      let reg1 = /[0-9]+$/g;
+      let reg2 = /^[a-zA-Z]+/g;
+      let startword = this.form.items.startItem.match(reg2);
+      let startnum = this.form.items.startItem.match(reg1);
+      console.log(startword, this.form.items.startItem.match(reg1));
 
-      let endword = this.form.items.endItem.match(reg2)
-      let endnum = this.form.items.endItem.match(reg1)
-      console.log(endword, endnum)
+      let endword = this.form.items.endItem.match(reg2);
+      let endnum = this.form.items.endItem.match(reg1);
+      console.log(endword, endnum);
       if (startword || endword) {
         if ((startword == null && endword != null) || (startword != null && endword == null) || (startword[0] !== endword[0])) {
-          this.$message.error('批量输入错误，前缀不同！')
+          this.$message.error('批量输入错误，前缀不同！');
           return
         }
       }
@@ -249,20 +250,20 @@ export default {
         //   this.$message.error("批量输入错误，没有数字进行批量操作！");
         // }
         if (Number(endnum) < Number(startnum)) {
-          this.$message.error('批量输入错误，后部数字应大于前部数字！')
+          this.$message.error('批量输入错误，后部数字应大于前部数字！');
           return
         } else if (endnum[0].length !== startnum[0].length) {
-          this.$message.error('批量输入错误，数字位数不相等！')
+          this.$message.error('批量输入错误，数字位数不相等！');
           return
         }
       } else {
-        this.$message.error('批量输入错误，没有数字进行批量操作！')
+        this.$message.error('批量输入错误，没有数字进行批量操作！');
         return
       }
-      let arr = []
+      let arr = [];
       for (let i = 0; i <= Number(endnum[0]) - Number(startnum[0]); i++) {
-        let num = Number(startnum[0]) + i
-        this.form.item = startword[0] + num.toString()
+        let num = Number(startnum[0]) + i;
+        this.form.item = startword[0] + num.toString();
         if (this.form.item === '') {
           this.form.code = ''
         } else {
@@ -281,16 +282,16 @@ export default {
           type: this.form.type
         })
       }
-      console.log(arr)
+      console.log(arr);
       this.$api.addBatchSilks(arr).then(res => {
-        this.getSilks()
+        this.getSilks();
         this.dialogVisibleBatchAdd = false
       })
     },
     openSaveSilk (row) {
-      console.log(row)
-      this.form1 = row
-      this.form1.name = '高新'
+      console.log(row);
+      this.form1 = row;
+      this.form1.name = '高新';
       this.dialogFormVisibleSave = true
     },
     saveSilks () {
@@ -300,23 +301,23 @@ export default {
         this.form1.type = 'BIG_SILK_CAR'
       }
       this.$api.saveSilks(this.form1).then(res => {
-        this.getSilks()
+        this.getSilks();
         this.$notify({
           title: '成功',
           message: '修改成功',
           type: 'success'
-        })
+        });
         this.dialogFormVisibleSave = false
       })
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-      this.pageSize = val
+      console.log(`每页 ${val} 条`);
+      this.pageSize = val;
       this.getSilks(this.pageSize, this.first, this.silk)
     },
     handleCurrentChange (val) {
-      this.first = (--val) * this.pageSize
-      console.log(`当前页: ${this.first}`)
+      this.first = (--val) * this.pageSize;
+      console.log(`当前页: ${this.first}`);
       this.getSilks(this.pageSize, this.first, this.silk)
     }
   }
