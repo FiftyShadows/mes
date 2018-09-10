@@ -1,6 +1,6 @@
 <template>
   <div class="Configurat">
-    <el-tabs type="border-card" v-model="activeTabs" @tab-click="handleClick">
+    <el-tabs type="border-card" v-model="activeTabs" @tab-click="handleClick" v-loading.fullscreen.lock="fullscreenLoading">
       <el-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name" :label="tab.name">
         <el-tag type="success" style="width: 100%;text-align: left;height: 50px;line-height: 50px;">
           生产管理
@@ -8,7 +8,7 @@
           <el-button size="mini" type="primary" style="float: right; margin: 10px;" @click="dialogVisibleSort = true">排序</el-button>
         </el-tag>
         <el-collapse v-model="activeColapse" accordion>
-          <el-collapse-item v-for="(item,index) in totalData" :key="item.id" :title="item.name" :name="item.name">
+          <el-collapse-item v-for="(item,index) in totalData" :key="item.id" :title="item.name">
             <el-form :model="item" :rules="rules" ref="ChangeData" label-width="100px" class="demo-ruleForm">
               <el-form-item label="权限code" prop="id">
                 <el-alert title="" type="info" :closable="false">ProductProcess:{{item.id}}</el-alert>
@@ -249,6 +249,7 @@ export default {
   name: 'Configurat',
   data () {
     return {
+      fullscreenLoading: false,
       val: '',
       val1: '',
       index: '',
@@ -374,6 +375,7 @@ export default {
       console.log(this.totalData[index])
     },
     getTabsTitles () {
+      this.fullscreenLoading = true // 添加loading
       this.$api.getProduct().then(res => {
         this.tabs = res.data
         this.activeTabs = this.selectId
@@ -382,6 +384,7 @@ export default {
           name: this.activeTabs
         }
         this.handleClick(product)
+        this.fullscreenLoading = false
       })
     },
     handleClick (tab, event) {

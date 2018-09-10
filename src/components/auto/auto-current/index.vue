@@ -1,7 +1,7 @@
 <template>
   <div class="current">
     <div style="height: 50px;">
-      <el-select v-model="code" filterable clearable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" @change="getSearchData" :loading="loading" style="float:left;">
+      <el-select v-model="code" filterable clearable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" @change="getSearchData" v-loading.fullscreen.lock="fullscreenLoading" style="float:left;">
         <el-option v-for="item in options" :key="item.id" :label="item.code" :value="item.number"></el-option>
       </el-select>
       <el-radio-group v-model="order" style="float: right;" @change="changeOrder">
@@ -118,7 +118,7 @@ export default {
   name: 'current',
   data () {
     return {
-      loading: false,
+      fullscreenLoading: false, // loading
       code: '',
       order: '正序', // 操作员显示顺序
       searchData: {}, // 返回的总数据
@@ -179,6 +179,7 @@ export default {
       })
     },
     getSearchData (val) {
+      this.fullscreenLoading = true
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].number === val) {
           this.value = this.options[i].code
@@ -260,6 +261,7 @@ export default {
         }
         console.log('eventSources', this.eventSources)
         this.batchOptions = this.searchData.silkRuntimes
+        this.fullscreenLoading = false
         this.getProcesses()
       })
     },
