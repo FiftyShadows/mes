@@ -16,9 +16,9 @@
     </el-table-column>
   </el-table>
   <el-dialog title="新 建" :visible.sync="dialogFormVisibleADD">
-    <el-form :model="form" :rules="rules" ref="form">
+    <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
       <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
-        <el-input v-model="form.name" auto-complete="off" required></el-input>
+        <el-input v-model="form.name" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item label="roles" :label-width="formLabelWidth" prop="roles" required>
         <el-select v-model="form.roles" multiple placeholder="请选择" style="width: 100%;">
@@ -35,11 +35,11 @@
     </el-checkbox-group>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisibleADD = false">取 消</el-button>
-      <el-button type="primary" @click="addUserGroups()">确 定</el-button>
+      <el-button type="primary" @click="addUserGroups('form')">确 定</el-button>
     </div>
   </el-dialog>
   <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave">
-    <el-form :model="saveForm" :rules="rules" ref="saveForm">
+    <el-form :model="saveForm" :rules="rules" ref="saveForm" class="demo-ruleForm">
       <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
         <el-input v-model="saveForm.name" auto-complete="off" required></el-input>
       </el-form-item>
@@ -59,7 +59,7 @@
     </el-checkbox-group>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisibleSave = false">取 消</el-button>
-      <el-button type="primary" @click="saveUserGroups()">确 定</el-button>
+      <el-button type="primary" @click="saveUserGroups('saveForm')">确 定</el-button>
     </div>
   </el-dialog>
 
@@ -135,7 +135,7 @@ export default {
       })
       this.dialogFormVisibleADD = true
     },
-    addUserGroups () {
+    addUserGroups (formName) {
       let item = []
       for (let j = 0; j < this.form.roles.length; j++) {
         for (let i = 0; i < this.options.length; i++) {
@@ -156,15 +156,20 @@ export default {
       this.form.createDateTime = new Date().getTime()
       this.form.modifyDateTime = new Date().getTime()
       // console.log(this.form)
-      this.$api.addUsergroups(this.form).then(res => {
-        console.log(res)
-        this.getUsergroups()
-        this.dialogFormVisibleADD = false
-        this.$notify({
-          title: '成功',
-          message: '添加成功',
-          type: 'success'
-        })
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.addUsergroups(this.form).then(res => {
+            this.getUsergroups()
+            this.dialogFormVisibleADD = false
+            this.$notify({
+              title: '成功',
+              message: '添加成功',
+              type: 'success'
+            })
+          })
+        } else {
+          return false
+        }
       })
     },
     openSavegroups (row) {
@@ -197,7 +202,7 @@ export default {
       // }
       this.dialogFormVisibleSave = true
     },
-    saveUserGroups () {
+    saveUserGroups (formName) {
       this.saveForm.modifyDateTime = new Date().getTime()
       // let item = []
       // for (let j = 0; j < this.checkedOptions1.length; j++) {
@@ -218,17 +223,20 @@ export default {
           }
         }
       }
-
-      console.log(this.saveForm)
-      this.$api.saveUsergroups(this.saveForm).then(res => {
-        console.log(res)
-        this.getUsergroups()
-        this.$notify({
-          title: '成功',
-          message: '修改成功',
-          type: 'success'
-        })
-        this.dialogFormVisibleSave = false
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.saveUsergroups(this.saveForm).then(res => {
+            this.getUsergroups()
+            this.$notify({
+              title: '成功',
+              message: '修改成功',
+              type: 'success'
+            })
+            this.dialogFormVisibleSave = false
+          })
+        } else {
+          return false
+        }
       })
     },
     handleCheckAllChange (val) {

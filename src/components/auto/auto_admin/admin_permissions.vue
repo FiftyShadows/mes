@@ -1,7 +1,7 @@
 <!-- 权限 -->
 <template>
   <div class="admin">
-    <el-button type="primary" @click="openAdd()" style="float: right; margin-bottom: 10px;">添 加</el-button>
+    <el-button type="primary" @click="openAdd()" style="float: right; margin-bottom: 10px;">新 建</el-button>
     <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="name" label="名称" width="200">
       </el-table-column>
@@ -14,7 +14,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="新 建" :visible.sync="dialogFormVisibleADD">
+    <!-- <el-dialog title="新 建" :visible.sync="dialogFormVisibleADD">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
           <el-input v-model="form.name" auto-complete="off"></el-input>
@@ -28,9 +28,9 @@
         <el-button type="primary" v-if="isAdd" @click="addAdmin()">确 定</el-button>
         <el-button type="primary" v-else @click="SaveAdmin()">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <el-dialog title="新 建" :visible.sync="dialogFormVisibleADD">
-      <el-form :model="form" :rules="rules" ref="form">
+      <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
           <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
@@ -40,11 +40,11 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleADD = false">取 消</el-button>
-        <el-button type="primary" @click="addAdmin()">确 定</el-button>
+        <el-button type="primary" @click="addAdmin('form')">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave" @close="closeDialog()">
-      <el-form :model="form2" :rules="rules" ref="form2">
+    <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave">
+      <el-form :model="form2" :rules="rules" ref="form2" class="demo-ruleForm">
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name" required>
           <el-input v-model="form2.name" auto-complete="off"></el-input>
         </el-form-item>
@@ -54,7 +54,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleSave = false">取 消</el-button>
-        <el-button type="primary" @click="SaveAdmin()">确 定</el-button>
+        <el-button type="primary" @click="SaveAdmin('form2')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -95,9 +95,6 @@ export default {
         this.loading = false
       })
     },
-    closeDialog () {
-      this.getAdmin()
-    },
     openAdd () {
       this.form.name = ''
       this.form.code = ''
@@ -105,19 +102,26 @@ export default {
     },
     openSave (row) {
       console.log(row)
-      this.form2 = row
+      this.form2.name = row.name
+      this.form2.code = row.code
       this.dialogFormVisibleSave = true
     },
-    SaveAdmin () {
-      this.$api.saveAdmin(this.form2).then(res => {
-        console.log(res)
-        this.getAdmin()
-        this.dialogFormVisibleSave = false
-        this.$notify({
-          title: '成功',
-          message: '修改成功',
-          type: 'success'
-        })
+    SaveAdmin (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.saveAdmin(this.form2).then(res => {
+            console.log(res)
+            this.getAdmin()
+            this.dialogFormVisibleSave = false
+            this.$notify({
+              title: '成功',
+              message: '修改成功',
+              type: 'success'
+            })
+          })
+        } else {
+          return false
+        }
       })
     },
     deleteAdmin (row) {
@@ -131,15 +135,21 @@ export default {
         })
       })
     },
-    addAdmin (data) {
-      this.$api.addAdmins(this.form).then(res => {
-        this.getAdmin()
-        this.dialogFormVisibleADD = false
-        this.$notify({
-          title: '成功',
-          message: '添加成功',
-          type: 'success'
-        })
+    addAdmin (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.addAdmins(this.form).then(res => {
+            this.getAdmin()
+            this.dialogFormVisibleADD = false
+            this.$notify({
+              title: '成功',
+              message: '添加成功',
+              type: 'success'
+            })
+          })
+        } else {
+          return false
+        }
       })
     }
   }

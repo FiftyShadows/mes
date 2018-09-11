@@ -16,10 +16,10 @@
 
     <el-dialog title="新 增" :visible.sync="dialogVisibleAdd" width="30%">
       <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="等级" :label-width="formLabelWidth" prop="name" required>
+        <el-form-item label="等级" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" auto-complete="off" ></el-input>
         </el-form-item>
-        <el-form-item label="分数" :label-width="formLabelWidth" prop="sortBy" required>
+        <el-form-item label="分数" :label-width="formLabelWidth" prop="sortBy">
           <el-input v-model="form.sortBy" auto-complete="off" ></el-input>
         </el-form-item>
       </el-form>
@@ -31,10 +31,10 @@
 
     <el-dialog title="修 改" :visible.sync="dialogVisibleSave" width="30%">
       <el-form :model="form2" :rules="rules" ref="form2" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="等级" :label-width="formLabelWidth" prop="name" required>
+        <el-form-item label="等级" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form2.name" auto-complete="off" ></el-input>
         </el-form-item>
-        <el-form-item label="分数" :label-width="formLabelWidth" prop="sortBy" required>
+        <el-form-item label="分数" :label-width="formLabelWidth" prop="sortBy">
           <el-input v-model="form2.sortBy" auto-complete="off" ></el-input>
         </el-form-item>
       </el-form>
@@ -85,14 +85,20 @@ export default {
       })
     },
     AddGrade (formName) {
-      this.$api.AddGrades(this.form).then(res => {
-        this.$notify({
-          title: '成功',
-          message: '新增成功',
-          type: 'success'
-        })
-        this.getGrade()
-        this.dialogVisibleAdd = false
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.AddGrades(this.form).then(res => {
+            this.$notify({
+              title: '成功',
+              message: '新增成功',
+              type: 'success'
+            })
+            this.getGrade()
+            this.dialogVisibleAdd = false
+          })
+        } else {
+          return false
+        }
       })
     },
     Save (row) {
@@ -102,15 +108,21 @@ export default {
       this.form2.id = row.id
       this.dialogVisibleSave = true
     },
-    SaveGrade (formName2) {
-      this.$api.SaveGrades(this.form2).then(res => {
-        this.$notify({
-          title: '成功',
-          message: '修改成功',
-          type: 'success'
-        })
-        this.getGrade()
-        this.dialogVisibleSave = false
+    SaveGrade (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.SaveGrades(this.form2).then(res => {
+            this.$notify({
+              title: '成功',
+              message: '修改成功',
+              type: 'success'
+            })
+            this.getGrade()
+            this.dialogVisibleSave = false
+          })
+        } else {
+          return false
+        }
       })
     }
   }

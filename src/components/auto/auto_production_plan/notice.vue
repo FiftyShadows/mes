@@ -33,22 +33,22 @@
   <!-- 第一层 -->
   <el-dialog title="新 增" :visible.sync="dialogFormVisibleAdd" width="50%">
     <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
-      <el-form-item label="名称" :label-width="formLabelWidth" required>
+      <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
         <el-input v-model="form.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
       </el-form-item>
-      <el-form-item label="类型" :label-width="formLabelWidth">
+      <el-form-item label="类型" prop="type" :label-width="formLabelWidth">
         <el-radio-group v-model="form.type" style="float: left;">
           <el-radio-button label="样品"></el-radio-button>
           <el-radio-button label="改批"></el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="批号" :label-width="formLabelWidth" required>
+      <el-form-item label="批号" prop="batch" :label-width="formLabelWidth" required>
         <!-- <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
         <el-select v-model="form.batch" filterable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
           <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="开始日期" :label-width="formLabelWidth" required>
+      <el-form-item label="开始日期" prop="startDate" :label-width="formLabelWidth" required>
         <el-date-picker v-model="form.startDate" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="timestamp" style="float: left;"></el-date-picker>
       </el-form-item>
       <el-form-item label="" :label-width="formLabelWidth" required>
@@ -115,16 +115,16 @@
 
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
-      <el-button type="primary" @click="addNotice()">确 定</el-button>
+      <el-button type="primary" @click="addNotice('form')">确 定</el-button>
     </div>
   </el-dialog>
 
   <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave" width="50%">
-    <el-form :model="form1" :rules="rules" ref="form" class="demo-ruleForm">
-      <el-form-item label="名称" :label-width="formLabelWidth" required>
+    <el-form :model="form1" :rules="rules" ref="form1" class="demo-ruleForm">
+      <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
         <el-input v-model="form1.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
       </el-form-item>
-      <el-form-item label="类型" :label-width="formLabelWidth">
+      <el-form-item label="类型" prop="type" :label-width="formLabelWidth">
         <el-radio-group v-model="form1.type" style="float: left;">
           <el-radio-button label="样品"></el-radio-button>
           <el-radio-button label="改批"></el-radio-button>
@@ -136,10 +136,10 @@
           <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="开始日期" :label-width="formLabelWidth" required>
+      <el-form-item label="开始日期" prop="startDate" :label-width="formLabelWidth" required>
         <el-date-picker v-model="form1.startDate" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="float: left;"></el-date-picker>
       </el-form-item>
-      <el-form-item label="" :label-width="formLabelWidth" required>
+      <el-form-item label="" prop="lineMachines" :label-width="formLabelWidth" required>
         <el-tag type="info" style="float: left; width: 80%;text-align: left;">
           机台 *
           <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="saveWorkshops()"></el-button>
@@ -203,7 +203,7 @@
 
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
-      <el-button type="primary" @click="saveNotice()">确 定</el-button>
+      <el-button type="primary" @click="saveNotice('form1')">确 定</el-button>
     </div>
   </el-dialog>
 
@@ -252,7 +252,8 @@ export default {
       formLabelWidth: '180px',
       rules: {
         name: [{ required: true, message: '必输项...', trigger: 'blur' }],
-        batchNo: [{ required: true, message: '必输项...', trigger: 'blur' }],
+        batchNo: [{ required: true, message: '必输项...', trigger: 'change' }],
+        type: [{ required: true, message: '必输项...', trigger: 'change' }],
         startDate: [{ required: true, message: '必输项...', trigger: 'change' }]
       },
       // 修改
@@ -371,7 +372,7 @@ export default {
         this.Lines.spindleSeq.push(i)
       }
     },
-    addNotice () {
+    addNotice (formName) {
       if (this.form.type === '改批') {
         this.form.type = 'CHANGE_BATCH'
       } else if (this.form.type === '样品') {
@@ -384,16 +385,26 @@ export default {
         }
       }
       console.log(this.form)
-      this.$api.addNotices(this.form).then(res => {
-        console.log(res)
-        this.$notify({
-          title: '成功',
-          message: '添加成功',
-          type: 'success'
+      if (this.form.lineMachines !== undefined) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$api.addNotices(this.form).then(res => {
+              console.log(res)
+              this.$notify({
+                title: '成功',
+                message: '添加成功',
+                type: 'success'
+              })
+              this.dialogFormVisibleAdd = false
+              this.getNotice()
+            })
+          } else {
+            return false
+          }
         })
-        this.dialogFormVisibleAdd = false
-        this.getNotice()
-      })
+      } else {
+        this.$message.error('请配置机台，否者无法提交！')
+      }
     },
     // 新增线别
     addLines () {
@@ -453,7 +464,7 @@ export default {
       this.form1.lineMachines = this.multipleSelection
       this.innerVisible = false
     },
-    saveNotice () {
+    saveNotice (formName) {
       if (this.form1.type === '改批') {
         this.form1.type = 'CHANGE_BATCH'
       } else if (this.form1.type === '样品') {
@@ -464,20 +475,30 @@ export default {
           this.form1.batch = this.optionsItem[i]
         }
       }
-      this.$api.saveNotice(this.form1).then(res => {
-        console.log(res)
-        if (res.errorCode !== 'E00000') {
-          this.$notify({
-            title: '成功',
-            message: '修改成功',
-            type: 'success'
-          })
-          this.dialogFormVisibleSave = false
-          this.getNotice()
-        } else {
-          this.$message.error(res.errorMessage)
-        }
-      })
+      if (this.form1.lineMachines !== undefined) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$api.saveNotice(this.form1).then(res => {
+              console.log(res)
+              if (res.errorCode !== 'E00000') {
+                this.$notify({
+                  title: '成功',
+                  message: '修改成功',
+                  type: 'success'
+                })
+                this.dialogFormVisibleSave = false
+                this.getNotice()
+              } else {
+                this.$message.error(res.errorMessage)
+              }
+            })
+          } else {
+            return false
+          }
+        })
+      } else {
+        this.$message.error('请配置机台，否者无法提交！')
+      }
     },
     // 分页配置
     handleSizeChange (val) {

@@ -14,31 +14,31 @@
       </el-table-column>
     </el-table>
     <el-dialog title="新 增" :visible.sync="dialogVisibleAdd" width="30%">
-      <el-form :model="form1">
-        <el-form-item label="公司" :label-width="formLabelWidth">
+      <el-form :model="form1" :rules="rules" ref="form1" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="公司" prop="company" :label-width="formLabelWidth" required>
           <el-input v-model="form1.company" auto-complete="off" disabled></el-input>
         </el-form-item>
-        <el-form-item label="名称" :label-width="formLabelWidth">
+        <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
           <el-input v-model="form1.name" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleAdd = false">取 消</el-button>
-        <el-button type="primary" @click="createWorkshop()">确 定</el-button>
+        <el-button type="primary" @click="addWorkshop('form1')">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="修 改" :visible.sync="dialogVisibleSave" width="30%">
-      <el-form :model="form2">
-        <el-form-item label="公司" :label-width="formLabelWidth">
+      <el-form :model="form2" :rules="rules" ref="form2" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="公司" prop="company" :label-width="formLabelWidth" required>
           <el-input v-model="form2.company" auto-complete="off" disabled></el-input>
         </el-form-item>
-        <el-form-item label="名称" :label-width="formLabelWidth">
+        <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
           <el-input v-model="form2.name" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleSave = false">取 消</el-button>
-        <el-button type="primary" @click="SaveWorkShop()">确 定</el-button>
+        <el-button type="primary" @click="SaveWorkShop('form2')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -63,7 +63,11 @@ export default {
         id: '',
         corporation: {}
       },
-      workshop: {}
+      workshop: {},
+      rules: {
+        name: [{ required: true, message: '必输项...', trigger: 'blur' }],
+        company: [{ required: true, message: '必输项...', trigger: 'blur' }]
+      }
     }
   },
   created () {
@@ -80,24 +84,29 @@ export default {
         this.loading = false
       })
     },
-    createWorkshop () {
+    addWorkshop (formName) {
       this.workshop = this.tableData[1].corporation
       this.workshop.createTime = new Date().getTime() // 创建时间戳
       this.workshop.modifyDateTime = this.workshop.createTime
-
-      this.$api.createWorkshop({
-        id: null,
-        name: this.form1.name,
-        note: null,
-        corporation: this.workshop
-      }).then(res => {
-        this.$notify({
-          title: '成功',
-          message: '新增成功',
-          type: 'success'
-        })
-        this.WorkShopLine()
-        this.dialogVisibleAdd = false
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.createWorkshop({
+            id: null,
+            name: this.form1.name,
+            note: null,
+            corporation: this.workshop
+          }).then(res => {
+            this.$notify({
+              title: '成功',
+              message: '新增成功',
+              type: 'success'
+            })
+            this.WorkShopLine()
+            this.dialogVisibleAdd = false
+          })
+        } else {
+          return false
+        }
       })
     },
     handleClick (row) {
@@ -108,20 +117,26 @@ export default {
       this.form2.id = row.id
       this.form2.corporation = row.corporation
     },
-    SaveWorkShop () {
-      this.$api.updateWorkshop({
-        id: this.form2.id,
-        name: this.form2.name,
-        note: null,
-        corporation: this.form2.corporation
-      }).then(res => {
-        this.$notify({
-          title: '成功',
-          message: '修改成功',
-          type: 'success'
-        })
-        this.WorkShopLine()
-        this.dialogVisibleSave = false
+    SaveWorkShop (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.updateWorkshop({
+            id: this.form2.id,
+            name: this.form2.name,
+            note: null,
+            corporation: this.form2.corporation
+          }).then(res => {
+            this.$notify({
+              title: '成功',
+              message: '修改成功',
+              type: 'success'
+            })
+            this.WorkShopLine()
+            this.dialogVisibleSave = false
+          })
+        } else {
+          return false
+        }
       })
     }
   }

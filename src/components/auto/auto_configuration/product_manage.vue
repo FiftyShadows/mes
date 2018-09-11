@@ -21,7 +21,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleAdd = false">取 消</el-button>
-        <el-button type="primary" @click="addProducts()">确 定</el-button>
+        <el-button type="primary" @click="addProducts('form')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -33,7 +33,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleSave = false">取 消</el-button>
-        <el-button type="primary" @click="saveProduct()">确 定</el-button>
+        <el-button type="primary" @click="saveProduct('form1')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -78,30 +78,42 @@ export default {
       this.form1.id = row.id
       this.dialogVisibleSave = true
     },
-    saveProduct () {
-      this.$api.saveProduct(this.form1).then(res => {
-        console.log(res)
-        this.getProduct()
-        this.dialogVisibleSave = false
-        this.$notify({
-          title: '成功',
-          message: '修改成功',
-          type: 'success'
-        })
+    saveProduct (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.saveProduct(this.form1).then(res => {
+            console.log(res)
+            this.getProduct()
+            this.dialogVisibleSave = false
+            this.$notify({
+              title: '成功',
+              message: '修改成功',
+              type: 'success'
+            })
+          })
+        } else {
+          return false
+        }
       })
     },
     openAdd () {
       this.dialogVisibleAdd = true
     },
-    addProducts () {
-      this.$api.addProduct(this.form).then(res => {
-        this.getProduct()
-        this.dialogVisibleAdd = false
-        this.$notify({
-          title: '成功',
-          message: '添加成功',
-          type: 'success'
-        })
+    addProducts (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.addProduct(this.form).then(res => {
+            this.getProduct()
+            this.dialogVisibleAdd = false
+            this.$notify({
+              title: '成功',
+              message: '添加成功',
+              type: 'success'
+            })
+          })
+        } else {
+          return false
+        }
       })
     },
     setting (row) {

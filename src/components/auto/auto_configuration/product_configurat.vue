@@ -9,15 +9,15 @@
         </el-tag>
         <el-collapse v-model="activeColapse" accordion>
           <el-collapse-item v-for="(item,index) in totalData" :key="item.id" :title="item.name">
-            <el-form :model="item" :rules="rules" ref="ChangeData" label-width="100px" class="demo-ruleForm">
+            <el-form :model="item" :rules="exceptionsRules" ref="item" label-width="100px" class="demo-ruleForm">
               <el-form-item label="权限code" prop="id">
                 <el-alert title="" type="info" :closable="false">ProductProcess:{{item.id}}</el-alert>
               </el-form-item>
-              <el-form-item label="名称*" prop="name">
+              <el-form-item label="名称" prop="name" required>
                 <el-input v-model="item.name"></el-input>
               </el-form-item>
-              <el-form-item label="排序*" prop="sortBy">
-                <el-input v-model="item.sortBy"></el-input>
+              <el-form-item label="排序" prop="sortBy" required>
+                <el-input v-model.number="item.sortBy"></el-input>
               </el-form-item>
               <el-form-item label="relateRoles:" prop="relateRoles">
                 <el-checkbox-group v-model="item.relateRoles" style="float: left;" @change="checkbox(index)">
@@ -59,7 +59,7 @@
                 </template>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="submitForm(index)" style="width: 100%;">保存</el-button>
+                <el-button type="primary" @click="submitForm(index, 'item')" style="width: 100%;">保存</el-button>
               </el-form-item>
             </el-form>
           </el-collapse-item>
@@ -67,14 +67,14 @@
       </el-tab-pane>
     </el-tabs>
     <el-dialog title="新增" :visible.sync="dialogVisibleAddProesses">
-      <el-form :model="productProesses">
+      <el-form :model="productProesses" :rules="exceptionsRules" ref="productProesses" label-width="100px" class="demo-ruleForm">
         <el-form-item label="产品" :label-width="formLabelWidthcode">
           <el-input v-model="productProesses.product.name" disabled></el-input>
         </el-form-item>
-        <el-form-item label="名称" :label-width="formLabelWidthcode">
+        <el-form-item label="名称" prop="name" :label-width="formLabelWidthcode">
           <el-input v-model="productProesses.name"></el-input>
         </el-form-item>
-        <el-form-item label="排序" :label-width="formLabelWidthcode">
+        <el-form-item label="排序" prop="sortBy" :label-width="formLabelWidthcode">
           <el-input-number v-model="productProesses.sortBy" :min="0" :step="1000" style="float: left;"></el-input-number>
         </el-form-item>
         <el-form-item label="role" :label-width="formLabelWidthcode">
@@ -118,7 +118,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="NewForm()">确 定</el-button>
+        <el-button type="primary" @click="NewForm('productProesses')">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="排 序" :visible.sync="dialogVisibleSort" width="50%" :before-close="handleClose">
@@ -195,8 +195,8 @@
       </span>
     </el-dialog>
     <el-dialog title="新建模板" :visible.sync="dialogVisibleCreate">
-      <el-form :model="createform">
-        <el-form-item label="活动名称" :label-width="formLabelWidth">
+      <el-form :model="createform" :rules="exceptionsRules" ref="createform" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="名称" prop="name" :label-width="formLabelWidth">
           <el-input v-model="createform.name" auto-complete="off" clearable></el-input>
         </el-form-item>
       </el-form>
@@ -221,19 +221,19 @@
       </span>
     </el-dialog>
     <el-dialog title="新建表单字段" :visible.sync="dialogVisibleNewCode">
-      <el-form :model="createCode">
-        <el-form-item label="名称" :label-width="formLabelWidthcode">
+      <el-form :model="createCode" :rules="exceptionsRules" ref="createCode" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="名称" prop="name" :label-width="formLabelWidthcode">
           <el-input v-model="createCode.name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="是否必输" :label-width="formLabelWidthcode">
+        <el-form-item label="是否必输" prop="required" :label-width="formLabelWidthcode">
           <el-checkbox v-model="createCode.required" label="必输项" border style="float:left;"></el-checkbox>
         </el-form-item>
-        <el-form-item label="值类型" :label-width="formLabelWidthcode">
+        <el-form-item label="值类型" prop="valueType" :label-width="formLabelWidthcode">
           <el-select v-model="createCode.valueType" placeholder="请选择" style="float:left;">
             <el-option v-for="item in optionsCode" :label="item.name" :value="item.valueType" :key="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="输入类型" :label-width="formLabelWidthcode">
+        <el-form-item label="输入类型" prop="inputType" :label-width="formLabelWidthcode">
           <el-select v-model="createCode.inputType" placeholder="请选择" style="float:left;">
             <el-option label="默认" value="DEFAULT"></el-option>
             <el-option label="下拉列表" value="SELECTION"></el-option>
@@ -256,15 +256,16 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addNewCode()">确 定</el-button>
+        <el-button type="primary" @click="addNewCode('createCode')">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog title="新建选项值" :visible.sync="dialogVisibleSelects">
-      <el-form :model="selectOptions">
-        <el-form-item label="活动名称" :label-width="formLabelWidth">
+      <!-- <el-form :model="selectOptions">
+        <el-form-item label="活动名称" prop="name" :label-width="formLabelWidth">
           <el-input v-model="selectOptions.name" auto-complete="off"></el-input>
         </el-form-item>
-      </el-form>
+      </el-form> -->
+      <el-input v-model="selectOptions.name"></el-input>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="addSelectOptions()">确 定</el-button>
       </div>
@@ -374,12 +375,18 @@ export default {
         {name: '布尔', valueType: 'BOOLEAN'},
         {name: '数值', valueType: 'NUMBER'}
       ],
-      selectOptions: {}, // 新建选项值
+      selectOptions: { // 新建选项值
+        name: ''
+      },
       showSelectOptions: [], // 展示列表
       isSaveOption: false, // 是否修改下拉值
       // 表单验证规则
       exceptionsRules: {
-        name: [{ required: true, message: '必输项', trigger: 'blur' }]
+        name: [{ required: true, message: '必输项', trigger: 'blur' }],
+        sortBy: [{ type: 'number', required: true, message: '请输入数字', trigger: 'blur' }],
+        required: [{ required: true, message: '必选项', trigger: 'change' }],
+        valueType: [{ required: true, message: '必选项', trigger: 'change' }],
+        inputType: [{ required: true, message: '必选项', trigger: 'change' }]
       }
     }
   },
@@ -452,14 +459,20 @@ export default {
         }
       })
     },
-    submitForm (index) {
-      this.$api.sortProesses(this.totalData[index]).then(res => {
-        console.log(res)
-        this.$notify({
-          title: '成功',
-          message: '保存成功',
-          type: 'success'
-        })
+    submitForm (index, formName) {
+      this.$refs[formName][index].validate((valid) => {
+        if (valid) {
+          this.$api.sortProesses(this.totalData[index]).then(res => {
+            console.log(res)
+            this.$notify({
+              title: '成功',
+              message: '保存成功',
+              type: 'success'
+            })
+          })
+        } else {
+          return false
+        }
       })
     },
     // 关闭弹窗
@@ -552,34 +565,51 @@ export default {
     },
     addNewFormcode () {
       this.createform.formFieldConfigs = this.showCode
-      this.$api.addCode(this.createform).then(res => {
-        console.log(res)
-        this.$notify({
-          title: '成功',
-          message: '添加成功',
-          type: 'success'
+      console.log(this.createform.formFieldConfigs)
+      if (this.createform.name === '') {
+        this.$message.error('无法新建，请输入名称！')
+      } else if (this.createform.formFieldConfigs.length === 0) {
+        this.$message.error('无法新建，请新建表单字段！')
+      } else {
+        this.$api.addCode(this.createform).then(res => {
+          console.log(res)
+          this.$notify({
+            title: '成功',
+            message: '添加成功',
+            type: 'success'
+          })
+          this.formFieldConfigs = res.data // 赋值完成
+          if (this.formFieldConfigs !== '') {
+            this.productProesses.formConfig = this.formFieldConfigs
+          }
+          this.dialogVisibleCreate = false
+          this.dialogVisibleForm = false
+          this.formFieldConfigs = []
         })
-        this.formFieldConfigs = res.data // 赋值完成
-        if (this.formFieldConfigs !== '') {
-          this.productProesses.formConfig = this.formFieldConfigs
-        }
-        this.dialogVisibleCreate = false
-        this.dialogVisibleForm = false
-        this.formFieldConfigs = []
-      })
+      }
     },
-    NewForm () { // 新增确定按钮
-      console.log(this.productProesses)
-      this.$api.addProductProcesses(this.productProesses).then(res => {
-        console.log(res)
-        this.$notify({
-          title: '成功',
-          message: '添加成功',
-          type: 'success'
+    NewForm (formName) { // 新增确定按钮
+      console.log(this.productProesses.exceptions)
+      if (this.productProesses.exceptions.length === 0) {
+        this.$message.error('请选择丝锭异常, 否则无法新增!')
+      } else {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$api.addProductProcesses(this.productProesses).then(res => {
+              console.log(res)
+              this.$notify({
+                title: '成功',
+                message: '添加成功',
+                type: 'success'
+              })
+              this.dialogVisibleAddProesses = false
+              this.handleClose()
+            })
+          } else {
+            return false
+          }
         })
-        this.dialogVisibleAddProesses = false
-        this.handleClose()
-      })
+      }
     },
     // 排序（有修改不能复用）
     getOldSort () {
@@ -680,8 +710,8 @@ export default {
                 this.checkedSilks = this.totalData[this.index].exceptions.map(item => {
                   return item.name
                 })
-                this.checkedSilks.push(this.newSilkExceptions.name)
               }
+              this.checkedSilks.push(this.newSilkExceptions.name)
               this.innerVisibleSilkExceptions = false
               console.log(this.silkExceptTable)
             })
@@ -802,18 +832,33 @@ export default {
       this.dialogVisibleForm = false
       console.log(this.value)
     },
-    addNewCode () { // 添加新字段
-      this.createCode.selectOptions = this.showSelectOptions.map(item => { return item.name }) // 传入select
-      this.createCode.multi = false
-      if (this.isSave) {
-        this.showCode[this.saveIndex] = this.createCode
-        this.dialogVisibleNewCode = false
-        this.isSave = false
-      } else {
-        this.showCode.push(this.createCode)
-        this.dialogVisibleNewCode = false
+    addNewCode (formName) { // 添加新字段
+      // console.log(this.createCode.inputType)
+      // console.log(this.showSelectOptions)
+      if (this.createCode.inputType === 'SELECTION') {
+        if (this.showSelectOptions.length !== 0) {
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              this.createCode.selectOptions = this.showSelectOptions.map(item => { return item.name }) // 传入select
+              this.createCode.multi = false
+              if (this.isSave) {
+                this.showCode[this.saveIndex] = this.createCode
+                this.dialogVisibleNewCode = false
+                this.isSave = false
+              } else {
+                this.showCode.push(this.createCode)
+                this.dialogVisibleNewCode = false
+              }
+              this.showSelectOptions = []
+              console.log(this.showCode)
+            } else {
+              return false
+            }
+          })
+        } else {
+          this.$message.error('无法新建，请配置选项值!')
+        }
       }
-      console.log(this.showCode)
     },
     addFormcode () { // 添加方法
       this.createform.formFieldConfigs = this.showCode
@@ -837,6 +882,10 @@ export default {
       this.isSave = true
       this.saveIndex = i
       this.createCode = row
+      for (let i of row.selectOptions) {
+        this.showSelectOptions.push({name: i})
+      }
+      console.log(this.showSelectOptions)
       this.dialogVisibleNewCode = true
     },
     deletedCode (i, row) {
@@ -846,14 +895,20 @@ export default {
     },
     addSelectOptions () {
       console.log(this.selectOptions)
-      if (this.isSaveOption) {
-        // console.log(this.selectIndex)
-        this.showSelectOptions[this.selectIndex] = this.selectOptions
-        this.isSaveOption = false
-        this.dialogVisibleSelects = false
+      if (this.selectOptions.name !== undefined) {
+        if (this.isSaveOption) {
+          // console.log(this.selectIndex)
+          this.showSelectOptions[this.selectIndex] = this.selectOptions
+          console.log(this.showSelectOptions)
+          this.isSaveOption = false
+          this.dialogVisibleSelects = false
+        } else {
+          this.showSelectOptions.push(this.selectOptions)
+          console.log(this.showSelectOptions)
+          this.dialogVisibleSelects = false
+        }
       } else {
-        this.showSelectOptions.push(this.selectOptions)
-        this.dialogVisibleSelects = false
+        this.$message.error('无法新建，请输入选项值!')
       }
     },
     saveOptions (i, row) {
