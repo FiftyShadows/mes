@@ -156,9 +156,17 @@ export default {
   silkExceptions () {
     return axios.get(`${baseAutoUrl}/silkExceptions`)
   },
+  // 产品管理--配置--新增丝锭异常
+  addsilkExceptions (data) {
+    return axios.post(`${baseAutoUrl}/silkExceptions`, data)
+  },
   // 产品管理--配置--丝锭备注
   silkNotes () {
     return axios.get(`${baseAutoUrl}/silkNotes`)
+  },
+  // 产品管理--配置--新增丝锭备注
+  addSilkNotes (data) {
+    return axios.post(`${baseAutoUrl}/silkNotes`, data)
   },
   // 产品管理--配置--表单搜索
   searchForms (data) {

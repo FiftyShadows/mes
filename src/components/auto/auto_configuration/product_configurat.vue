@@ -134,37 +134,64 @@
       </span>
     </el-dialog>
     <el-dialog title="丝锭异常" :visible.sync="dialogVisibleSilkExceptions" :before-close="handleClose1">
+      <el-dialog width="30%" title="新建异常" :visible.sync="innerVisibleSilkExceptions" append-to-body>
+        <el-form :model="newSilkExceptions" :rules="exceptionsRules" ref="newSilkExceptions" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="异常" prop="name">
+            <el-input v-model="newSilkExceptions.name" clearable placeholder="请输入异常..."></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="addSilkExceptions('newSilkExceptions')">确 定</el-button>
+        </div>
+      </el-dialog>
       <el-checkbox :indeterminate="isIndeterminateSilk" v-model="checkAllSilk" @change="handleCheckAllSilkChange">全选</el-checkbox>
       <div style="margin: 15px 0;"></div>
       <el-checkbox-group v-model="checkedSilks" @change="handleCheckedSilksChange">
         <el-checkbox v-for="item in silkExceptTable" :label="item" :key="item" style="margin:5px;" border>{{item}}</el-checkbox>
       </el-checkbox-group>
       <span slot="footer" class="dialog-footer">
+        <el-button type="success" @click="innerVisibleSilkExceptions = true">新 增</el-button>
         <el-button type="primary" v-if="isNewSilk" @click="addSilk()">确 定</el-button>
         <el-button type="primary" v-else @click="saveSilk()">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="丝锭备注" :visible.sync="dialogVisibleSilkNotes" :before-close="handleClose2">
+      <el-dialog width="30%" title="新建备注" :visible.sync="innerVisibleSilkNotes" append-to-body>
+        <el-form :model="newSilkNotes" :rules="exceptionsRules" ref="newSilkNotes" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="备注" prop="name">
+            <el-input v-model="newSilkNotes.name" clearable placeholder="请输入备注..."></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="addSilkNotes('newSilkNotes')">确 定</el-button>
+        </div>
+      </el-dialog>
       <el-checkbox :indeterminate="isIndeterminateNote" v-model="checkAllNote" @change="handleCheckAllNoteChange">全选</el-checkbox>
       <div style="margin: 15px 0;"></div>
       <el-checkbox-group v-model="checkedNotes" @change="handleCheckedNoteChange">
         <el-checkbox v-for="item in silkNoteTable" :label="item" :key="item" style="margin:5px;" border>{{item}}</el-checkbox>
       </el-checkbox-group>
       <span slot="footer" class="dialog-footer">
+        <el-button type="success" @click="innerVisibleSilkNotes = true">新 增</el-button>
         <el-button type="primary" v-if="isNewNotes" @click="addNewNotes()">确 定</el-button>
         <el-button type="primary" v-else @click="saveNotes()">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="表单模板选择" :visible.sync="dialogVisibleForm">
       <el-select v-model="value" v-if="!isNewForm" filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod" :loading="loading" @change="choseForm()">
-        <el-option v-for="item in optionsForm" :key="item.id" :label="item.name" :value="item.name"></el-option>
+        <el-option v-for="item in optionsForm" :key="item.id" :label="item.name" :value="item.name">
+          {{item.name}}
+          <el-button type="primary" icon="el-icon-edit" circle @click="saveOptionsFormItem(item.name)" :change="false" style="float: right;" size="mini"></el-button>
+        </el-option>
       </el-select>
       <el-select v-model="value" v-else filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod" :loading="loading" @change="choseNewForm()">
-        <el-option v-for="item in optionsForm" :key="item.id" :label="item.name" :value="item.name"></el-option>
+        <el-option v-for="item in optionsForm" :key="item.id" :label="item.name" :value="item.name">
+          {{item.name}}
+          <el-button type="primary" icon="el-icon-edit" @click="saveOptionsFormItem(item.name)" style="float: right; z-index: 999;" size="mini"></el-button>
+        </el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisibleCreate = true">新建表单</el-button>
-        <!-- <el-button type="primary" @click="addForm()">确 定</el-button> -->
       </span>
     </el-dialog>
     <el-dialog title="新建模板" :visible.sync="dialogVisibleCreate">
@@ -262,7 +289,9 @@ export default {
       dialogVisibleAddProesses: false, // 新增工序
       dialogVisibleSort: false, // 排序弹框
       dialogVisibleSilkExceptions: false, // 丝锭异常弹框
+      innerVisibleSilkExceptions: false, // 丝锭异常 新建异常
       dialogVisibleSilkNotes: false, // 丝锭备注
+      innerVisibleSilkNotes: false, // 新建备注
       dialogVisibleForm: false, // 搜索表单
       dialogVisibleCreate: false, // 新建表单
       dialogVisibleNewCode: false, // 添加字段
@@ -305,13 +334,20 @@ export default {
       isIndeterminateSilk: true,
       silkExceptTable: [], // 所有丝锭异常列表
       checkedSilks: [], // 已有异常
+      newSilkExceptions: { // 新增异常选项
+        name: ''
+      },
       // 丝锭备注
       silkNotes: [],
       checkAllNote: false,
       isIndeterminateNote: true,
       silkNoteTable: [], // 所有丝锭备注列表
       checkedNotes: [], // 已有备注
+      newSilkNotes: { // 新增备注选项
+        name: ''
+      },
       // 表单选择
+      isSaveForm: false, // 表单是添加还是修改
       formFieldConfigs: '', // 最终显示的数据
       formLabelWidth: '',
       formLabelWidthcode: '120px',
@@ -340,7 +376,11 @@ export default {
       ],
       selectOptions: {}, // 新建选项值
       showSelectOptions: [], // 展示列表
-      isSaveOption: false // 是否修改下拉值
+      isSaveOption: false, // 是否修改下拉值
+      // 表单验证规则
+      exceptionsRules: {
+        name: [{ required: true, message: '必输项', trigger: 'blur' }]
+      }
     }
   },
   created () {
@@ -592,9 +632,11 @@ export default {
           return item.name
         })
         this.dialogVisibleSilkExceptions = true
-        this.checkedSilks = this.totalData[index].exceptions.map(item => {
-          return item.name
-        })
+        if (this.totalData[index].exceptions) {
+          this.checkedSilks = this.totalData[index].exceptions.map(item => {
+            return item.name
+          })
+        }
       })
     },
     handleCheckAllSilkChange (val) {
@@ -620,6 +662,35 @@ export default {
       this.dialogVisibleSilkExceptions = false
       this.checkedSilks = [] // 赋值结束 清空
     },
+    addSilkExceptions (formName) { // 新增丝锭异常选项
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.addsilkExceptions(this.newSilkExceptions).then(res => {
+            this.$notify({
+              title: '成功',
+              message: '新增成功',
+              type: 'success'
+            })
+            this.$api.silkExceptions().then(res => {
+              this.silkExcepts = res.data
+              this.silkExceptTable = res.data.map(item => {
+                return item.name
+              })
+              if (this.totalData[this.index].exceptions) {
+                this.checkedSilks = this.totalData[this.index].exceptions.map(item => {
+                  return item.name
+                })
+                this.checkedSilks.push(this.newSilkExceptions.name)
+              }
+              this.innerVisibleSilkExceptions = false
+              console.log(this.silkExceptTable)
+            })
+          })
+        } else {
+          return false
+        }
+      })
+    },
     // 丝锭备注
     openNotes (index) {
       this.index = index
@@ -629,9 +700,11 @@ export default {
           return item.name
         })
         this.dialogVisibleSilkNotes = true
-        this.checkedNotes = this.totalData[index].notes.map(item => {
-          return item.name
-        })
+        if (this.totalData[index].notes) {
+          this.checkedNotes = this.totalData[index].notes.map(item => {
+            return item.name
+          })
+        }
       })
     },
     handleCheckAllNoteChange (val) {
@@ -656,6 +729,35 @@ export default {
       this.dialogVisibleSilkNotes = false
       this.checkedNotes = [] // 清空
     },
+    addSilkNotes (formName) { // 新增备注选项
+      console.log(this.index)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.addSilkNotes(this.newSilkNotes).then(res => {
+            this.$notify({
+              title: '成功',
+              message: '新增成功',
+              type: 'success'
+            })
+            this.$api.silkNotes().then(res => {
+              this.silkNotes = res.data
+              this.silkNoteTable = res.data.map(item => {
+                return item.name
+              })
+              if (this.totalData[this.index].notes) {
+                this.checkedNotes = this.totalData[this.index].notes.map(item => {
+                  return item.name
+                })
+                this.checkedNotes.push(this.newSilkNotes.name)
+              }
+              this.innerVisibleSilkNotes = false
+            })
+          })
+        } else {
+          return false
+        }
+      })
+    },
     // 表单模板选择
     // addForm () {
     //   this.dialogVisibleForm = false
@@ -663,6 +765,17 @@ export default {
     //     this.totalData[this.index].formConfig = this.formFieldConfigs
     //   }
     // },
+    saveOptionsFormItem (name) {
+      for (let i = 0; i < this.optionsForm.length; i++) {
+        if (this.optionsForm[i].name === name) {
+          this.value = this.optionsForm[i]
+        }
+      }
+      console.log(this.value)
+      this.createform = this.value
+      this.showCode = this.value.formFieldConfigs
+      this.dialogVisibleCreate = true
+    },
     openForms (i) {
       this.index = i
       this.dialogVisibleForm = true
