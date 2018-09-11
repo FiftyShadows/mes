@@ -1,7 +1,7 @@
 <template>
   <div class="current">
     <div style="height: 50px;">
-      <el-select v-model="code" filterable clearable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" @change="getSearchData" v-loading.fullscreen.lock="fullscreenLoading" style="float:left;">
+      <el-select v-model="code" filterable clearable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" @change="getSearchData" style="float:left;">
         <el-option v-for="item in options" :key="item.id" :label="item.code" :value="item.number"></el-option>
       </el-select>
       <el-radio-group v-model="order" style="float: right;" @change="changeOrder">
@@ -41,45 +41,15 @@
           </el-checkbox-group>
         </div>
       </div>
-      <div class="right">
-        <el-card v-for="(item,index) in eventSources" v-if="item.productProcess" :key="index" class="box-card">
-          <div slot="header" class="clearfix">
-            <span style="float: left;">
-              <span style="font-weight: bold; font-size: 17px; color: #409EFF;">{{item.operator.name}}</span>
-              <span style="font-weight: bold;">{{item.operator.hrId}}</span>
-              <br>
-              <i>{{item.firstTime}}</i>
-            </span>
-            <el-button style="float: right;" type="warning" size="mini">{{item.productProcess.name}}</el-button>
-          </div>
-          <div class="silkRuntimes" v-if="item.silkRuntimes[0]">
-            <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭</el-tag>
-            <el-button size="mini" class="btn silkbtn" v-for="runtimes in item.silkRuntimes" plain :key="runtimes.id">
-              {{runtimes.sideType}}面 —— {{runtimes.row}} —— {{runtimes.col}}
-            </el-button>
-          </div>
-          <div class="silkExceptions" v-if="item.silkExceptions">
-            <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭异常</el-tag>
-            <el-button size="mini" class="btn" type="danger" v-for="exceptions in item.silkExceptions" plain round :key="exceptions.id">{{exceptions.name}}</el-button>
-          </div>
-          <div class="notes" style="margin-top: 10px;" v-if="item.silkNotes">
-            <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭备注</el-tag>
-            <el-button size="mini" class="btn" type="info" v-for="notes in item.silkNotes" plain round :key="notes.id">{{notes.name}}</el-button>
-          </div>
-          <div class="silkform" style="margin-top: 10px;" v-if="item.formConfig">
-            <el-tag type="info" style="float: left; width: 100%;text-align: left;">{{item.formConfig.name}}</el-tag>
-            <div v-for="config in item.formConfig.formFieldConfigs" :key="config.id">
-              <el-tag class="btn">{{config.name}}</el-tag>
-              <el-tag v-if="config.value" class="btn">{{config.value}}</el-tag>
-            </div>
-          </div>
-        </el-card>
-      </div>
+      <current-operator :eventSources='eventSources'></current-operator>
     </div>
     <el-dialog :title="dialogName" :visible.sync="dialogFormVisibleEvents">
       <el-form :model="EventsForm" :label-width="formLabelWidth">
-        <el-form-item label="">
-          <el-input style="width: 60%;float: left;" v-model="EventsForm.name" disabled></el-input>
+        <el-form-item label="条码">
+          <el-input style="width: 40%;float: left;" v-model="EventsForm.name" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="车次">
+          <el-input style="width: 40%;float: left;" v-model="EventsForm.id" disabled></el-input>
         </el-form-item>
         <el-form-item label="丝锭异常" :label-width="formLabelWidth">
           <el-select style="float: left;" v-model="EventsForm.silkExceptions" multiple placeholder="请选择">
@@ -87,24 +57,28 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="" v-if="EventsForm.formConfig" :label-width="formLabelWidth">
-          <el-tag type="primary" style="width: 80%;text-align: left;float: left;">
+        <el-form-item label="丝锭备注" :label-width="formLabelWidth">
+          <el-select style="float: left;" v-model="EventsForm.silkNotes" multiple placeholder="请选择">
+            <el-option v-for="item in notesOptions" :key="item.id" :label="item.name" :value="item.name">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="表单名称" v-if="EventsForm.formConfig" :label-width="formLabelWidth">
+          <el-tag type="primary" style="width: 100%;text-align: left;float: left;">
             {{EventsForm.formConfig.name}}
           </el-tag>
-          <template>
-            <div class="Form" v-for="item in EventsForm.formConfig.formFieldConfigs" :key="item.id">
-              <el-tag type="info">{{item.name}}</el-tag>
-              <el-input-number v-model="item.valueConfig" v-if="item.valueType === 'NUMBER' && item.inputType !== 'SELECTION'" label="请输入"></el-input-number>
-              <el-input v-model="item.valueConfig" v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容" style="width: 60%;"></el-input>
-              <el-select v-model="item.valueConfig" v-if="item.valueType !== 'BOOLEAN' && item.inputType === 'SELECTION'" placeholder="请选择">
-                <el-option v-for="item in item.selectOptions" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
-              <el-select v-model="item.valueConfig" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择">
-                <el-option label="是" value="true"></el-option>
-                <el-option label="否" value="false"></el-option>
-              </el-select>
-            </div>
-          </template>
+          <div v-for="item in EventsForm.formConfig.formFieldConfigs" :key="item.id">
+            <el-tag type="info" style="float: left;">{{item.name}}</el-tag>
+            <el-input-number v-model="item.valueConfig" v-if="item.valueType === 'NUMBER' && item.inputType !== 'SELECTION'" label="请输入" style="float: left;"></el-input-number>
+            <el-input v-model="item.valueConfig" v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容" style="width: 60%;float: left;"></el-input>
+            <el-select v-model="item.valueConfig" v-if="item.valueType !== 'BOOLEAN' && item.inputType === 'SELECTION'" placeholder="请选择" style="float: left;">
+              <el-option v-for="item in item.selectOptions" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+            <el-select v-model="item.valueConfig" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择" style="float: left;">
+              <el-option label="是" value="true"></el-option>
+              <el-option label="否" value="false"></el-option>
+            </el-select>
+          </div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -114,8 +88,12 @@
   </div>
 </template>
 <script>
+import CurrentOperator from './current-operator.vue'
 export default {
   name: 'current',
+  components: {
+    'current-operator': CurrentOperator
+  },
   data () {
     return {
       fullscreenLoading: false, // loading
@@ -141,17 +119,19 @@ export default {
       checkAllB: false,
       EventsForm: { // 操作数据 // 提交事件数据
         name: '', // 批号
+        id: '', // 车次
         valueConfig: '', // 绑定表单数据
         silkExceptions: [], // 上传异常
         productProcess: {}, // 上传工序
         silkCarRecord: {}, // 单号情况
-        silkNotes: null,
+        silkNotes: [], // 备注
         silkRuntimes: [],
         formConfig: null, // 表单
         formConfigValueData: {} // 表单value
       },
       formLabelWidth: '120px',
       silkOptions: [], // 丝锭异常列表
+      notesOptions: [], // 丝锭备注列表
       dialogFormVisibleEvents: false,
       dialogName: ''
     }
@@ -186,7 +166,6 @@ export default {
         }
       }
       this.$api.getSearchData(this.value).then(res => {
-        console.log(res)
         this.searchData = res.data
         this.ifShow = true
         this.silkCarRecord = this.searchData.silkCarRecord // 丝车信息
@@ -207,8 +186,9 @@ export default {
           let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
           let D = date.getDate() + ' '
           let H = date.getHours() + ':'
-          let m = date.getMinutes() + ' '
-          this.eventSources[i].firstTime = Y + M + D + H + m
+          let m = date.getMinutes() + ':'
+          let S = date.getSeconds() + ' '
+          this.eventSources[i].firstTime = Y + M + D + H + m + S
           // 工序信息
           if (this.eventSources[i].productProcess) { // productProcess中存在空的 所以需要判断之后在进行 要不然会报错
             this.$api.productProcesses(this.eventSources[i].productProcess.id).then(res => {
@@ -260,8 +240,10 @@ export default {
           }
         }
         console.log('eventSources', this.eventSources)
-        this.batchOptions = this.searchData.silkRuntimes
-        this.fullscreenLoading = false
+        this.batchOptions = this.searchData.silkRuntimes.sort(function (a, b) {
+          return a.row - b.row
+        })
+        // this.fullscreenLoading = false
         this.getProcesses()
       })
     },
@@ -269,9 +251,12 @@ export default {
       // console.log(val)
       this.dialogName = val
       this.EventsForm.name = this.silkCarRecord.silkCar.code
+      this.EventsForm.id = this.silkCarRecord.id
+      console.log(this.selected)
       for (let i = 0; i < this.selected.length; i++) {
         if (this.selected[i].name === this.dialogName) {
           this.silkOptions = this.selected[i].exceptions
+          this.notesOptions = this.selected[i].notes
         }
       }
       for (let i in this.selected) { // 分辨操作工序
@@ -303,20 +288,22 @@ export default {
       // }
       // this.EventsForm.silkCarRecord = this.silkCarRecord
       // this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
-      console.log(this.EventsForm.formConfig.formFieldConfigs) // 数组
+      // console.log(this.EventsForm.formConfig.formFieldConfigs) // 数组
       // console.log(this.EventsForm.formConfig.formFieldConfigs.valueConfig)
       // if (this.valueConfig === 'true') {
       //   this.valueConfig = true
       // } else if (this.valueConfig === 'false') {
       //   this.valueConfig = false
       // }
-      for (let i in this.EventsForm.formConfig.formFieldConfigs) {
-        let value = this.EventsForm.formConfig.formFieldConfigs[i]
-        this.EventsForm.formConfigValueData[value.id] = value.valueConfig
-        if (this.EventsForm.formConfigValueData[value.id] === 'true') {
-          this.EventsForm.formConfigValueData[value.id] = true
-        } else if (value.valueConfig === 'false') {
-          this.EventsForm.formConfigValueData[value.id] = false
+      if (this.EventsForm.formConfig) {
+        for (let i in this.EventsForm.formConfig.formFieldConfigs) {
+          let value = this.EventsForm.formConfig.formFieldConfigs[i]
+          this.EventsForm.formConfigValueData[value.id] = value.valueConfig
+          if (this.EventsForm.formConfigValueData[value.id] === 'true') {
+            this.EventsForm.formConfigValueData[value.id] = true
+          } else if (value.valueConfig === 'false') {
+            this.EventsForm.formConfigValueData[value.id] = false
+          }
         }
       }
       console.log(this.EventsForm)
@@ -414,11 +401,6 @@ export default {
           padding-left: 5px;
           color: #aaa;
         }
-        // .el-tag {
-        //   position: absolute;
-        //   left: 60%;
-        //   bottom: 10px;
-        // }
         .selected {
           position: absolute;
           right: 10px;
@@ -430,15 +412,10 @@ export default {
     .el-checkbox {
       font-weight: bold;
     }
-    .right {
-      position: absolute;
-      width: 50%;
-      height: 100%;
-      // border: 1px solid black;
-      right: 0;
-      overflow-y: auto;
-    }
   }
+}
+.From {
+  float: left;
 }
 // 多选框
 .el-checkbox-group {
@@ -464,34 +441,5 @@ export default {
   height: auto;
   width: 22%;
 }
-// 人员操作
-.text {
-  font-size: 14px;
-}
-.item {
-  margin-bottom: 18px;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both
-}
-.box-card {
-  width: 100%;
-  margin-bottom: 10px;
-}
-.btn {
-  margin-top: 10px;
-}
-.silkbtn {
-  display: block;
-  margin-left: 10px;
-}
-.Form {
-  float: left;
-  margin-top: 10px;
-}
+
 </style>

@@ -34,19 +34,19 @@
         <el-form-item label="公司" :label-width="formLabelWidth">
           <el-input v-model="form.name" auto-complete="off" style="width: 60%; float: left;" disabled></el-input>
         </el-form-item>
-        <el-form-item label="编号" :label-width="formLabelWidth" prop="number" required>
+        <el-form-item label="编号" prop="number" :label-width="formLabelWidth">
           <el-input v-model="form.number" auto-complete="off" @input="changeCode()"  style="width: 60%; float: left;" ></el-input>
         </el-form-item>
         <el-form-item label="条码" :label-width="formLabelWidth">
           <el-input v-model="form.code" auto-complete="off" style="width: 60%; float: left;" disabled></el-input>
         </el-form-item>
-        <el-form-item label="行" :label-width="formLabelWidth">
+        <el-form-item label="行" prop="row" :label-width="formLabelWidth">
           <el-input-number size="small" v-model="form.row" style="width: 120px; float: left;"></el-input-number>
         </el-form-item>
-        <el-form-item label="列" :label-width="formLabelWidth">
+        <el-form-item label="列" prop="col" :label-width="formLabelWidth">
           <el-input-number size="small" v-model="form.col" style="width: 120px; float: left;"></el-input-number>
         </el-form-item>
-        <el-form-item label="" :label-width="formLabelWidth">
+        <el-form-item label="" prop="type" :label-width="formLabelWidth">
           <el-radio-group v-model="form.type" style="width: 60%; float: left;">
             <el-radio-button label="普通丝车"></el-radio-button>
             <el-radio-button label="大 丝 车"></el-radio-button>
@@ -55,7 +55,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog()">取 消</el-button>
-        <el-button type="primary" @click="addSilks()">确 定</el-button>
+        <el-button type="primary" @click="addSilks('form')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -64,10 +64,10 @@
         <el-form-item label="公司" :label-width="formLabelWidth">
           <el-input v-model="form.name" auto-complete="off" style="width: 60%;float: left;" disabled></el-input>
         </el-form-item>
-        <el-form-item label="行" :label-width="formLabelWidth">
+        <el-form-item label="行" prop="row" :label-width="formLabelWidth">
           <el-input-number size="small" v-model="form.row" style="width: 120px;float: left;"></el-input-number>
         </el-form-item>
-        <el-form-item label="列" :label-width="formLabelWidth">
+        <el-form-item label="列" prop="col" :label-width="formLabelWidth">
           <el-input-number size="small" v-model="form.col" style="width: 120px;float: left;"></el-input-number>
         </el-form-item>
         <el-form-item label="" :label-width="formLabelWidth">
@@ -76,7 +76,7 @@
             <el-radio-button label="大 丝 车"></el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="批量" :label-width="formLabelWidth" prop="items" required>
+        <el-form-item label="批量" :label-width="formLabelWidth" required>
           <el-input v-model="form.items.startItem" auto-complete="off" style="width: 80px;float:left;"></el-input>
           <span style="float: left;"> —— </span>
           <el-input v-model="form.items.endItem" auto-complete="off" style="width: 80px;float:left;"></el-input>
@@ -85,7 +85,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog()">取 消</el-button>
-        <el-button type="primary" @click="AddBatchSilk()">确 定</el-button>
+        <el-button type="primary" @click="AddBatchSilk('form')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -94,16 +94,16 @@
         <el-form-item label="公司" :label-width="formLabelWidth">
           <el-input v-model="form1.name" auto-complete="off" style="width: 60%; float: left;" disabled></el-input>
         </el-form-item>
-        <el-form-item label="编号" :label-width="formLabelWidth" prop="number" required>
+        <el-form-item label="编号" prop="number" :label-width="formLabelWidth" required>
           <el-input v-model="form1.number" auto-complete="off" @input="changeCode()"  style="width: 60%; float: left;" ></el-input>
         </el-form-item>
         <el-form-item label="条码" :label-width="formLabelWidth">
           <el-input v-model="form1.code" auto-complete="off" style="width: 60%; float: left;" disabled></el-input>
         </el-form-item>
-        <el-form-item label="行" :label-width="formLabelWidth">
+        <el-form-item label="行" prop="row" :label-width="formLabelWidth">
           <el-input-number size="small" v-model="form1.row" style="width: 120px; float: left;"></el-input-number>
         </el-form-item>
-        <el-form-item label="列" :label-width="formLabelWidth">
+        <el-form-item label="列" prop="col" :label-width="formLabelWidth">
           <el-input-number size="small" v-model="form1.col" style="width: 120px; float: left;"></el-input-number>
         </el-form-item>
         <el-form-item label="" :label-width="formLabelWidth">
@@ -115,7 +115,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog()">取 消</el-button>
-        <el-button type="primary" @click="saveSilks()">确 定</el-button>
+        <el-button type="primary" @click="saveSilks('form1')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -157,7 +157,10 @@ export default {
       },
       dialogFormVisibleSave: false,
       rules: {
-        number: [{ required: true, message: '必输项...', trigger: 'blur' }]
+        number: [{ required: true, message: '必输项...', trigger: 'blur' }],
+        col: [{ required: true, message: '必输项...', trigger: 'blur' }],
+        row: [{ required: true, message: '必输项...', trigger: 'blur' }],
+        item: [{ required: true, message: '必输项...', trigger: 'blur' }]
       }
     }
   },
@@ -205,24 +208,30 @@ export default {
         this.form1.code = `3000${this.form1.number}`
       }
     },
-    addSilks () {
+    addSilks (formName) {
       if (this.form.type === '普通丝车') {
         this.form.type = 'DEFAULT'
       } else {
         this.form.type = 'BIG_SILK_CAR'
       }
-      console.log(this.form)
-      this.$api.addSilks(this.form).then(res => {
-        this.getSilks()
-        this.$notify({
-          title: '成功',
-          message: '添加成功',
-          type: 'success'
-        })
-        this.dialogFormVisibleAdd = false
+      // console.log(this.form)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.addSilks(this.form).then(res => {
+            this.getSilks()
+            this.$notify({
+              title: '成功',
+              message: '添加成功',
+              type: 'success'
+            })
+            this.dialogFormVisibleAdd = false
+          })
+        } else {
+          return false
+        }
       })
     },
-    AddBatchSilk () {
+    AddBatchSilk (formName) {
       if (this.form.type === '普通丝车') {
         this.form.type = 'DEFAULT'
       } else {
@@ -283,9 +292,15 @@ export default {
         })
       }
       console.log(arr)
-      this.$api.addBatchSilks(arr).then(res => {
-        this.getSilks()
-        this.dialogVisibleBatchAdd = false
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.addBatchSilks(arr).then(res => {
+            this.getSilks()
+            this.dialogVisibleBatchAdd = false
+          })
+        } else {
+          return false
+        }
       })
     },
     openSaveSilk (row) {
@@ -294,20 +309,26 @@ export default {
       this.form1.name = '高新'
       this.dialogFormVisibleSave = true
     },
-    saveSilks () {
+    saveSilks (formName) {
       if (this.form1.type === '普通丝车') {
         this.form1.type = 'DEFAULT'
       } else {
         this.form1.type = 'BIG_SILK_CAR'
       }
-      this.$api.saveSilks(this.form1).then(res => {
-        this.getSilks()
-        this.$notify({
-          title: '成功',
-          message: '修改成功',
-          type: 'success'
-        })
-        this.dialogFormVisibleSave = false
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.saveSilks(this.form1).then(res => {
+            this.getSilks()
+            this.$notify({
+              title: '成功',
+              message: '修改成功',
+              type: 'success'
+            })
+            this.dialogFormVisibleSave = false
+          })
+        } else {
+          return false
+        }
       })
     },
     handleSizeChange (val) {

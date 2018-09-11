@@ -23,7 +23,7 @@
 
     <el-dialog title="新增" :visible.sync="dialogVisibleSingleAdd" width="50%">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="车间">
+        <el-form-item label="车间" prop="value">
           <el-select v-model="ruleForm.value" placeholder="请选择车间" clearable style="float:left;">
             <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
@@ -40,13 +40,13 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleSingleAdd = false">取 消</el-button>
-        <el-button type="primary" @click="createSingleLine()">确 定</el-button>
+        <el-button type="primary" @click="createSingleLine('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
 
     <el-dialog title="批量新增" :visible.sync="dialogVisibleAdd" width="50%">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="车间">
+        <el-form-item label="车间" prop="value">
           <el-select v-model="ruleForm.value" placeholder="请选择车间" clearable style="float:left;">
             <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
@@ -65,13 +65,13 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleAdd = false">取 消</el-button>
-        <el-button type="primary" @click="createLines()">确 定</el-button>
+        <el-button type="primary" @click="createLines('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
 
     <el-dialog title="修改" :visible.sync="dialogVisibleSave" width="50%">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="车间">
+        <el-form-item label="车间" prop="value">
           <el-select v-model="ruleForm.value" placeholder="请选择车间" clearable style="float:left;">
             <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
@@ -88,7 +88,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleSave = false">取 消</el-button>
-        <el-button type="primary" @click="SaveLineForm()">确 定</el-button>
+        <el-button type="primary" @click="SaveLineForm('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -121,12 +121,9 @@ export default {
       },
       workshop: {}, // 创建车间的的参数
       rules: {
-        name: [
-          { required: true, message: '必输项', trigger: 'blur' }
-        ],
-        resource: [
-          { required: true, message: '请选择', trigger: 'change' }
-        ]
+        value: [{ required: true, message: '必输项', trigger: 'change' }],
+        name: [{ required: true, message: '必输项', trigger: 'blur' }],
+        resource: [{ required: true, message: '请选择', trigger: 'blur' }]
       }
     }
   },
@@ -166,7 +163,7 @@ export default {
         this.loading = false
       })
     },
-    createSingleLine () {
+    createSingleLine (formName) {
       console.log(this.ruleForm)
       if (this.ruleForm.resource === '自动落桶') {
         this.ruleForm.resource = 'AUTO'
@@ -181,19 +178,25 @@ export default {
         }
       }
       console.log(this.workshop)
-      this.$api.creatSingleLine({
-        doffingType: this.ruleForm.resource,
-        id: null,
-        name: this.ruleForm.name,
-        workshop: this.workshop
-      }).then(res => {
-        this.$notify({
-          title: '成功',
-          message: '新建成功',
-          type: 'success'
-        })
-        this.getLine(this.ruleForm.value)
-        this.dialogVisibleSingleAdd = false
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.creatSingleLine({
+            doffingType: this.ruleForm.resource,
+            id: null,
+            name: this.ruleForm.name,
+            workshop: this.workshop
+          }).then(res => {
+            this.$notify({
+              title: '成功',
+              message: '新建成功',
+              type: 'success'
+            })
+            this.getLine(this.ruleForm.value)
+            this.dialogVisibleSingleAdd = false
+          })
+        } else {
+          return false
+        }
       })
     },
     handleClick (row) {
@@ -205,28 +208,34 @@ export default {
       this.workshop = row.workshop
       this.dialogVisibleSave = true
     },
-    SaveLineForm () {
+    SaveLineForm (formName) {
       if (this.ruleForm.resource === '自动落桶') {
         this.ruleForm.resource = 'AUTO'
       } else {
         this.ruleForm.resource = 'MANUAL'
       }
-      this.$api.saveLine({
-        doffingType: this.ruleForm.resource,
-        id: this.ruleForm.id,
-        name: this.ruleForm.name,
-        workshop: this.workshop
-      }).then(res => {
-        this.$notify({
-          title: '成功',
-          message: '修改成功',
-          type: 'success'
-        })
-        this.getLine(this.ruleForm.value)
-        this.dialogVisibleSave = false
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.saveLine({
+            doffingType: this.ruleForm.resource,
+            id: this.ruleForm.id,
+            name: this.ruleForm.name,
+            workshop: this.workshop
+          }).then(res => {
+            this.$notify({
+              title: '成功',
+              message: '修改成功',
+              type: 'success'
+            })
+            this.getLine(this.ruleForm.value)
+            this.dialogVisibleSave = false
+          })
+        } else {
+          return false
+        }
       })
     },
-    createLines () { // 还未完成
+    createLines (formName) { // 还未完成
       if (this.ruleForm.resource === '自动落桶') {
         this.ruleForm.resource = 'AUTO'
       } else {
@@ -239,17 +248,17 @@ export default {
           this.workshop.modifyDateTime = this.workshop.createDateTime
         }
       }
-      console.log(this.workshop)
+      // console.log(this.workshop)
       // 处理批量
       let reg1 = /[0-9]+$/g
       let reg2 = /^[a-zA-Z]+/g
       let startword = this.ruleForm.startItem.match(reg2)
       let startnum = this.ruleForm.startItem.match(reg1)
-      console.log(startword, startnum)
+      // console.log(startword, startnum)
 
       let endword = this.ruleForm.endItem.match(reg2)
       let endnum = this.ruleForm.endItem.match(reg1)
-      console.log(endword, endnum)
+      // console.log(endword, endnum)
       if (startword || endword) {
         if ((startword == null && endword != null) || (startword != null && endword == null) || (startword[0] !== endword[0])) {
           this.$message.error('批量输入错误，前缀不同！')
@@ -274,21 +283,26 @@ export default {
         this.$message.error('批量输入错误，没有数字进行批量操作！')
         return
       }
-
-      for (let i = 0; i <= Number(endnum[0]) - Number(startnum[0]); i++) {
-        let num = Number(startnum[0]) + i
-        this.ruleForm.name = startword[0] + num.toString()
-        this.$api.creatSingleLine({
-          doffingType: this.ruleForm.resource,
-          name: this.ruleForm.name,
-          workshop: this.workshop
-        }).then(res => {
-          console.log(res)
-          this.dialogVisibleAdd = false
-          this.value = this.workshop.name
-          this.getLine(this.workshop.name)
-        })
-      }
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          for (let i = 0; i <= Number(endnum[0]) - Number(startnum[0]); i++) {
+            let num = Number(startnum[0]) + i
+            this.ruleForm.name = startword[0] + num.toString()
+            this.$api.creatSingleLine({
+              doffingType: this.ruleForm.resource,
+              name: this.ruleForm.name,
+              workshop: this.workshop
+            }).then(res => {
+              // console.log(res)
+              this.dialogVisibleAdd = false
+              this.value = this.workshop.name
+              this.getLine(this.workshop.name)
+            })
+          }
+        } else {
+          return false
+        }
+      })
     }
   }
 }

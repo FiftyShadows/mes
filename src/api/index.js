@@ -25,21 +25,18 @@ axios.interceptors.response.use(function (response) {
         title: '错误',
         message: '登录信息未认证'
       })
-      // router.replace('/login');
       break
     case 403:
       vue.$notify.error({
         title: '错误',
         message: '您没有权限进行此操作'
       })
-      // store.state.pageLoading = false;
       break
     case 404:
       vue.$notify.error({
         title: '错误',
-        message: '未找到接口数据'
+        message: '未找到数据'
       })
-      // store.state.pageLoading = false;
       break
     default:
       vue.$notify.error({
@@ -246,6 +243,14 @@ export default {
   // 通知单--修改通知单
   saveNotice (data) {
     return axios.put(`${baseAutoUrl}/productPlanNotifies/${data.id}`, data)
+  },
+  // 通知单--搜索获取线别数据
+  getLinesList (data) {
+    return axios.get(`${baseAutoUrl}/lines?pageSize=${data.pageSize}&q=${data.q}`)
+  },
+  // 通知单--搜索线别列表
+  getLinesData (data) {
+    return axios.get(`${baseAutoUrl}/lines/${data}/lineMachines`)
   },
 
   // 批号管理--获取数据
