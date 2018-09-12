@@ -5,12 +5,12 @@ import store from './store/store.js'
 import api from './api/index.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import Global from './window_global.js'
+import util from './util'
 
-Vue.use(ElementUI)
-Vue.prototype.$api = api
-Vue.prototype.global = Global
-Vue.config.productionTip = false
+Vue.use(ElementUI);
+Vue.prototype.$api = api;
+Vue.prototype.util = util;
+Vue.config.productionTip = false;
 
 var vue = new Vue({
   el: '#app',
@@ -18,6 +18,6 @@ var vue = new Vue({
   store,
   components: { App },
   template: '<App/>'
-})
+});
 
 export default vue

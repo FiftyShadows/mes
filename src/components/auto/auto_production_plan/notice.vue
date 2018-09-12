@@ -414,6 +414,7 @@ export default {
       } else {
         this.$message.error('请配置机台，否者无法提交！')
       }
+<<<<<<< HEAD
     },
     // 线别列表
     getLinesList (query) {
@@ -434,6 +435,8 @@ export default {
         console.log(res)
         this.data = res.data
       })
+=======
+>>>>>>> 6419b0b627edda396a15f6663c760b609c7eb779
     },
     // 新增线别
     addLines () {

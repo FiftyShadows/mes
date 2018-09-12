@@ -26,7 +26,7 @@
             <i class="el-icon-search"></i>
             <span slot="title">当前</span>
           </el-menu-item>
-          <el-menu-item index="#">
+          <el-menu-item index="/history">
             <i class="el-icon-tickets"></i>
             <span slot="title">历史</span>
           </el-menu-item>
@@ -54,6 +54,16 @@
           </el-submenu>
           <el-submenu index="4">
             <template slot="title">
+              <i class="el-icon-document"></i>
+              <span slot="title">染判</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/dye/dyeing"><i class="el-icon-document"></i>待染判</el-menu-item>
+              <el-menu-item index="/dye/dyed"><i class="el-icon-document"></i>已染判</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="5">
+            <template slot="title">
               <i class="el-icon-setting"></i>
               <span slot="title">自动化配置</span>
             </template>
@@ -66,22 +76,22 @@
               <el-menu-item index="/configuration/Grade"><i class="el-icon-setting"></i>等级管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="5" disabled>
+          <el-menu-item index="6" disabled>
             <i class="el-icon-d-caret"></i>
             <span slot="title">仓储</span>
           </el-menu-item>
-          <el-submenu index="6">
+          <el-submenu index="7">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span slot="title">仓储配置</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="6-1"><i class="el-icon-setting"></i>车间管理</el-menu-item>
-              <el-menu-item index="6-2"><i class="el-icon-setting"></i>线别控制</el-menu-item>
-              <el-menu-item index="6-3"><i class="el-icon-setting"></i>机台管理</el-menu-item>
-              <el-menu-item index="6-4"><i class="el-icon-setting"></i>产品管理</el-menu-item>
-              <el-menu-item index="6-5"><i class="el-icon-setting"></i>丝车管理</el-menu-item>
-              <el-menu-item index="6-6"><i class="el-icon-setting"></i>等级管理</el-menu-item>
+              <el-menu-item index="7-1"><i class="el-icon-setting"></i>车间管理</el-menu-item>
+              <el-menu-item index="7-2"><i class="el-icon-setting"></i>线别控制</el-menu-item>
+              <el-menu-item index="7-3"><i class="el-icon-setting"></i>机台管理</el-menu-item>
+              <el-menu-item index="7-4"><i class="el-icon-setting"></i>产品管理</el-menu-item>
+              <el-menu-item index="7-5"><i class="el-icon-setting"></i>丝车管理</el-menu-item>
+              <el-menu-item index="7-6"><i class="el-icon-setting"></i>等级管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
         </el-menu>

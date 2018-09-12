@@ -4,6 +4,11 @@ import Index from '@/components/index'
 import Help from '@/components/help'
 // 当前
 import Current from '@/components/auto/auto-current/index'
+// 历史
+import History from '@/components/auto/aut_history/history'
+// 染判
+import Dyed from '@/components/auto/aut_dye/dyed'
+import Dyeing from '@/components/auto/aut_dye/dyeing'
 // 管理员
 import Permissions from '@/components/auto/auto_admin/admin_permissions'
 import User from '@/components/auto/auto_admin/user'
@@ -22,7 +27,7 @@ import Configurat from '@/components/auto/auto_configuration/product_configurat'
 import SlikCar from '@/components/auto/auto_configuration/silkCar_manage'
 import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
@@ -31,10 +36,25 @@ export default new Router({
       name: 'index',
       component: Index,
       children: [
-        {
+        {// 当前
           path: '/current/index',
           name: 'current',
           component: Current
+        },
+        {// 历史
+          path: '/history',
+          name: 'history',
+          component: History
+        },
+        {// 待染判
+          path: '/dye/dyeing',
+          name: 'dyeing',
+          component: Dyeing
+        },
+        {// 已染判
+          path: '/dye/dyed',
+          name: 'dyed',
+          component: Dyed
         },
         {// 权限
           path: '/admin/perminssions',
