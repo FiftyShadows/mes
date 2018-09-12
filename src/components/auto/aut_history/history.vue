@@ -48,7 +48,7 @@ export default {
   methods: {
     getSilkCarRecords () {
       this.$api.getSilkCarRecords().then(res => {
-        console.log(res.data);
+        console.log(res.data)
         this.tableData = res.data.silkCarRecords
       })
     },

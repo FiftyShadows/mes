@@ -27,7 +27,7 @@ import Configurat from '@/components/auto/auto_configuration/product_configurat'
 import SlikCar from '@/components/auto/auto_configuration/silkCar_manage'
 import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage'
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
   routes: [

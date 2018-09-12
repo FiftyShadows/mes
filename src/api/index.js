@@ -3,18 +3,18 @@ import vue from '../main.js'
 import global from '../window_global'
 import promiseFinally from 'promise.prototype.finally'
 
-promiseFinally.shim();
+promiseFinally.shim()
 
 // 测试token
 
 // 9999是PDA用的端口，不是单点
 // 8080目前全部单点登录，正式会切到80
 // 这个token只能测试用，正式代码里不要用，后台密钥不同，会验证不成功
-const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE';
+const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
 
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token;
-axios.defaults.timeout = 3000;
-const baseAutoUrl = global.auto;
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
+axios.defaults.timeout = 3000
+const baseAutoUrl = global.auto
 // const baseWareUrl = ''
 
 // 响应拦截器
@@ -26,47 +26,29 @@ axios.interceptors.response.use(function (response) {
       vue.$notify.error({
         title: '错误',
         message: '登录信息未认证'
-<<<<<<< HEAD
       })
       break
-=======
-      });
-      // router.replace('/login');
-      break;
->>>>>>> 6419b0b627edda396a15f6663c760b609c7eb779
     case 403:
       vue.$notify.error({
         title: '错误',
         message: '您没有权限进行此操作'
-<<<<<<< HEAD
       })
       break
-    case 404:
-      vue.$notify.error({
-        title: '错误',
-        message: '未找到数据'
-      })
-      break
-=======
-      });
-      // store.state.pageLoading = false;
-      break;
     case 404:
       vue.$notify.error({
         title: '错误',
         message: '未找到接口数据'
-      });
+      })
       // store.state.pageLoading = false;
-      break;
->>>>>>> 6419b0b627edda396a15f6663c760b609c7eb779
+      break
     default:
       vue.$notify.error({
         title: '错误',
         message: `未知错误 ${error.response.status}`
-      });
+      })
       return Promise.reject(error)
   }
-});
+})
 
 export default {
   axios,
