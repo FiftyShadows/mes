@@ -57,7 +57,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="丝锭备注" :label-width="formLabelWidth">
+        <el-form-item label="丝锭备注" v-if="EventsForm.silkNotes || EventsForm.silkNotes.length !== 0" :label-width="formLabelWidth">
           <el-select style="float: left;" v-model="EventsForm.silkNotes" multiple placeholder="请选择">
             <el-option v-for="item in notesOptions" :key="item.id" :label="item.name" :value="item.name">
             </el-option>

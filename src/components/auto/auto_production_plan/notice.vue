@@ -150,7 +150,7 @@
       </el-form-item>
     </el-form>
     <!-- 第二层 -->
-    <el-dialog width="50%" title="* 选择机台" :visible.sync="innerVisible" tooltip-effect="dark" append-to-body>
+    <el-dialog width="50%" title="* 选择机台" :visible.sync="innerVisible" tooltip-effect="dark" :before-close="closeChoseItem" append-to-body>
       <!-- 第三层 -->
       <el-dialog width="50%" title="新增机台" :visible.sync="addLine" append-to-body>
         <el-form :model="Lines" :rules="rules" ref="Lines" class="demo-ruleForm">
@@ -183,19 +183,19 @@
         </span>
       </el-dialog>
       <div style="float: left;">
-        <el-select  filterable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" :loading="lineLoading">
-          <el-option v-for="item in linesOptions" :key="item.name" :label="item.name" :value="item.name"></el-option>
+        <el-select v-model="seachLine" filterable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
+          <el-option v-for="item in linesOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
         </el-select>
         <!-- <el-input v-model="seachLine" multiple filterable remote reserve-keyword :remote-method="remoteMethod" :loading="lineLoading" placeholder="线别..." style="width: 60%;"></el-input> -->
-        <el-button type="success" class="el-icon-search" @click="getLinesData()" circle></el-button>
+        <!-- <el-button type="success" class="el-icon-search" @click="getLinesData()" circle></el-button> -->
       </div>
       <el-button type="primary" @click="createLines()" style="float: right;">新 增</el-button>
-      <el-table ref="multipleTable" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
+      <el-table ref="multipleTable1" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
         <el-table-column type="selection" width="55">
         </el-table-column>
-        <el-table-column prop="line.workshop.name" label="车间" width="180">
+        <el-table-column prop="line.workshop.name" label="车间">
         </el-table-column>
-        <el-table-column prop="line.name" label="线别" width="180">
+        <el-table-column prop="line.name" label="线别">
         </el-table-column>
         <el-table-column prop="item" label="机台">
         </el-table-column>
@@ -358,8 +358,15 @@ export default {
         this.optionsItem = []
       }
     },
-    saveWorkshops () {
+    saveWorkshops () { // 修改机台
       this.innerVisible = true
+      this.data = this.data.concat(this.form1.lineMachines)
+      this.multipleSelection = this.data
+      // console.log(this.$refs)
+      // this.multipleSelection.forEach(row => {
+      //   console.log(row)
+      //   this.$refs.multipleTable1.toggleRowSelection(row)
+      // })
     },
     createLines () {
       this.$api.getSelected().then(res => {
@@ -367,11 +374,16 @@ export default {
       })
       this.addLine = true
     },
-    handleSelectionChange (val) {
+    handleSelectionChange (val) { // 勾选的机台列表
       this.multipleSelection = val
       console.log(this.multipleSelection)
     },
-    selectItem () {
+    closeChoseItem (done) { // 关闭选择机台弹框
+      console.log(this.data)
+      this.data = []
+      done()
+    },
+    selectItem () { // 选择机台并确认
       this.form.lineMachines = this.multipleSelection
       this.innerVisible = false
     },
@@ -381,7 +393,7 @@ export default {
         this.Lines.spindleSeq.push(i)
       }
     },
-    addNotice (formName) {
+    addNotice (formName) { // 新增通知单
       if (this.form.type === '改批') {
         this.form.type = 'CHANGE_BATCH'
       } else if (this.form.type === '样品') {
@@ -415,28 +427,42 @@ export default {
         this.$message.error('请配置机台，否者无法提交！')
       }
     },
-    // 线别列表
-    getLinesList (query) {
+    getLinesList (query) { // 线别列表
       if (query !== '') {
         this.lineLoading = true
         this.$api.getLinesList({
           pageSize: 10,
-          q: this.seachLine
+          q: query
         }).then(res => {
-          console.log(res)
-          this.linesOptions = res.data
+          this.linesOptions = res.data.lines
+          console.log(this.linesOptions)
+          this.lineLoading = false
         })
+      } else {
+        this.linesOptions = []
       }
     },
-    // 搜索线别
-    getLinesData () {
-      this.$api.getLinesData().then(res => {
+    getLinesData () { // 搜索线别
+      console.log(this.seachLine, this.linesOptions)
+      let id
+      for (let item of this.linesOptions) {
+        if (item.name === this.seachLine) {
+          id = item.id
+        }
+      }
+      // console.log(id)
+      this.$api.getLinesData(id).then(res => {
         console.log(res)
-        this.data = res.data
+        console.log(res.data.length)
+        if (res.data.length !== 0) {
+          this.data = this.data.concat(res.data)
+        } else {
+          console.log('无搜索值')
+        }
       })
+      console.log(this.data)
     },
-    // 新增线别
-    addLines () {
+    addLines () { // 新增线别
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].name === this.Lines.name) {
           this.Lines.line = this.options[i]
@@ -483,13 +509,14 @@ export default {
       this.form1.startDate = row.startDate
       this.form1.lineMachines = row.lineMachines
       console.log(this.form1)
-      this.data = this.form1.lineMachines
+      // this.data = this.form1.lineMachines
     },
     perform (row) {
       console.log(row)
       this.$router.push({path: '/productPlan/Notice-perform', query: {id: row.id, startDate: row.startDate}})
     },
     saveItem () {
+      this.data = []
       this.form1.lineMachines = this.multipleSelection
       this.innerVisible = false
     },
