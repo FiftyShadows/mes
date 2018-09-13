@@ -5,10 +5,10 @@ import Help from '@/components/help'
 // 当前
 import Current from '@/components/auto/auto-current/index'
 // 历史
-import History from '@/components/auto/aut_history/history'
+import History from '@/components/auto/auto_history/history'
 // 染判
-import Dyed from '@/components/auto/aut_dye/dyed'
-import Dyeing from '@/components/auto/aut_dye/dyeing'
+import Dyed from '@/components/auto/auto_dye/dyed'
+import Dyeing from '@/components/auto/auto_dye/dyeing'
 // 管理员
 import Permissions from '@/components/auto/auto_admin/admin_permissions'
 import User from '@/components/auto/auto_admin/user'

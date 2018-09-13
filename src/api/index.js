@@ -85,6 +85,10 @@ export default {
   ProductProcessSubmitEvents (data) {
     return axios.post(`${baseAutoUrl}/ProductProcessSubmitEvents`, data)
   },
+  // 当前--标佯丝提交
+  DyeingSampleSubmitEvents (data) {
+    return axios.post(`${baseAutoUrl}/DyeingSampleSubmitEvents`, data)
+  },
 
   // 车间管理--获取数据
   getWorkShopsLine () {
