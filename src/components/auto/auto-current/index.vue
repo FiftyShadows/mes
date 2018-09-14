@@ -21,22 +21,39 @@
         <div class="checkBoxA">
           <el-checkbox :indeterminateA="isIndeterminateA" v-model="checkAllA" class="checkAll" @change="handleCheckAllAChange">A面--全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="checkedBatchA" @change="handleCheckedBatchAChange" size="small">
-            <el-checkbox v-if="batch.sideType === 'A'" v-for="(batch,index) in batchOptions" :key="index" :label="batch" style="overflow:hidden;" border>
-              {{batch.sideType}}-{{batch.row}}-{{batch.col}}
-              <br>
-              <span style="color: #E6A23C; font-weight: bolder;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>
-            </el-checkbox>
+          <el-checkbox-group v-model="checkedSilkCarA" @change="handleCheckedSilkCarAChange" size="small">
+          <el-checkbox v-for="(checkOption,index) in checkOptions" :key="index" :label="checkOption" style="overflow:hidden;" border>
+            {{checkOption.row + 1}}×{{checkOption.col + 1}}
+          <br>
+            <template v-for="(batch,index) in batchOptions">
+              <span style="color: #E6A23C; font-weight: bolder;" v-if="batch.sideType === 'A'&&batch.row===checkOption.row+1&&batch.col===checkOption.col+1">
+                {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
+              </span>
+            </template>
+          </el-checkbox>
           </el-checkbox-group>
         </div>
         <div class="checkBoxB">
-          <el-checkbox :indeterminateB="isIndeterminateB" v-model="checkAllB" class="checkAll" @change="handleCheckAllBChange">B面--全选</el-checkbox>
+          <!--<el-checkbox :indeterminateB="isIndeterminateB" v-model="checkAllB" class="checkAll" @change="handleCheckAllBChange">B面&#45;&#45;全选</el-checkbox>-->
+          <!--<div style="margin: 15px 0;"></div>-->
+          <!--<el-checkbox-group v-model="checkedSilkCarB" @change="handleCheckedSilkCarBChange" size="small">-->
+            <!--<el-checkbox v-if="batch.sideType === 'B'" v-for="(batch,index) in batchOptions" :label="batch" :key="index" style="overflow:hidden;" border>-->
+              <!--{{batch.sideType}}-{{batch.row}}-{{batch.col}}-->
+              <!--<br>-->
+              <!--<span style="color: #F56C6C; font-weight: bolder;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>-->
+            <!--</el-checkbox>-->
+          <!--</el-checkbox-group>-->
+          <el-checkbox :indeterminateA="isIndeterminateB" v-model="checkAllB" class="checkAll" @change="handleCheckAllBChange">B面--全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="checkedBatchB" @change="handleCheckedBatchBChange" size="small">
-            <el-checkbox v-if="batch.sideType === 'B'" v-for="(batch,index) in batchOptions" :label="batch" :key="index" style="overflow:hidden;" border>
-              {{batch.sideType}}-{{batch.row}}-{{batch.col}}
+          <el-checkbox-group v-model="checkedSilkCarB" @change="handleCheckedSilkCarBChange" size="small">
+            <el-checkbox v-for="(checkOption,index) in checkOptions" :key="index" :label="checkOption" style="overflow:hidden;" border>
+              {{checkOption.row + 1}}×{{checkOption.col + 1}}
               <br>
-              <span style="color: #F56C6C; font-weight: bolder;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>
+              <template v-for="(batch,index) in batchOptions">
+              <span style="color: #F56C6C; font-weight: bolder;" v-if="batch.sideType === 'B'&&batch.row===checkOption.row+1&&batch.col===checkOption.col+1">
+                {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
+              </span>
+              </template>
             </el-checkbox>
           </el-checkbox-group>
         </div>
@@ -110,11 +127,14 @@ export default {
       process: '',
       productsId: [], // 产品id
       // 多选框
-      checkedBatchA: [], // A
+      checkedSilkCarA: [1], // A
       isIndeterminateA: true,
       batchOptions: [],
+      checkOptions: [],
       checkAllA: false,
-      checkedBatchB: [], // B
+      rows: '', // 丝车行数
+      cols: '', // 丝车列数
+      checkedSilkCarB: [], // B
       isIndeterminateB: true,
       checkAllB: false,
       EventsForm: { // 操作数据 // 提交事件数据
@@ -139,7 +159,7 @@ export default {
   created () {},
   methods: {
     changeOrder (val) {
-      console.log(val)
+      console.log(val);
       if (val === '正序') {
         this.eventSources.sort(function (a, b) {
           return a.fireDateTime - b.fireDateTime
@@ -152,24 +172,24 @@ export default {
       console.log(this.eventSources)
     },
     getProcesses () {
-      this.productsId = this.searchData.silkCarRecord.batch.product.id
+      this.productsId = this.searchData.silkCarRecord.batch.product.id;
       this.$api.getProcesses(this.productsId).then(res => {
         this.selected = res.data
-        console.log(this.selected)
       })
     },
     getSearchData (val) {
-      this.fullscreenLoading = true
+      this.fullscreenLoading = true;
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].number === val) {
           this.value = this.options[i].code
         }
       }
       this.$api.getSearchData(this.value).then(res => {
-        this.searchData = res.data
-        this.ifShow = true
-        this.silkCarRecord = this.searchData.silkCarRecord // 丝车信息
-        this.eventSources = this.searchData.eventSources // 操作员操作
+        this.searchData = res.data;
+        console.log(this.searchData.silkCarRecord.silkCar);
+        this.ifShow = true;
+        this.silkCarRecord = this.searchData.silkCarRecord; // 丝车信息
+        this.eventSources = this.searchData.eventSources; // 操作员操作
         if (this.silkCarRecord.doffingType === 'MANUAL') {
           this.doffingType = '手动落桶'
         } else {
@@ -179,16 +199,16 @@ export default {
           // 操作员信息
           this.$api.getOperators(this.eventSources[i].operator.id).then(res => {
             this.eventSources[i].operator = res.data
-          })
+          });
           // 时间
-          let date = new Date(this.eventSources[i].fireDateTime) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
-          let Y = date.getFullYear() + '-'
-          let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-          let D = date.getDate() + ' '
-          let H = date.getHours() + ':'
-          let m = date.getMinutes() + ':'
-          let S = date.getSeconds() + ' '
-          this.eventSources[i].firstTime = Y + M + D + H + m + S
+          let date = new Date(this.eventSources[i].fireDateTime); // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+          let Y = date.getFullYear() + '-';
+          let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+          let D = date.getDate() + ' ';
+          let H = date.getHours() + ':';
+          let m = date.getMinutes() + ':';
+          let S = date.getSeconds() + ' ';
+          this.eventSources[i].firstTime = Y + M + D + H + m + S;
           // 工序信息
           if (this.eventSources[i].productProcess) { // productProcess中存在空的 所以需要判断之后在进行 要不然会报错
             this.$api.productProcesses(this.eventSources[i].productProcess.id).then(res => {
@@ -199,7 +219,6 @@ export default {
           if (this.eventSources[i].silkExceptions) {
             for (let j = 0; j < this.eventSources[i].silkExceptions.length; j++) {
               this.$api.getSilkExceptions(this.eventSources[i].silkExceptions[j].id).then(res => {
-                // console.log(res.data)
                 this.eventSources[i].silkExceptions[j] = res.data
               })
             }
@@ -208,23 +227,22 @@ export default {
           if (this.eventSources[i].silkNotes) {
             for (let j = 0; j < this.eventSources[i].silkNotes.length; j++) {
               this.$api.getSilkNotes(this.eventSources[i].silkNotes[j].id).then(res => {
-                // console.log(res.data)
                 this.eventSources[i].silkNotes[j] = res.data
               })
             }
           }
           // 表单
           if (this.eventSources[i].formConfig) {
-            let config = this.eventSources[i].formConfig // 要取的数据名
-            console.log(this.eventSources[i])
+            let config = this.eventSources[i].formConfig; // 要取的数据名
+            console.log(this.eventSources[i]);
             if (this.eventSources[i].formConfigValueData) {
-              let value = this.eventSources[i].formConfigValueData // 对应数据值
-              let key = Object.keys(value)
+              let value = this.eventSources[i].formConfigValueData; // 对应数据值
+              let key = Object.keys(value);
               // console.log(key)
               for (let j = 0; j < config.formFieldConfigs.length; j++) { // 取id值判断数据
                 for (let t = 0; t < key.length; t++) {
                   if (key[t] === config.formFieldConfigs[j].id) {
-                    let keyt = key[t]
+                    let keyt = key[t];
                     // console.log(keyt,value[keyt])
                     if (value[keyt] === true) {
                       value[keyt] = '是'
@@ -236,37 +254,46 @@ export default {
                 }
               }
             }
-            console.log(this.eventSources[i].formConfig.formFieldConfigs)
+            // console.log(this.eventSources[i].formConfig.formFieldConfigs)
           }
         }
-        console.log('eventSources', this.eventSources)
+        //获取丝车的行列规格
+        this.rows = this.searchData.silkCarRecord.silkCar.row;
+        this.cols = this.searchData.silkCarRecord.silkCar.col;
+        this.checkOptions = [];
+        for (let i=0;i<this.rows;i++) {
+          for (let j=0;j<this.cols;j++) {
+            this.checkOptions.push({row: i,col: j})
+          }
+        }
         this.batchOptions = this.searchData.silkRuntimes.sort(function (a, b) {
           return a.row - b.row
-        })
+        });
+        console.log(this.batchOptions);
         // this.fullscreenLoading = false
         this.getProcesses()
       })
     },
     productProcess (val) { // 打开event弹框
       // console.log(val)
-      this.dialogName = val
-      this.EventsForm.name = this.silkCarRecord.silkCar.code
-      this.EventsForm.id = this.silkCarRecord.id
-      console.log(this.selected)
+      this.dialogName = val;
+      this.EventsForm.name = this.silkCarRecord.silkCar.code;
+      this.EventsForm.id = this.silkCarRecord.id;
+      console.log(this.selected);
       for (let i = 0; i < this.selected.length; i++) {
         if (this.selected[i].name === this.dialogName) {
-          this.silkOptions = this.selected[i].exceptions
+          this.silkOptions = this.selected[i].exceptions;
           this.notesOptions = this.selected[i].notes
         }
       }
       for (let i in this.selected) { // 分辨操作工序
         if (this.selected[i].name === this.process) {
-          this.EventsForm.productProcess = this.selected[i]
+          this.EventsForm.productProcess = this.selected[i];
           this.EventsForm.formConfig = this.selected[i].formConfig
         }
       }
-      this.EventsForm.silkCarRecord = this.silkCarRecord
-      this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
+      this.EventsForm.silkCarRecord = this.silkCarRecord;
+      this.EventsForm.silkRuntimes = this.checkedSilkCarA.concat(this.checkedSilkCarB);
       this.dialogFormVisibleEvents = true
     },
     submitEvents () { // 提交操作按钮
@@ -287,7 +314,7 @@ export default {
       //   }
       // }
       // this.EventsForm.silkCarRecord = this.silkCarRecord
-      // this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
+      // this.EventsForm.silkRuntimes = this.checkedSilkCarA.concat(this.checkedSilkCarB)
       // console.log(this.EventsForm.formConfig.formFieldConfigs) // 数组
       // console.log(this.EventsForm.formConfig.formFieldConfigs.valueConfig)
       // if (this.valueConfig === 'true') {
@@ -297,8 +324,8 @@ export default {
       // }
       if (this.EventsForm.formConfig) {
         for (let i in this.EventsForm.formConfig.formFieldConfigs) {
-          let value = this.EventsForm.formConfig.formFieldConfigs[i]
-          this.EventsForm.formConfigValueData[value.id] = value.valueConfig
+          let value = this.EventsForm.formConfig.formFieldConfigs[i];
+          this.EventsForm.formConfigValueData[value.id] = value.valueConfig;
           if (this.EventsForm.formConfigValueData[value.id] === 'true') {
             this.EventsForm.formConfigValueData[value.id] = true
           } else if (value.valueConfig === 'false') {
@@ -306,17 +333,17 @@ export default {
           }
         }
       }
-      console.log(this.EventsForm)
+      console.log(this.EventsForm);
       // if (this.EventsForm.formConfig.formFieldConfigs.required) {
       // }
       this.$api.ProductProcessSubmitEvents(this.EventsForm).then(res => {
-        console.log(res)
+        console.log(res);
         this.$notify({
           title: '成功',
           message: '提交成功',
           type: 'success'
-        })
-        this.dialogFormVisibleEvents = false
+        });
+        this.dialogFormVisibleEvents = false;
         this.EventsForm = { // 清空数据
           name: '',
           valueConfig: '',
@@ -327,19 +354,19 @@ export default {
           silkRuntimes: [],
           formConfig: null,
           formConfigValueData: {}
-        }
+        };
         this.getSearchData()
       })
       // this.EventsForm.silkExceptions = []
     },
     remoteMethod (query) {
       if (query !== '') {
-        this.loading = true
+        this.loading = true;
         this.$api.getCurrentSelect(query).then(res => {
           if (res.errorCode === 'E00000') {
             this.$message.error(res.errorMessage)
           } else {
-            this.loading = false
+            this.loading = false;
             this.options = res.data
           }
         })
@@ -348,24 +375,24 @@ export default {
       }
     },
     handleCheckAllAChange (val) {
-      this.checkedBatchA = val ? this.batchOptions : []
+      // this.checkedSilkCarA = val ? this.rows : []
+      this.checkedSilkCarA = val ? this.checkOptions : [];
+      console.log(this.checkedSilkCarA);
       this.isIndeterminate = false
     },
-    handleCheckedBatchAChange (value) {
-      // console.log(value)
-      // console.log(this.checkedBatchA)
-      let checkedCount = value.length
-      this.checkAllA = checkedCount === this.batchOptions.length
-      this.isIndeterminateA = checkedCount > 0 && checkedCount < this.batchOptions.length
+    handleCheckedSilkCarAChange (value) {
+      let checkedCount = value.length;
+      this.checkAllA = checkedCount === this.checkOptions.length;
+      this.isIndeterminateA = checkedCount > 0 && checkedCount < this.checkOptions.length
     },
     handleCheckAllBChange (val) {
-      this.checkedBatchB = val ? this.batchOptions : []
+      this.checkedSilkCarB = val ? this.checkOptions : [];
       this.isIndeterminate = false
     },
-    handleCheckedBatchBChange (value) {
-      let checkedCount = value.length
-      this.checkAllB = checkedCount === this.batchOptions.length
-      this.isIndeterminateB = checkedCount > 0 && checkedCount < this.batchOptions.length
+    handleCheckedSilkCarBChange (value) {
+      let checkedCount = value.length;
+      this.checkAllB = checkedCount === this.checkOptions.length;
+      this.isIndeterminateB = checkedCount > 0 && checkedCount < this.checkOptions.length
     }
   }
 }
