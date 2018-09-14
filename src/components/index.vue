@@ -18,10 +18,10 @@
               <img class="radio_img radio_img_pickup" v-else src="../assets/radio2.png" alt="">
             </el-tooltip>
           </div>
-          <el-menu-item index="1" disabled>
+          <!-- <el-menu-item index="1" disabled>
             <i class="el-icon-d-caret"></i>
             <span slot="title">自动化</span>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="/current/index">
             <i class="el-icon-search"></i>
             <span slot="title">当前</span>
@@ -76,10 +76,10 @@
               <el-menu-item index="/configuration/Grade"><i class="el-icon-setting"></i>等级管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="6" disabled>
+          <!-- <el-menu-item index="6" disabled>
             <i class="el-icon-d-caret"></i>
             <span slot="title">仓储</span>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-submenu index="7">
             <template slot="title">
               <i class="el-icon-menu"></i>

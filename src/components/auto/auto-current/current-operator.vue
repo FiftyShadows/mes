@@ -44,7 +44,6 @@ export default {
   position: absolute;
   width: 50%;
   height: 100%;
-  // border: 1px solid black;
   right: 0;
   overflow-y: auto;
 }
