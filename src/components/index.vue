@@ -18,10 +18,10 @@
               <img class="radio_img radio_img_pickup" v-else src="../assets/radio2.png" alt="">
             </el-tooltip>
           </div>
-          <el-menu-item index="1" disabled>
+          <!-- <el-menu-item index="1" disabled>
             <i class="el-icon-d-caret"></i>
             <span slot="title">自动化</span>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="/current/index">
             <i class="el-icon-search"></i>
             <span slot="title">当前</span>
@@ -76,22 +76,66 @@
               <el-menu-item index="/configuration/Grade"><i class="el-icon-setting"></i>等级管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="6" disabled>
+          <!-- <el-menu-item index="6" disabled>
             <i class="el-icon-d-caret"></i>
             <span slot="title">仓储</span>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-submenu index="7">
             <template slot="title">
               <i class="el-icon-menu"></i>
-              <span slot="title">仓储配置</span>
+              <span slot="title">包装计量</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="7-1"><i class="el-icon-setting"></i>车间管理</el-menu-item>
-              <el-menu-item index="7-2"><i class="el-icon-setting"></i>线别控制</el-menu-item>
-              <el-menu-item index="7-3"><i class="el-icon-setting"></i>机台管理</el-menu-item>
-              <el-menu-item index="7-4"><i class="el-icon-setting"></i>产品管理</el-menu-item>
-              <el-menu-item index="7-5"><i class="el-icon-setting"></i>丝车管理</el-menu-item>
-              <el-menu-item index="7-6"><i class="el-icon-setting"></i>等级管理</el-menu-item>
+              <el-menu-item index="7-1"><i class="el-icon-setting"></i>自动打包唛头</el-menu-item>
+              <el-menu-item index="7-2"><i class="el-icon-setting"></i>人工唛头</el-menu-item>
+              <el-menu-item index="7-3"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>
+              <el-menu-item index="7-4"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>
+              <el-menu-item index="7-5"><i class="el-icon-setting"></i>包装记录</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="8">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span slot="title">库位库存</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="7-1"><i class="el-icon-setting"></i>库位视图</el-menu-item>
+              <el-menu-item index="7-2"><i class="el-icon-setting"></i>库位计划</el-menu-item>
+              <el-menu-item index="7-3"><i class="el-icon-setting"></i>库存明细</el-menu-item>
+              <el-menu-item index="7-4"><i class="el-icon-setting"></i>箱包追溯</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="9">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span slot="title">仓储记录</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="7-1"><i class="el-icon-setting"></i>待入库</el-menu-item>
+              <el-menu-item index="7-2"><i class="el-icon-setting"></i>入库记录</el-menu-item>
+              <el-menu-item index="7-3"><i class="el-icon-setting"></i>出库记录</el-menu-item>
+              <el-menu-item index="7-4"><i class="el-icon-setting"></i>退货记录</el-menu-item>
+              <el-menu-item index="7-4"><i class="el-icon-setting"></i>翻包记录</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="10">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span slot="title">调拨处理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="7-1"><i class="el-icon-setting"></i>销售调拨单</el-menu-item>
+              <el-menu-item index="7-2"><i class="el-icon-setting"></i>退货调拨单</el-menu-item>
+              <el-menu-item index="7-3"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="11">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span slot="title">盘点SAP</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="7-1"><i class="el-icon-setting"></i>盘点</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
         </el-menu>

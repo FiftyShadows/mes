@@ -31,7 +31,7 @@
   <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
   </el-pagination>
   <!-- 第一层 -->
-  <el-dialog title="新 增" :visible.sync="dialogFormVisibleAdd" width="50%">
+  <el-dialog title="新 增" :visible.sync="dialogFormVisibleAdd" :before-close="closeAddDialog" width="50%">
     <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
       <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
         <el-input v-model="form.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
@@ -90,12 +90,15 @@
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="addLine = false">取 消</el-button>
           <el-button type="primary" @click="addLines()">确 定</el-button>
         </span>
       </el-dialog>
-
-      <el-button type="primary" @click="createLines()">新 增</el-button>
+      <div style="float: left;">
+        <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
+          <el-option v-for="item in linesOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
+        </el-select>
+      </div>
+      <el-button type="primary" @click="createLines()" style="float: right;">新 增</el-button>
       <el-table ref="multipleTable" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
         <el-table-column type="selection" width="55">
         </el-table-column>
@@ -106,15 +109,11 @@
         <el-table-column prop="item" label="机台">
         </el-table-column>
       </el-table>
-
       <span slot="footer" class="dialog-footer">
-        <el-button @click="innerVisible = false">取 消</el-button>
         <el-button type="primary" @click="selectItem()">确 定</el-button>
       </span>
     </el-dialog>
-
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
       <el-button type="primary" @click="addNotice('form')">确 定</el-button>
     </div>
   </el-dialog>
@@ -183,11 +182,9 @@
         </span>
       </el-dialog>
       <div style="float: left;">
-        <el-select v-model="seachLine" filterable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
+        <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
           <el-option v-for="item in linesOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
         </el-select>
-        <!-- <el-input v-model="seachLine" multiple filterable remote reserve-keyword :remote-method="remoteMethod" :loading="lineLoading" placeholder="线别..." style="width: 60%;"></el-input> -->
-        <!-- <el-button type="success" class="el-icon-search" @click="getLinesData()" circle></el-button> -->
       </div>
       <el-button type="primary" @click="createLines()" style="float: right;">新 增</el-button>
       <el-table ref="multipleTable1" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
@@ -202,7 +199,6 @@
       </el-table>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="innerVisible = false">取 消</el-button>
         <el-button type="primary" @click="saveItem()">确 定</el-button>
       </span>
     </el-dialog>
@@ -220,6 +216,7 @@ export default {
   name: 'notice',
   data () {
     return {
+      isNew: false,
       tableLoading: false, // 表格加载
       lineLoading: false, // 列表加载
       data: [], // 添加表格 数据
@@ -273,12 +270,21 @@ export default {
         batch: {},
         startDate: '',
         lineMachines: []
-      }
+      },
+      multipleSelection: []
     }
   },
   created () {
     this.getNotice()
   },
+  // mounted () {
+  //   if (this.multipleSelection.length !== 0) {
+  //     this.multipleSelection.forEach(row => {
+  //       console.log(row)
+  //       this.$refs.multipleTable1.toggleRowSelection(row)
+  //     })
+  //   }
+  // },
   methods: {
     // 获取列表数据
     getNotice () {
@@ -337,6 +343,7 @@ export default {
       this.dialogFormVisibleAdd = true
       this.data = []
       this.form = {}
+      this.isNew = true // 新增开始
     },
     remoteMethod (query) {
       if (query !== '') {
@@ -359,14 +366,19 @@ export default {
       }
     },
     saveWorkshops () { // 修改机台
-      this.innerVisible = true
-      this.data = this.data.concat(this.form1.lineMachines)
-      this.multipleSelection = this.data
-      // console.log(this.$refs)
-      // this.multipleSelection.forEach(row => {
-      //   console.log(row)
-      //   this.$refs.multipleTable1.toggleRowSelection(row)
-      // })
+      if (!this.isNew) { // 判断是否是修改
+        this.innerVisible = true
+        this.data = this.data.concat(this.form1.lineMachines)
+        this.multipleSelection = this.data
+        this.$nextTick(function () { // 默认选中 在这个场景必须使用nextTick函数
+          this.multipleSelection.forEach(row => {
+            console.log(row)
+            this.$refs.multipleTable1.toggleRowSelection(row)
+          })
+        })
+      } else {
+        this.innerVisible = true
+      }
     },
     createLines () {
       this.$api.getSelected().then(res => {
@@ -378,9 +390,13 @@ export default {
       this.multipleSelection = val
       console.log(this.multipleSelection)
     },
+    closeAddDialog (done) { // 关闭新增按钮
+      this.isNew = false
+      done()
+    },
     closeChoseItem (done) { // 关闭选择机台弹框
-      console.log(this.data)
       this.data = []
+      // console.log(this.data)
       done()
     },
     selectItem () { // 选择机台并确认
@@ -393,7 +409,7 @@ export default {
         this.Lines.spindleSeq.push(i)
       }
     },
-    addNotice (formName) { // 新增通知单
+    addNotice (formName) { // 新增
       if (this.form.type === '改批') {
         this.form.type = 'CHANGE_BATCH'
       } else if (this.form.type === '样品') {
@@ -417,6 +433,7 @@ export default {
                 type: 'success'
               })
               this.dialogFormVisibleAdd = false
+              this.isNew = false // 新增结束
               this.getNotice()
             })
           } else {
@@ -435,7 +452,7 @@ export default {
           q: query
         }).then(res => {
           this.linesOptions = res.data.lines
-          console.log(this.linesOptions)
+          // console.log(this.linesOptions)
           this.lineLoading = false
         })
       } else {
@@ -443,7 +460,7 @@ export default {
       }
     },
     getLinesData () { // 搜索线别
-      console.log(this.seachLine, this.linesOptions)
+      // console.log(this.seachLine, this.linesOptions)
       let id
       for (let item of this.linesOptions) {
         if (item.name === this.seachLine) {
@@ -453,9 +470,13 @@ export default {
       // console.log(id)
       this.$api.getLinesData(id).then(res => {
         console.log(res)
-        console.log(res.data.length)
+        // console.log(res.data.length)
         if (res.data.length !== 0) {
-          this.data = this.data.concat(res.data)
+          // this.data = this.data.concat(res.data)
+          for (let i of res.data) { // 此处如果使用concat multipleSelection会变为【】
+            this.data.push(i)
+          }
+          // console.log(this.multipleSelection)
         } else {
           console.log('无搜索值')
         }
@@ -472,6 +493,7 @@ export default {
       this.$api.AddMachine(this.Lines).then(res => {
         console.log(res)
         this.data.push(res.data)
+        this.Lines = {}
         this.addLine = false
       })
     },
@@ -519,6 +541,7 @@ export default {
       this.data = []
       this.form1.lineMachines = this.multipleSelection
       this.innerVisible = false
+      this.isNew = false
     },
     saveNotice (formName) {
       if (this.form1.type === '改批') {

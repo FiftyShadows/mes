@@ -6,7 +6,7 @@
         type="datetime"
         placeholder="选择日期时间" style="float: left">
       </el-date-picker>
-      <span style="float: left;margin-top: 10px">至</span>
+      <span style="float: left;margin-top: 15px" class="el-icon-caret-right"></span>
       <el-date-picker
         v-model="endTime"
         type="datetime"
@@ -15,7 +15,7 @@
       <!--<el-select v-model="code" placeholder="请输入批号" style="float: left;margin-left: 10px">-->
         <!--<el-option v-for="item in options" :key="item.id" :label="item.code" :value="item.number"></el-option>-->
       <!--</el-select>-->
-      <el-button type="primary" icon="el-icon-search" style="float: left;margin-left: 10px"></el-button>
+      <el-button type="primary" icon="el-icon-search" style="float: left;margin-left: 10px" circle></el-button>
       <el-radio-group v-model="order" style="float: right;" @change="changeOrder">
         <el-radio-button label="正序"></el-radio-button>
         <el-radio-button label="逆序"></el-radio-button>
