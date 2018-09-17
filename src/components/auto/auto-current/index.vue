@@ -300,7 +300,7 @@ export default {
       this.EventsForm.silkCarRecord = this.silkCarRecord
       // console.log(this.checkedBatchA.concat(this.checkedBatchB))
       // this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
-      console.log(this.checkedSilkCarA.concat(this.checkedSilkCarB))
+      // console.log(this.checkedSilkCarA.concat(this.checkedSilkCarB))
       this.EventsForm.silkRuntimes = this.checkedSilkCarA.concat(this.checkedSilkCarB)
       this.DyeingSample.silkCarRecord = this.searchData.silkCarRecord // 标样丝
       console.log(this.EventsForm)
