@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import Help from '@/components/help'
+// ================================自动化===============================
 // 当前
 import Current from '@/components/auto/auto-current/index'
 // 历史
@@ -26,6 +27,28 @@ import Product from '@/components/auto/auto_configuration/product_manage'
 import Configurat from '@/components/auto/auto_configuration/product_configurat'
 import SlikCar from '@/components/auto/auto_configuration/silkCar_manage'
 import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage'
+// ================================仓储=================================
+// 包装计量
+import AutoPackage from '@/components/ware/ware_measurement/autoPackage/autoPackage'
+import Artificial from '@/components/ware/ware_measurement/artificial/artificial'
+import SmallPackage from '@/components/ware/ware_measurement/smallPackage/smallPackage'
+import BoxManagement from '@/components/ware/ware_measurement/boxManagement/boxManagement'
+import PackagingRecords from '@/components/ware/ware_measurement/packaging_records/packaging_records'
+// 库位库存
+import StorageView from '@/components/ware/ware_storage/storage_view/view'
+import StoragePlan from '@/components/ware/ware_storage/storage_plan/plan'
+import StorageDetail from '@/components/ware/ware_storage/storage_detail/detail'
+import StorageTrace from '@/components/ware/ware_storage/storage_trace/trace'
+// 仓储记录
+import InStorage from '@/components/ware/ware_record/in_storage_record/in_storage_record'
+import OutStorage from '@/components/ware/ware_record/out_storage_record/out_storage_record'
+import Returngoods from '@/components/ware/ware_record/returngoods_record/returngoods_record'
+import PrepareInStorage from '@/components/ware/ware_record/prepare_in_storage/prepare_in_storage'
+import OnceAgain from '@/components/ware/ware_record/onceAgain_record/onceAgain_record'
+// 调拨处理
+import SilkCarShipped from '@/components/ware/ware_transfers/silkCarShipped/silkCarShipped'
+import SalesRequisition from '@/components/ware/ware_transfers/sales_requisition/sales_requisition'
+import ReturngoodsRequisition from '@/components/ware/ware_transfers/returngoods_requisition/returngoods_requisition'
 
 Vue.use(Router)
 
@@ -36,6 +59,7 @@ export default new Router({
       name: 'index',
       component: Index,
       children: [
+        // ================================自动化===============================
         {// 当前
           path: '/current/index',
           name: 'current',
@@ -112,6 +136,76 @@ export default new Router({
           path: '/configuration/WorkshopManage',
           name: 'WorkshopManage',
           component: WorkshopManage
+        },
+        // ================================仓储===============================
+        {// 包装计量--自动打唛头
+          path: '/measurement/autoPackage',
+          name: 'AutoPackage',
+          component: AutoPackage
+        }, {// 包装计量--人工唛头
+          path: '/measurement/artificial',
+          name: 'Artificial',
+          component: Artificial
+        }, {// 包装计量--小包装唛头
+          path: '/measurement/smallPackage',
+          name: 'SmallPackage',
+          component: SmallPackage
+        }, {// 包装计量--暂存箱管理
+          path: '/measurement/smallPackage',
+          name: 'BoxManagement',
+          component: BoxManagement
+        }, {// 包装计量--包装记录
+          path: '/measurement/smallPackage',
+          name: 'PackagingRecords',
+          component: PackagingRecords
+        }, { // 库位库存--库位视图
+          path: '/storage/view',
+          name: 'StorageView',
+          component: StorageView
+        }, { // 库位库存--库位计划
+          path: '/storage/plan',
+          name: 'StoragePlan',
+          component: StoragePlan
+        }, { // 库位库存--库位明细
+          path: '/storage/detail',
+          name: 'StorageDetail',
+          component: StorageDetail
+        }, { // 库位库存--箱包追溯
+          path: '/storage/trace',
+          name: 'StorageTrace',
+          component: StorageTrace
+        }, { // 仓储记录--入库记录
+          path: '/record/instorage',
+          name: 'InStorage',
+          component: InStorage
+        }, { // 仓储记录--待入库
+          path: '/record/PrepareInStorage',
+          name: 'PrepareInStorage',
+          component: PrepareInStorage
+        }, { // 仓储记录--出库记录
+          path: '/record/OutStorage',
+          name: 'OutStorage',
+          component: OutStorage
+        }, { // 仓储记录--退货记录
+          path: '/record/Returngoods',
+          name: 'Returngoods',
+          component: Returngoods
+        }, { // 仓储记录--翻包记录
+          path: '/record/OnceAgain',
+          name: 'OnceAgain',
+          component: OnceAgain
+        }, { // 调拨处理--销售调拨单
+          path: '/record/SalesRequisition',
+          name: 'SalesRequisition',
+          component: SalesRequisition
+        }, { // 调拨处理--退货调拨单
+          path: '/record/ReturngoodsRequisition',
+          name: 'ReturngoodsRequisition',
+          component: ReturngoodsRequisition
+        }, { // 调拨处理--丝车发运调拨单
+          path: '/record/SilkCarShipped',
+          name: 'SilkCarShipped',
+          component: SilkCarShipped
         }
       ]
     },

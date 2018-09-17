@@ -32,7 +32,7 @@
           </el-menu-item>
           <el-submenu index="2">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i class="el-icon-setting"></i>
               <span slot="title">管理员 </span>
             </template>
             <el-menu-item-group>
@@ -43,7 +43,7 @@
           </el-submenu>
           <el-submenu index="3">
             <template slot="title">
-              <i class="el-icon-document"></i>
+              <i class="el-icon-setting"></i>
               <span slot="title">生产计划</span>
             </template>
             <el-menu-item-group>
@@ -54,7 +54,7 @@
           </el-submenu>
           <el-submenu index="4">
             <template slot="title">
-              <i class="el-icon-document"></i>
+              <i class="el-icon-setting"></i>
               <span slot="title">染判</span>
             </template>
             <el-menu-item-group>
