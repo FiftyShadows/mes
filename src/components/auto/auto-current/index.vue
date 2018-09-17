@@ -26,7 +26,7 @@
             {{checkOption.row + 1}}×{{checkOption.col + 1}}
           <br>
             <template v-for="(batch,index) in batchOptions">
-              <span style="color: #E6A23C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'A' && batch.row === checkOption.row+1 && batch.col === checkOption.col + 1">
+              <span style="color: #E6A23C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'A' && batch.row === checkOption.row + 1 && batch.col === checkOption.col + 1">
                 {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
               </span>
             </template>
@@ -34,15 +34,6 @@
           </el-checkbox-group>
         </div>
         <div class="checkBoxB">
-          <!--<el-checkbox :indeterminateB="isIndeterminateB" v-model="checkAllB" class="checkAll" @change="handleCheckAllBChange">B面&#45;&#45;全选</el-checkbox>-->
-          <!--<div style="margin: 15px 0;"></div>-->
-          <!--<el-checkbox-group v-model="checkedSilkCarB" @change="handleCheckedSilkCarBChange" size="small">-->
-            <!--<el-checkbox v-if="batch.sideType === 'B'" v-for="(batch,index) in batchOptions" :label="batch" :key="index" style="overflow:hidden;" border>-->
-              <!--{{batch.sideType}}-{{batch.row}}-{{batch.col}}-->
-              <!--<br>-->
-              <!--<span style="color: #F56C6C; font-weight: bolder;">{{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}</span>-->
-            <!--</el-checkbox>-->
-          <!--</el-checkbox-group>-->
           <el-checkbox :indeterminateA="isIndeterminateB" v-model="checkAllB" class="checkAll" @change="handleCheckAllBChange">B面--全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedSilkCarB" @change="handleCheckedSilkCarBChange" size="small">
@@ -308,7 +299,9 @@ export default {
       }
       this.EventsForm.silkCarRecord = this.silkCarRecord
       // console.log(this.checkedBatchA.concat(this.checkedBatchB))
-      this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
+      // this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
+      console.log(this.checkedSilkCarA.concat(this.checkedSilkCarB))
+      this.EventsForm.silkRuntimes = this.checkedSilkCarA.concat(this.checkedSilkCarB)
       this.DyeingSample.silkCarRecord = this.searchData.silkCarRecord // 标样丝
       console.log(this.EventsForm)
       this.DyeingSample.silkRuntimes = this.EventsForm.silkRuntimes // 标样丝
@@ -346,8 +339,8 @@ export default {
           formConfig: null,
           formConfigValueData: {}
         }
-        this.checkedBatchA = []
-        this.checkedBatchB = []
+        this.checkedSilkCarA = []
+        this.checkedSilkCarB = []
         this.isDyeing = false
         this.getSearchData()
         this.dialogFormVisibleEvents = false
