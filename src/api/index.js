@@ -52,7 +52,7 @@ axios.interceptors.response.use(function (response) {
 
 export default {
   axios,
-  /* --------------自动化--------------- */
+  // =========================================== 自动化 ===========================================
   // 当前--搜索
   getCurrentSelect (data) {
     return axios.get(`${baseAutoUrl}/autoComplete/silkCar?q=${data}`)
@@ -327,4 +327,6 @@ export default {
   getSilkCarRecords (data) {
     return axios.get(`${baseAutoUrl}/silkCarRecords`, data)
   }
+
+  // =========================================== 仓储 ===========================================
 }

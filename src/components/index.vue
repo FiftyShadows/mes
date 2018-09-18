@@ -11,7 +11,7 @@
         </router-link>
       </el-header>
       <el-container>
-        <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" @open="handleOpen" @close="handleClose" :unique-opened="true" :collapse="isCollapse" style="overflow-y: auto;">
+        <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" @open="handleOpen" @close="handleClose" :unique-opened="true" :collapse="isCollapse" style="overflow-y: auto;width: 230px;">
           <div class="radio" @click="radio()">
             <el-tooltip class="item" effect="dark" content="缩放" placement="right-start">
               <img class="radio_img" v-if="!isCollapse" src="../assets/radio2.png" alt="">
