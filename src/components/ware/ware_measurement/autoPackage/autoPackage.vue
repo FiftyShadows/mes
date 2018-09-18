@@ -1,12 +1,36 @@
 <template>
   <!-- 自动打包 -->
   <div class="autoPackage">
-    自动打包
+    <el-tabs type="border-card">
+      <el-tab-pane label="已打印">
+        <HaveToPrint></HaveToPrint>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 <script>
+import HaveToPrint from './auto_have_to_print.vue'
 export default {
-  name: 'autoPackage'
+  name: 'autoPackage',
+  components: {
+    HaveToPrint
+  },
+  data () {
+    return {
+
+    }
+  },
+  created () {},
+  methods: {
+    seachTableData (formName) { // 搜索列表数据
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+        } else {
+          return false
+        }
+      })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

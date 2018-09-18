@@ -151,11 +151,11 @@ export default new Router({
           name: 'SmallPackage',
           component: SmallPackage
         }, {// 包装计量--暂存箱管理
-          path: '/measurement/smallPackage',
+          path: '/measurement/BoxManagement',
           name: 'BoxManagement',
           component: BoxManagement
         }, {// 包装计量--包装记录
-          path: '/measurement/smallPackage',
+          path: '/measurement/PackagingRecords',
           name: 'PackagingRecords',
           component: PackagingRecords
         }, { // 库位库存--库位视图
@@ -191,7 +191,7 @@ export default new Router({
           name: 'Returngoods',
           component: Returngoods
         }, { // 仓储记录--翻包记录
-          path: '/record/OnceAgain',
+          path: '/record/OnceAgainPackage',
           name: 'OnceAgain',
           component: OnceAgain
         }, { // 调拨处理--销售调拨单
