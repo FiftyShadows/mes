@@ -9,7 +9,6 @@ export default {
   name: 'App'
 }
 </script>
-
 <style>
 html,body,#app{
   margin: 0;

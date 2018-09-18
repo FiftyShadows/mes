@@ -26,7 +26,7 @@
             {{checkOption.row + 1}}×{{checkOption.col + 1}}
           <br>
             <template v-for="(batch,index) in batchOptions">
-              <span style="color: #E6A23C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'A'&&batch.row===checkOption.row+1&&batch.col===checkOption.col+1">
+              <span style="color: #E6A23C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'A' && batch.row === checkOption.row + 1 && batch.col === checkOption.col + 1">
                 {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
               </span>
             </template>
@@ -41,9 +41,9 @@
               {{checkOption.row + 1}}×{{checkOption.col + 1}}
               <br>
               <template v-for="(batch,index) in batchOptions">
-              <span style="color: #F56C6C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'B'&&batch.row===checkOption.row+1&&batch.col===checkOption.col+1">
-                {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
-              </span>
+                <span style="color: #F56C6C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'B' && batch.row === checkOption.row + 1 && batch.col === checkOption.col + 1">
+                  {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
+                </span>
               </template>
             </el-checkbox>
           </el-checkbox-group>
@@ -298,7 +298,9 @@ export default {
         }
       }
       this.EventsForm.silkCarRecord = this.silkCarRecord
-      console.log(this.checkedSilkCarA.concat(this.checkedSilkCarB))
+      // console.log(this.checkedBatchA.concat(this.checkedBatchB))
+      // this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
+      // console.log(this.checkedSilkCarA.concat(this.checkedSilkCarB))
       this.EventsForm.silkRuntimes = this.checkedSilkCarA.concat(this.checkedSilkCarB)
       this.DyeingSample.silkCarRecord = this.searchData.silkCarRecord // 标样丝
       console.log(this.EventsForm)
