@@ -325,6 +325,6 @@ export default {
   },
   // 获取丝车历史信息
   getSilkCarRecords (data) {
-    return axios.get(`${baseAutoUrl}/silkCarRecords`, data)
+    return axios.get(`${baseAutoUrl}/silkCarRecords?startTime=${data.startTime}&endTime=${data.endTime}&q=${data.silkCarCode}`)
   }
 }

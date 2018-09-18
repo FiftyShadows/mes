@@ -1,7 +1,7 @@
 <template>
   <div class="current">
     <div style="height: 50px;">
-      <el-select v-model="code" filterable clearable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" @change="getSearchData" style="float:left;">
+      <el-select v-model="code" filterable clearable remote reserve-keyword placeholder="请输入丝车号" :remote-method="remoteMethod" @change="getSearchData" style="float:left;">
         <el-option v-for="item in options" :key="item.id" :label="item.code" :value="item.number"></el-option>
       </el-select>
       <el-radio-group v-model="order" style="float: right;" @change="changeOrder">
@@ -12,8 +12,8 @@
     <div class="current-main" v-if="ifShow">
       <div class="left">
         <div class="silkCarRecord">
-          <h3>丝车条码：{{silkCarRecord.silkCar.code}} — {{silkCarRecord.silkCar.number}} — {{silkCarRecord.batch.spec}}</h3>
-          <h4>丝车车次：{{silkCarRecord.id}} <el-tag size="mini">{{doffingType}}</el-tag></h4>
+            <h3>丝车条码：{{silkCarRecord.silkCar.code}} — {{silkCarRecord.silkCar.number}} — {{silkCarRecord.batch.spec}}</h3>
+            <h4>丝车车次：{{silkCarRecord.id}} <el-tag size="mini">{{doffingType}}</el-tag></h4>
           <el-select v-model="process" placeholder="请选择" class="selected" @change="productProcess">
             <el-option v-for="item in selected" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
