@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新 增" :visible.sync="dialogAddSingleFormVisible">
+  <el-dialog title="批 量 新 增" :visible.sync="dialogAddFormVisible">
     <el-form :inline="true" :model="addForm" :rules="rules" ref="addForm" label-width="100px" class="demo-ruleForm demo-form-inline">
       <el-form-item label="销售类型" prop="type" :label-width="formLabelWidth">
         <el-select class="floatLeft" v-model="addForm.type" placeholder="请选择销售类型">
@@ -69,9 +69,9 @@
           <el-option label="区域一" value="shanghai"></el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="唛头数量" prop="marksNum" :label-width="formLabelWidth">
+      <el-form-item label="唛头数量" prop="marksNum" :label-width="formLabelWidth">
         <el-input-number class="floatLeft" v-model="addForm.marksNum" :min="1" label=""></el-input-number>
-      </el-form-item> -->
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="add('addForm')">确 定</el-button>
@@ -84,7 +84,7 @@ export default {
   data () {
     return {
       formLabelWidth: '100px',
-      dialogAddSingleFormVisible: false,
+      dialogAddFormVisible: false,
       addForm: {
         type: '', // 销售类型
         workshop: '', // 车间
@@ -101,8 +101,8 @@ export default {
         net: '', // 净重
         gross: '', // 毛重
         sapStorage: '', // sap库位
-        readyStorage: '' // 预设库位
-        // marksNum: '' // 唛头数量
+        readyStorage: '', // 预设库位
+        marksNum: '' // 唛头数量
       },
       rules: {
         type: {required: true, message: '请选择销售类型', trigger: 'change'},
@@ -126,7 +126,7 @@ export default {
   created () {},
   methods: {
     show () {
-      this.dialogAddSingleFormVisible = true
+      this.dialogAddFormVisible = true
     },
     add (formName) {
       this.$refs[formName].validate((valid) => {

@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     workShops: [],
-    Lines: []
+    Lines: [],
+    isWareLogin: false // ware系统登陆
   },
   getters: {},
   mutations: {},
