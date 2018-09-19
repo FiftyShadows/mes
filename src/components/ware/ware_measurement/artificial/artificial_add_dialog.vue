@@ -101,7 +101,7 @@ export default {
         net: '', // 净重
         gross: '', // 毛重
         sapStorage: '', // sap库位
-        readyStorage: '', // 预设库位
+        readyStorage: '' // 预设库位
         // marksNum: '' // 唛头数量
       },
       rules: {
