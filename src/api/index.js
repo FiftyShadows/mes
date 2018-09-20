@@ -1,18 +1,23 @@
 import axios from 'axios'
 import vue from '../main.js'
 import global from '../window_global'
-import promiseFinally from 'promise.prototype.finally'
+// import promiseFinally from 'promise.prototype.finally'
 
-promiseFinally.shim()
+// promiseFinally.shim()
 
 // 测试token
 
 // 9999是PDA用的端口，不是单点
 // 8080目前全部单点登录，正式会切到80
 // 这个token只能测试用，正式代码里不要用，后台密钥不同，会验证不成功
-const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
+// const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
+// 仓储token
+const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZW5neWkiLCJhZG1pbiI6InBhc3N3b3JkIiwiaWF0IjoxNTM3MzI0NDY0fQ.QGMzQXX09igK9gaKAq5jfniTpioa12st7h9FCZ-D7AY'
 
+// 自动化Token
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
+// 仓储Token
+// axios.defaults.headers.common['Authorization'] = Token
 axios.defaults.timeout = 3000
 const baseAutoUrl = global.auto
 const baseWareUrl = global.ware
@@ -329,7 +334,31 @@ export default {
   },
 
   // =========================================== 仓储 ===========================================
-  wareLogin (data) {
+  wareLogin (data) { // 登陆
     return axios.post(`${baseWareUrl}/system/login`, data)
+  },
+  getDict (data) { // 通用下拉菜单
+    return axios.post(`${baseWareUrl}/mes/system/dict/getDict`, data)
+  },
+  getSelectRole () { // 角色下拉接口
+    return axios.post(`${baseWareUrl}/mes/system/role/selectRole`)
+  },
+  getBatchList () { // 查询所有批次
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/getBatchList`)
+  },
+  getMaterialList (data) { // sap信息--物料查询
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/material/getMaterialList`, data)
+  },
+  getReasonList (data) {
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/getReasonList`, data)
+  },
+  addReason (data) {
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/addReason`, data)
+  },
+  updateReason (data) {
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/updateReason`, data)
+  },
+  deleteReason (data) {
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/deleteReason`, data)
   }
 }

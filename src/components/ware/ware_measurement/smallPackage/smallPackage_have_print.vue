@@ -6,8 +6,8 @@
           <el-option v-for="item in BatchOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="" prop="numcode" class="floatLeft">
-        <el-input v-model="seachForm.code" placeholder="请输入等级"></el-input>
+      <el-form-item label="" prop="code" class="floatLeft">
+        <el-input v-model="seachForm.code" placeholder="请输入调拨单号"></el-input>
       </el-form-item>
       <el-form-item label="" prop="grade" class="floatLeft">
         <el-input v-model="seachForm.grade" placeholder="请输入等级"></el-input>
@@ -55,6 +55,7 @@ export default {
   data () {
     return {
       seachForm: { // 搜索列表数据
+        code: '', // 调拨单号
         workshop: '', // 车间
         lines: '', // 线别
         shift: '', // 班次
@@ -68,6 +69,7 @@ export default {
       tableData: [], // 列表数据
       rules: {
         workshop: { required: true, message: '请选择车间', trigger: 'change' },
+        code: { required: true, message: '请选择调拨单号', trigger: 'change' },
         lines: { required: true, message: '请选择线别', trigger: 'change' },
         shift: { required: true, message: '请选择班次', trigger: 'change' },
         Batch: { required: true, message: '请选择批号', trigger: 'change' },
