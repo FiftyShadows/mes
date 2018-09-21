@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import Help from '@/components/help'
-import Login from '@/components/login' // 仓储登陆
+// import Login from '@/components/login' // 仓储登陆
 // ================================自动化===============================
 // 当前
 import Current from '@/components/auto/auto-current/index'
@@ -40,6 +40,8 @@ import StorageView from '@/components/ware/ware_storage/storage_view/view'
 import StoragePlan from '@/components/ware/ware_storage/storage_plan/plan'
 import StorageDetail from '@/components/ware/ware_storage/storage_detail/detail'
 import StorageTrace from '@/components/ware/ware_storage/storage_trace/trace'
+import SAPMessage from '@/components/ware/ware_storage/storage_SAPMessage/SAPMessage'
+import FBreason from '@/components/ware/ware_storage/storage_FB_reason/FB_reason'
 // 仓储记录
 import InStorage from '@/components/ware/ware_record/in_storage_record/in_storage_record'
 import OutStorage from '@/components/ware/ware_record/out_storage_record/out_storage_record'
@@ -175,6 +177,14 @@ export default new Router({
           path: '/storage/trace',
           name: 'StorageTrace',
           component: StorageTrace
+        }, { // 库位库存--SAP信息
+          path: '/storage/SAPMessage',
+          name: 'SAPMessage',
+          component: SAPMessage
+        }, { // 库位库存--翻包原因
+          path: '/storage/FBreason',
+          name: 'FBreason',
+          component: FBreason
         }, { // 仓储记录--入库记录
           path: '/record/instorage',
           name: 'InStorage',
@@ -214,12 +224,12 @@ export default new Router({
       path: '/help',
       name: 'help',
       component: Help
-    },
-    {// login
-      path: '/ware/login',
-      name: 'login',
-      component: Login
     }
+    // {// login
+    //   path: '/ware/login',
+    //   name: 'login',
+    //   component: Login
+    // }
   ]
 })
 

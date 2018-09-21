@@ -24,6 +24,9 @@ export default {
     return {
     }
   },
+  created () {
+    this.$store.dispatch('getDict', '班次')
+  },
   methods: {
   }
 }

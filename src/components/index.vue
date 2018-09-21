@@ -9,10 +9,19 @@
         <!-- <router-link to="/help">
           <i class="head_help el-icon-question"></i>
         </router-link> -->
-        <router-link to="/ware/login">
-          <el-button class="login" icon="el-icon-info" type="text" v-if="!$store.state.isWareLogin">未登录</el-button>
-        </router-link>
+        <!-- <router-link to="/ware/login">
+          <el-button class="login" type="text" v-if="!$store.state.isWareLogin">未登录</el-button>
+        </router-link> -->
         <!-- <el-button class="login" icon="el-icon-success" type="success" plain size="mini">已登陆</el-button> -->
+        <el-dropdown class="login" @command="handleCommand" v-if="!$store.state.isWareLogin">
+          <el-button type="primary">
+            未登录
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="login">登陆</el-dropdown-item>
+            <el-dropdown-item command="registered">注册</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
         <el-dropdown class="login" v-if="$store.state.isWareLogin">
           <el-button type="primary">
             已登陆
@@ -20,9 +29,6 @@
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>黄金糕</el-dropdown-item>
             <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -119,6 +125,8 @@
               <el-menu-item index="/storage/plan"><i class="el-icon-setting"></i>库位计划</el-menu-item>
               <el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>
               <el-menu-item index="/storage/trace"><i class="el-icon-setting"></i>箱包追溯</el-menu-item>
+              <el-menu-item index="/storage/SAPMessage"><i class="el-icon-setting"></i>SAP信息</el-menu-item>
+              <el-menu-item index="/storage/FBreason"><i class="el-icon-setting"></i>翻包原因</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="9">
@@ -163,12 +171,20 @@
         </el-container>
       </el-container>
     </el-container>
+    <dialog-login ref="login"></dialog-login>
+    <dialog-registered ref="registered"></dialog-registered>
   </div>
 </template>
 
 <script>
+import Login from './ware_login/login.vue'
+import Registered from './ware_login/registered.vue'
 export default {
   name: 'index',
+  components: {
+    'dialog-login': Login,
+    'dialog-registered': Registered
+  },
   data () {
     return {
       isCollapse: false
@@ -185,11 +201,16 @@ export default {
         type: 'warning'
       }).then().catch()
     },
+    handleCommand (command) {
+      if (command === 'login') {
+        this.$refs.login.show()
+      } else if (command === 'registered') {
+        this.$refs.registered.show()
+      }
+    },
     handleOpen (key, keyPath) {
-      // console.log(key, keyPath);
     },
     handleClose (key, keyPath) {
-      // console.log(key, keyPath);
     }
   }
 }
