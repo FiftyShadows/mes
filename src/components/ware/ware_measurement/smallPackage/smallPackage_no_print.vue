@@ -1,60 +1,26 @@
 <template>
   <div>
     <el-form :model="seachForm" :rules="rules" ref="seachForm" label-width="10px" class="demo-ruleForm">
-      <el-form-item label="" prop="workshop" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.workshop" placeholder="请选择车间">
-          <el-option label="A" value="shanghai"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="" prop="lines" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.lines" placeholder="请选择线别">
-          <el-option label="A" value="shanghai"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="" prop="shift" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.shift" placeholder="请选择班次">
-          <el-option label="A" value="shanghai"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="" prop="Batch" style="float: left;width: 150px;">
+      <el-form-item label="" prop="Batch" class="floatLeft">
         <el-select v-model="seachForm.Batch" filterable placeholder="请输入批号">
           <el-option v-for="item in BatchOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="" prop="spec" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.spec" filterable placeholder="请输入规格">
-          <el-option v-for="item in BatchOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
+      <el-form-item label="" prop="numcode" class="floatLeft">
+        <el-input v-model="seachForm.code" placeholder="请输入等级"></el-input>
       </el-form-item>
-      <el-form-item label="" prop="grade" style="float: left;width: 150px;">
+      <el-form-item label="" prop="grade" class="floatLeft">
         <el-input v-model="seachForm.grade" placeholder="请输入等级"></el-input>
-      </el-form-item>
-      <el-form-item label="" required style="float: left; width: 300px;">
-        <el-col :span="12">
-          <el-form-item prop="date1">
-            <el-date-picker type="date" placeholder="选择日期" v-model="seachForm.date1" style="width: 100%;"></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="10">
-          <el-form-item prop="date2">
-            <el-time-picker type="fixed-time" placeholder="选择时间" v-model="seachForm.date2" style="width: 100%;"></el-time-picker>
-          </el-form-item>
-        </el-col>
       </el-form-item>
       <el-form-item style="float: left;">
         <el-button type="primary" icon="el-icon-search" @click="seachTableData('seachForm')" circle></el-button>
         <el-button type="success" icon="el-icon-printer" circle></el-button>
-        <el-button type="warning" icon="el-icon-plus" @click="addSingle()" circle></el-button>
-        <el-button type="warning" icon="el-icon-circle-plus" @click="addMore()">批量</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" style="width: 100%" height="250" stripe>
+    <el-table :data="tableData" style="width: 100%" height="500" stripe>
       <el-table-column fixed prop="code" label="码单号">
       </el-table-column>
       <el-table-column prop="name" label="成品">
-      </el-table-column>
-      <el-table-column prop="type" label="成品种类">
       </el-table-column>
       <el-table-column prop="batch" label="批号">
       </el-table-column>
@@ -81,16 +47,11 @@
         </template>
       </el-table-column>
     </el-table>
-    <add-dialog ref="add_dialog"></add-dialog>
   </div>
 </template>
 <script>
-import ArtificialAddDialog from './artificial_add_dialog.vue'
 export default {
-  name: 'artificial_have_to_print',
-  components: {
-    'add-dialog': ArtificialAddDialog
-  },
+  name: 'have_to_print',
   data () {
     return {
       seachForm: { // 搜索列表数据
@@ -114,14 +75,10 @@ export default {
         grade: { required: true, message: '请选择等级', trigger: 'change' },
         date1: { type: 'date', required: true, message: '请选择日期', trigger: 'change' },
         date2: { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-      },
-      dialogAddSingleFormVisible: false
+      }
     }
   },
   methods: {
-    addSingle () {
-      this.$refs.add_dialog.show()
-    },
     seachTableData (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -134,5 +91,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+.floatLeft {
+  float: left;
+  width: 150px;
+}
 </style>

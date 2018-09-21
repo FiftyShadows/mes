@@ -49,7 +49,7 @@
         <el-button type="warning" icon="el-icon-circle-plus" @click="addMore()">批量</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" style="width: 100%" height="250" stripe>
+    <el-table :data="tableData" style="width: 100%" height="500" stripe>
       <el-table-column fixed prop="code" label="码单号">
       </el-table-column>
       <el-table-column prop="name" label="成品">
@@ -82,14 +82,17 @@
       </el-table-column>
     </el-table>
     <add-dialog ref="add_dialog"></add-dialog>
+    <addmore-dialog ref="addmore_dialog"></addmore-dialog>
   </div>
 </template>
 <script>
 import ArtificialAddDialog from './artificial_add_dialog.vue'
+import ArtificialAddMoreDialog from './artificial_addmore_dialog.vue'
 export default {
   name: 'artificial_have_to_print',
   components: {
-    'add-dialog': ArtificialAddDialog
+    'add-dialog': ArtificialAddDialog,
+    'addmore-dialog': ArtificialAddMoreDialog
   },
   data () {
     return {
@@ -121,6 +124,9 @@ export default {
   methods: {
     addSingle () {
       this.$refs.add_dialog.show()
+    },
+    addMore () {
+      this.$refs.addmore_dialog.show()
     },
     seachTableData (formName) {
       this.$refs[formName].validate((valid) => {

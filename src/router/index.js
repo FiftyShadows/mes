@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import Help from '@/components/help'
+import Login from '@/components/login' // 仓储登陆
 // ================================自动化===============================
 // 当前
 import Current from '@/components/auto/auto-current/index'
@@ -213,6 +214,11 @@ export default new Router({
       path: '/help',
       name: 'help',
       component: Help
+    },
+    {// login
+      path: '/ware/login',
+      name: 'login',
+      component: Login
     }
   ]
 })

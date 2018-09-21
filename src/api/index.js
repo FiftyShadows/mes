@@ -15,7 +15,7 @@ const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUi
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
 axios.defaults.timeout = 3000
 const baseAutoUrl = global.auto
-// const baseWareUrl = ''
+const baseWareUrl = global.ware
 
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
@@ -326,7 +326,10 @@ export default {
   // 获取丝车历史信息
   getSilkCarRecords (data) {
     return axios.get(`${baseAutoUrl}/silkCarRecords?startTime=${data.startTime}&endTime=${data.endTime}&q=${data.silkCarCode}`)
-  }
+  },
 
   // =========================================== 仓储 ===========================================
+  wareLogin (data) {
+    return axios.post(`${baseWareUrl}/system/login`, data)
+  }
 }

@@ -3,17 +3,17 @@
   <div class="autoPackage">
     <el-tabs type="border-card">
       <el-tab-pane label="已打印">
-        <HaveToPrint></HaveToPrint>
+        <have-print></have-print>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
-import HaveToPrint from './auto_have_to_print.vue'
+import HaveToPrint from './auto_have_print.vue'
 export default {
   name: 'autoPackage',
   components: {
-    HaveToPrint
+    'have-print': HaveToPrint
   },
   data () {
     return {

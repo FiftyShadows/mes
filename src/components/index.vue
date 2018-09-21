@@ -6,12 +6,28 @@
         <!-- <el-tooltip class="item" effect="dark" content="退出" placement="bottom">
           <i class="head_out el-icon-circle-close" @click="outLogin()"></i>
         </el-tooltip> -->
-        <router-link to="/help">
+        <!-- <router-link to="/help">
           <i class="head_help el-icon-question"></i>
+        </router-link> -->
+        <router-link to="/ware/login">
+          <el-button class="login" icon="el-icon-info" type="text" v-if="!$store.state.isWareLogin">未登录</el-button>
         </router-link>
+        <!-- <el-button class="login" icon="el-icon-success" type="success" plain size="mini">已登陆</el-button> -->
+        <el-dropdown class="login" v-if="$store.state.isWareLogin">
+          <el-button type="primary">
+            已登陆
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>黄金糕</el-dropdown-item>
+            <el-dropdown-item>狮子头</el-dropdown-item>
+            <el-dropdown-item>螺蛳粉</el-dropdown-item>
+            <el-dropdown-item>双皮奶</el-dropdown-item>
+            <el-dropdown-item>蚵仔煎</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-header>
       <el-container>
-        <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" @open="handleOpen" @close="handleClose" :unique-opened="true" :collapse="isCollapse" style="overflow-y: auto;width: 230px;">
+        <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" @open="handleOpen" @close="handleClose" :unique-opened="true" :collapse="isCollapse" style="overflow-y: auto;">
           <div class="radio" @click="radio()">
             <el-tooltip class="item" effect="dark" content="缩放" placement="right-start">
               <img class="radio_img" v-if="!isCollapse" src="../assets/radio2.png" alt="">
@@ -202,6 +218,12 @@ export default {
   right: 15px;
   top: 14px;
   cursor: pointer;
+}
+.login {
+  position: absolute;
+  right: 10px;
+  top: 4px;
+  color: #fff;
 }
 .main {
   width: 100%;
