@@ -349,16 +349,28 @@ export default {
   getMaterialList (data) { // sap信息--物料查询
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/material/getMaterialList`, data)
   },
-  getReasonList (data) {
+  getSapStorage (data) { // sap信息--sap库位
+    return axios.post(`${baseWareUrl}/warehouseInfo/sapStorage/selectSapStorage`, data)
+  },
+  updateSapStorage (data) { // sap信息--sap库位更新
+    return axios.post(`${baseWareUrl}/warehouseInfo/sapStorage/updateSapStorage`, data)
+  },
+  addSapStorage (data) { // sap信息--sap库位添加
+    return axios.post(`${baseWareUrl}/warehouseInfo/sapStorage/addSapStorage`, data)
+  },
+  deleteSapStorage (data) { // sap信息--sap库位删除
+    return axios.post(`${baseWareUrl}/warehouseInfo/sapStorage/deleteSapStorage`, data)
+  },
+  getReasonList (data) { // 翻包原因--获取原因
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/getReasonList`, data)
   },
-  addReason (data) {
+  addReason (data) { // 翻包原因--添加原因
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/addReason`, data)
   },
-  updateReason (data) {
+  updateReason (data) { // 翻包原因--更新原因
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/updateReason`, data)
   },
-  deleteReason (data) {
+  deleteReason (data) { // 翻包原因--删除原因
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/deleteReason`, data)
   }
 }

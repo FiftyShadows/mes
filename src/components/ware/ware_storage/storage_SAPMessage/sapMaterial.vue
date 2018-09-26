@@ -57,7 +57,7 @@ export default {
       tableData: [], // 列表数据
       pageNum: 1, // 当前页数
       pageSize: 10, // 默认每页显示条数
-      total: 10 // 总数
+      total: 0 // 总数
     }
   },
   created () {
