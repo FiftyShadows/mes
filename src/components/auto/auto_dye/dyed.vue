@@ -21,18 +21,12 @@ export default {
   .current-main {
     height: 100%;
     position: relative;
-    .left {
-      position: absolute;
-      width: 50%;
-      height: 100%;
-      // border: 1px solid black;
-      left: 0;
-      overflow-y: auto;
       .silkCarRecord {
         width: 100%;
         height: 60px;
         background: white;
         position: relative;
+        left: 10px;
         h3 {
           margin: 0px;
           text-align: left;
@@ -45,18 +39,6 @@ export default {
           padding-left: 5px;
           color: #aaa;
         }
-        // .el-tag {
-        //   position: absolute;
-        //   left: 60%;
-        //   bottom: 10px;
-        // }
-        .selected {
-          position: absolute;
-          right: 10px;
-          top: 10px;
-          width: 100px;
-        }
-      }
     }
     .el-checkbox {
       font-weight: bold;
