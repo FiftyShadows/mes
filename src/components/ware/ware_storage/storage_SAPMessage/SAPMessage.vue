@@ -3,9 +3,10 @@
   <div class="autoPackage">
     <el-tabs type="border-card">
       <el-tab-pane label="物料查询">
-        <material></material>
+        <Material></Material>
       </el-tab-pane>
       <el-tab-pane label="SAP库位">
+        <Localtion></Localtion>
       </el-tab-pane>
       <el-tab-pane label="SAP状态">
       </el-tab-pane>
@@ -13,11 +14,13 @@
   </div>
 </template>
 <script>
-import Material from './material.vue'
+import Material from './sapMaterial.vue'
+import Localtion from './sapLocation.vue'
 export default {
   name: 'autoPackage',
   components: {
-    'material': Material
+    Material,
+    Localtion
   },
   data () {
     return {
