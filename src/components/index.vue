@@ -77,6 +77,15 @@
           <el-submenu index="4">
             <template slot="title">
               <i class="el-icon-setting"></i>
+              <span slot="title">丝锭管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/silkManage/silkPrint"><i class="el-icon-document"></i>丝锭打印</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="5">
+            <template slot="title">
+              <i class="el-icon-setting"></i>
               <span slot="title">染判</span>
             </template>
             <el-menu-item-group>
@@ -84,7 +93,7 @@
               <el-menu-item index="/dye/dyed"><i class="el-icon-document"></i>已染判</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="5">
+          <el-submenu index="6">
             <template slot="title">
               <i class="el-icon-setting"></i>
               <span slot="title">自动化配置</span>
@@ -98,11 +107,11 @@
               <el-menu-item index="/configuration/Grade"><i class="el-icon-setting"></i>等级管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="6" disabled>
+          <el-menu-item index="7" disabled>
             <i class="el-icon-d-caret"></i>
             <span slot="title">仓储</span>
           </el-menu-item>
-          <el-submenu index="7">
+          <el-submenu index="8">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span slot="title">包装计量</span>
@@ -115,7 +124,7 @@
               <el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="8">
+          <el-submenu index="9">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span slot="title">库位库存</span>
@@ -129,7 +138,7 @@
               <el-menu-item index="/storage/FBreason"><i class="el-icon-setting"></i>翻包原因</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="9">
+          <el-submenu index="10">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span slot="title">仓储记录</span>
@@ -142,7 +151,7 @@
               <el-menu-item index="/record/OnceAgainPackage"><i class="el-icon-setting"></i>翻包记录</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="10">
+          <el-submenu index="11">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span slot="title">调拨处理</span>
@@ -153,7 +162,7 @@
               <el-menu-item index="/record/SilkCarShipped"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="11">
+          <el-submenu index="12">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span slot="title">盘点SAP</span>
