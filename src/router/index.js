@@ -36,12 +36,14 @@ import SmallPackage from '@/components/ware/ware_measurement/smallPackage/smallP
 import BoxManagement from '@/components/ware/ware_measurement/boxManagement/boxManagement'
 import PackagingRecords from '@/components/ware/ware_measurement/packaging_records/packaging_records'
 // 库位库存
+import Warehouse from '@/components/ware/ware_storage/storage_warehouse/warehouse'
 import StorageView from '@/components/ware/ware_storage/storage_view/view'
 import StoragePlan from '@/components/ware/ware_storage/storage_plan/plan'
 import StorageDetail from '@/components/ware/ware_storage/storage_detail/detail'
 import StorageTrace from '@/components/ware/ware_storage/storage_trace/trace'
 import SAPMessage from '@/components/ware/ware_storage/storage_SAPMessage/SAPMessage'
 import FBreason from '@/components/ware/ware_storage/storage_FB_reason/FB_reason'
+import Edit from '@/components/ware/ware_storage/storage_edit/edit'
 // 仓储记录
 import InStorage from '@/components/ware/ware_record/in_storage_record/in_storage_record'
 import OutStorage from '@/components/ware/ware_record/out_storage_record/out_storage_record'
@@ -161,6 +163,14 @@ export default new Router({
           path: '/measurement/PackagingRecords',
           name: 'PackagingRecords',
           component: PackagingRecords
+        }, { // 库位库存--仓库
+          path: '/storage/warehouse',
+          name: 'Warehouse',
+          component: Warehouse
+        }, { // 库位库存--库位维护
+          path: '/storage/edit',
+          name: 'Edit',
+          component: Edit
         }, { // 库位库存--库位视图
           path: '/storage/view',
           name: 'StorageView',

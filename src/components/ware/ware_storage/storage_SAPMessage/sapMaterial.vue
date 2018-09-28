@@ -42,6 +42,7 @@
   </div>
 </template>
 <script>
+import {mapActions, mapGetters} from 'vuex'
 import Pagination from './../../common/pagination.vue'
 export default {
   components: {
@@ -60,13 +61,17 @@ export default {
       total: 0 // 总数
     }
   },
+  computed: {
+    ...mapGetters(['batchList'])
+  },
   created () {
-    this.$store.dispatch('getBatchList').then(res => {
-      this.batchNoOptions = this.$store.state.batchList
-      console.log(this.$store.state.batchList)
-    })
+    this.getBatchList()
+    this.batchNoOptions = this.$store.state.batchList.batchList
+  },
+  mounted () {
   },
   methods: {
+    ...mapActions(['getBatchList']),
     seachTableData () {
       this.$api.getMaterialList({
         batchNo: this.seachForm.batchNo,

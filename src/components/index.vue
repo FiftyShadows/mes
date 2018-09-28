@@ -121,6 +121,8 @@
               <span slot="title">库位库存</span>
             </template>
             <el-menu-item-group>
+              <el-menu-item index="/storage/warehouse"><i class="el-icon-setting"></i>仓库</el-menu-item>
+              <el-menu-item index="/storage/edit"><i class="el-icon-setting"></i>库位维护</el-menu-item>
               <el-menu-item index="/storage/view"><i class="el-icon-setting"></i>库位视图</el-menu-item>
               <el-menu-item index="/storage/plan"><i class="el-icon-setting"></i>库位计划</el-menu-item>
               <el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>

@@ -37,21 +37,26 @@
         <el-button type="primary" @click="saveReason('saveForm')">确 定</el-button>
       </div>
     </el-dialog>
+    <Print></Print>
   </div>
 </template>
 <script>
+import Print from './../../common/print_marks'
 import Pagination from './../../common/pagination.vue'
 export default {
   components: {
-    'pagination': Pagination
+    'pagination': Pagination,
+    Print
   },
   data () {
     return {
       addForm: {
-        reason: ''
+        reason: '',
+        userId: 1
       },
       saveForm: {
-        reason: ''
+        reason: '',
+        userId: 1
       },
       formLabelWidth: '120px',
       dialogAddFormVisible: false, // 新增弹框
@@ -104,19 +109,32 @@ export default {
     openSave (row) {
       this.saveForm.reason = row.reason
       this.saveForm.id = row.id
+      this.saveForm.userId = 1
       this.dialogSaveFormVisible = true
     },
     saveReason (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$api.updateReason(this.saveform).then(res => {
-            this.$notify({
-              title: '成功',
-              message: res.data.msg,
-              type: 'success'
-            })
-            this.dialogSaveFormVisible = false
-            this.seachTableData()
+          this.$api.updateReason({
+            id: this.saveForm.id,
+            reason: this.saveForm.reason,
+            userId: 1
+          }).then(res => {
+            console.log(res)
+            if (res.data.status === '200') {
+              this.$notify({
+                title: '成功',
+                message: res.data.msg,
+                type: 'success'
+              })
+              this.dialogSaveFormVisible = false
+              this.seachTableData()
+            } else {
+              this.$notify.error({
+                title: '错误',
+                message: res.data.msg
+              })
+            }
           })
         } else {
           // return
