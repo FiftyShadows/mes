@@ -63,17 +63,11 @@
                         <el-col :span="3" class="value">
                           <span>{{silkCar.line}}</span>
                         </el-col>
-                        <el-col :span="3" class="span">
-                          <span>位号</span>
+                        <el-col :span="6" class="span">
+                          <span>位号/落次</span>
                         </el-col>
-                        <el-col :span="3" class="value">
-                          <span>{{silkCar.item}}</span>
-                        </el-col>
-                        <el-col :span="3" class="span">
-                          <span>落次</span>
-                        </el-col>
-                        <el-col :span="3" class="value">
-                          <span>{{silkCar.fallOrder}}</span>
+                        <el-col :span="6" class="value">
+                          <span>{{silkCar.item}}/{{silkCar.fallOrder}}</span>
                         </el-col>
                       </el-row>
                       <el-row type="flex" :gutter="20">
@@ -119,6 +113,9 @@
                         </el-col>
                       </el-row>
                     </div>
+                    <div class="tag">
+                      <span>{{silkCar.num}}次</span>
+                    </div>
                   </el-card>
                 </el-col>
               </el-row>
@@ -160,36 +157,53 @@ export default {
       startTime: this.util.getCurrentFormatDateSE().startTime,
       endTime: this.util.getCurrentFormatDateSE().endTime,
       rows: 4, // 丝车行数
-      cols: 4, // 丝车列数
+      cols: 6, // 丝车列数
       isIndeterminate: false,
       silkCars: [
-        {
+        {// 1次织袜一车一位的demo
           silkCarCode: '3000F2200',
           StockingTime: this.util.getCurrentFormatDateSE().startTime,
           batchNumber: 'D30111',
           line: 'D1',
           item: '1',
           fallOrder: 'C1',
-          StockingType: '一次织袜',
+          StockingType: '单织',
           userId: '1000',
           doffingType: '',
           doffingTime: this.util.getCurrentFormatDateSE().startTime,
           value: '车1',
-          checkFlag: false
+          checkFlag: false,
+          num: 1
         },
-        {
+        {// 1次织袜一车多位的demo
           silkCarCode: '3000F2201',
           StockingTime: this.util.getCurrentFormatDateSE().startTime,
           batchNumber: 'D30112',
           line: 'D2',
           item: '2',
           fallOrder: 'C2',
-          StockingType: '二次织袜',
+          StockingType: '位与位',
           userId: '1000',
           doffingType: '',
           doffingTime: this.util.getCurrentFormatDateSE().startTime,
           value: '车1',
-          checkFlag: false
+          checkFlag: false,
+          num: 2
+        },
+        {// 多次织袜（拼车）
+          silkCarCode: '3000F2201',
+          StockingTime: this.util.getCurrentFormatDateSE().startTime,
+          batchNumber: 'D30112',
+          line: 'D2',
+          item: '2',
+          fallOrder: 'C2',
+          StockingType: '单织',
+          userId: '1000',
+          doffingType: '',
+          doffingTime: this.util.getCurrentFormatDateSE().startTime,
+          value: '车1',
+          checkFlag: false,
+          num: 3
         }],
       silkDetail: {
         note: '测试'
@@ -279,5 +293,24 @@ export default {
     .checkAll{
       margin-top: 10px;
     }
-  };
+  }
+  .tag{
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 0;
+    height: 0;
+    color: #fff;
+    border: 15px solid #ff0000;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    span{
+      width: 24px;
+      display: block;
+      font-size: 12px;
+      margin-left: -15px;
+      margin-top: -15px;
+      transform: rotateZ(-45deg);
+    }
+  }
 </style>

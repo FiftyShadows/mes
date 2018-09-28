@@ -8,6 +8,8 @@ import Help from '@/components/help'
 import Current from '@/components/auto/auto-current/index'
 // 历史
 import History from '@/components/auto/auto_history/history'
+// 丝锭管理
+import silkPrint from '@/components/auto/auto_silk_manage/silk_print'
 // 染判
 import Dyed from '@/components/auto/auto_dye/dyed'
 import Dyeing from '@/components/auto/auto_dye/dyeing'
@@ -74,6 +76,11 @@ export default new Router({
           path: '/history',
           name: 'history',
           component: History
+        },
+        {// 丝锭打印
+          path: '/silkManage/silkPrint',
+          name: 'silkPrint',
+          component: silkPrint
         },
         {// 待染判
           path: '/dye/dyeing',
