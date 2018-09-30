@@ -14,7 +14,7 @@
         <div class="silkCarRecord">
             <h3>丝车条码：{{silkCarRecord.silkCar.code}} — {{silkCarRecord.silkCar.number}} — {{silkCarRecord.batch.spec}}</h3>
             <h4>丝车车次：{{silkCarRecord.id}} <el-tag size="mini">{{doffingType}}</el-tag></h4>
-          <el-select v-model="process" placeholder="请选择" class="selected" @change="productProcess">
+          <el-select v-model="process" placeholder="请选择" clearable class="selected" @change="productProcess">
             <el-option v-for="item in selected" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
         </div>
@@ -22,15 +22,15 @@
           <el-checkbox :indeterminateA="isIndeterminateA" v-model="checkAllA" class="checkAll" @change="handleCheckAllAChange">A面--全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedSilkCarA" @change="handleCheckedSilkCarAChange" size="small">
-          <el-checkbox v-for="(checkOption,index) in checkOptions" :key="index" :label="checkOption" style="overflow:hidden;" border>
-            {{checkOption.row + 1}}×{{checkOption.col + 1}}
-          <br>
-            <template v-for="(batch,index) in batchOptions">
-              <span style="color: #E6A23C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'A' && batch.row === checkOption.row + 1 && batch.col === checkOption.col + 1">
-                {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
-              </span>
-            </template>
-          </el-checkbox>
+            <el-checkbox v-for="(checkOption,index) in checkOptions" :key="index" :label="checkOption" style="overflow:hidden;" border>
+              {{checkOption.row + 1}}×{{checkOption.col + 1}}
+            <br>
+              <template v-for="(batch,index) in batchOptions">
+                <span style="color: #E6A23C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'A' && batch.row === checkOption.row + 1 && batch.col === checkOption.col + 1">
+                  {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
+                </span>
+              </template>
+            </el-checkbox>
           </el-checkbox-group>
         </div>
         <div class="checkBoxB">

@@ -471,12 +471,3 @@ body {
   /*margin-top: 3px;*/
   margin: 0;
 }
-.print {
-  margin: auto;
-  width: 400px;
-  border: 1px solid black;
-}
-.print .title {
-  font-size: 20px;
-  margin-top: 100px;
-}

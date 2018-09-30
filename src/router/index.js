@@ -56,6 +56,8 @@ import OnceAgain from '@/components/ware/ware_record/onceAgain_record/onceAgain_
 import SilkCarShipped from '@/components/ware/ware_transfers/silkCarShipped/silkCarShipped'
 import SalesRequisition from '@/components/ware/ware_transfers/sales_requisition/sales_requisition'
 import ReturngoodsRequisition from '@/components/ware/ware_transfers/returngoods_requisition/returngoods_requisition'
+// 盘点SAP
+import InventorySAP from '@/components/ware/ware_inventory_SAP/inventorySAP/index'
 
 Vue.use(Router)
 
@@ -234,6 +236,10 @@ export default new Router({
           path: '/record/SilkCarShipped',
           name: 'SilkCarShipped',
           component: SilkCarShipped
+        }, { // 盘点SAP
+          path: '/inventory/InventorySAP',
+          name: 'InventorySAP',
+          component: InventorySAP
         }
       ]
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="FB_reason">
     <el-button type="primary" class="addReason" @click="dialogAddFormVisible = true" icon="el-icon-plus" circle></el-button>
-    <el-table :data="tableData" border style="width: 100%" height="500" stripe>
+    <el-table :data="tableData" v-loading="loading" border style="width: 100%" height="500" stripe>
       <el-table-column prop="id" label="编号" width="80">
         <template slot-scope="scope">
           <span>{{(scope.$index+1)+(10*(pageNum-1))}}</span>
@@ -37,19 +37,17 @@
         <el-button type="primary" @click="saveReason('saveForm')">确 定</el-button>
       </div>
     </el-dialog>
-    <Print></Print>
   </div>
 </template>
 <script>
-import Print from './../../common/print_marks'
 import Pagination from './../../common/pagination.vue'
 export default {
   components: {
-    'pagination': Pagination,
-    Print
+    'pagination': Pagination
   },
   data () {
     return {
+      loading: false,
       addForm: {
         reason: '',
         userId: 1
@@ -75,11 +73,13 @@ export default {
   },
   methods: {
     seachTableData () {
+      this.loading = true
       this.$api.getReasonList({
         pageNum: this.pageNum,
         pageSize: this.pageSize
       }).then(res => {
         console.log(res)
+        this.loading = false
         this.tableData = res.data.data.list
         this.total = res.data.data.total
       })

@@ -419,5 +419,23 @@ export default {
   deleteReason (data) { // 翻包原因--删除原因
     console.log(data)
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/deleteReason`, data)
+  },
+  getStocktakingRecord (data) { // 盘点SAP--查询盘点记录
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getStocktakingRecord`, data)
+  },
+  getStocktakingDetail (data) { // 盘点SAP--查询盘点码单明细
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getStocktakingDetail`, data)
+  },
+  getHouseNameList (data) { // 待入库--查询所有“车间”
+    return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getHouseNameList`, data)
+  },
+  getSelectOublotNumberList (data) { // 待入库--查询所有“批号”
+    return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/selectOublotNumberList`, data)
+  },
+  getSelectProductNameList (data) { // 待入库--查询所有“品名”
+    return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/selectProductNameList`, data)
+  },
+  getPageInroundRecordList (data) { // 查询所有“待入库记录”
+    return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getPageInroundRecordList`, data)
   }
 }

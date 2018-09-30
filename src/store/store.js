@@ -19,7 +19,9 @@ const store = new Vuex.Store({
   },
   getters: {
     batchList: state => state.batchList,
-    workshop: state => state.workshop
+    workshop: state => state.workshop,
+    warehouseList: state => state.warehouseList,
+    sapStorage: state => state.sapStorage
   },
   mutations: {
     BatchList (state, batchList) {
