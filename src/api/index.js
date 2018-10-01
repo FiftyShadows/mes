@@ -346,6 +346,51 @@ export default {
   getBatchList () { // 查询所有批次
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/getBatchList`)
   },
+  getSelectWorkshop () { // 查询车间接口
+    return axios.post(`${baseWareUrl}/warehouseInfo/workshop/selectWorkshop`)
+  },
+  getselectSapStorage () { // 查询sap库存点
+    return axios.post(`${baseWareUrl}/warehouseInfo/sapStorage/getSapStorage`)
+  },
+  getSelectWarehouseList () { // 查询仓库下拉列表
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/selectWarehouseList`)
+  },
+  getSelectWarehouse (data) { // 仓库--获取数据
+    return axios.post(`${baseWareUrl}/warehouseInfo/warehouse/selectWarehouse`, data)
+  },
+  addWarehouse (data) { // 仓库--新增数据
+    return axios.post(`${baseWareUrl}/warehouseInfo/warehouse/addWarehouse`, data)
+  },
+  deleteWarehouse (data) { // 仓储--删除
+    return axios.post(`${baseWareUrl}/warehouseInfo/warehouse/deleteWarehouse`, data)
+  },
+  getWarehouseStorageList (data) { // 库位维护--获取数据
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/getWarehouseStorageList`, data)
+  },
+  addStorage (data) { // 库位维护--新增
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/addStorage`, data)
+  },
+  deleteStorage (data) { // 库位维护--删除
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/deleteStorage`, data)
+  },
+  updateStorage (data) { // 库位维护--修改
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/updateStorage`, data)
+  },
+  getWarehouseStoragePlanList (data) { // 库位计划--获取数据
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/getWarehouseStoragePlanList`, data)
+  },
+  getSelectStorageBatchNo (data) { // 库位计划--查询库位批次
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/selectStorageBatchNo`, data)
+  },
+  addStorageBatchNo (data) { // 库位计划--增加库位批次
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/addStorageBatchNo`, data)
+  },
+  updateStorageBatchNo (data) { // 库位计划--更改库位批次
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/updateStorageBatchNo`, data)
+  },
+  getSelectStorageList (data) { // 库位计划--查询关联仓库的库位
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/selectStorageList`, data)
+  },
   getMaterialList (data) { // sap信息--物料查询
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/material/getMaterialList`, data)
   },
@@ -368,9 +413,29 @@ export default {
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/addReason`, data)
   },
   updateReason (data) { // 翻包原因--更新原因
+    console.log(data)
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/updateReason`, data)
   },
   deleteReason (data) { // 翻包原因--删除原因
+    console.log(data)
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/deleteReason`, data)
+  },
+  getStocktakingRecord (data) { // 盘点SAP--查询盘点记录
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getStocktakingRecord`, data)
+  },
+  getStocktakingDetail (data) { // 盘点SAP--查询盘点码单明细
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getStocktakingDetail`, data)
+  },
+  getHouseNameList (data) { // 待入库--查询所有“车间”
+    return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getHouseNameList`, data)
+  },
+  getSelectOublotNumberList (data) { // 待入库--查询所有“批号”
+    return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/selectOublotNumberList`, data)
+  },
+  getSelectProductNameList (data) { // 待入库--查询所有“品名”
+    return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/selectProductNameList`, data)
+  },
+  getPageInroundRecordList (data) { // 查询所有“待入库记录”
+    return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getPageInroundRecordList`, data)
   }
 }

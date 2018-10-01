@@ -12,12 +12,30 @@ const store = new Vuex.Store({
     isWareLogin: false, // ware系统登陆
     dict: [], // 班次
     batchList: [], // 批次
+    warehouseType: ['固定库', '临时库', '立体库', '车丝库'], // 仓库类型
+    workshop: [], // 车间
+    sapStorage: [], // sap库存点
+    warehouseList: [], // 仓库列表
     silks: []
   },
-  getters: {},
+  getters: {
+    batchList: state => state.batchList,
+    workshop: state => state.workshop,
+    warehouseList: state => state.warehouseList,
+    sapStorage: state => state.sapStorage
+  },
   mutations: {
-    dict (state, data) {
-      state = data
+    BatchList (state, batchList) {
+      state.batchList = batchList
+    },
+    Workshop (state, workshop) {
+      state.workshop = workshop
+    },
+    WarehouseList (state, warehouseList) {
+      state.warehouseList = warehouseList
+    },
+    SapStorage (state, sapStorage) {
+      state.sapStorage = sapStorage
     }
   },
   actions: {
@@ -26,10 +44,27 @@ const store = new Vuex.Store({
         store.state.dict = res.data.data
       })
     },
-    getBatchList (store) {
+    getBatchList ({commit}) {
       api.getBatchList().then(res => {
-        store.state.batchList = res.data.data
-        console.log(store.state.batchList)
+        console.log(res)
+        commit('BatchList', {batchList: res.data.data})
+      })
+    },
+    getSelectWorkshop ({commit}) {
+      api.getSelectWorkshop().then(res => {
+        commit('Workshop', {workshop: res.data.data})
+      })
+    },
+    getselectSapStorage ({commit}) {
+      api.getselectSapStorage().then(res => {
+        console.log(res)
+        commit('SapStorage', {sapStorage: res.data.data})
+      })
+    },
+    getSelectWarehouseList ({commit}) {
+      api.getSelectWarehouseList().then(res => {
+        console.log(res)
+        commit('WarehouseList', {warehouseList: res.data.data})
       })
     }
   }

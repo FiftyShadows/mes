@@ -40,10 +40,10 @@
               <img class="radio_img radio_img_pickup" v-else src="../assets/radio2.png" alt="">
             </el-tooltip>
           </div>
-          <el-menu-item index="1" disabled>
+          <!-- <el-menu-item index="1" disabled>
             <i class="el-icon-d-caret"></i>
             <span slot="title">自动化</span>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="/current/index">
             <i class="el-icon-search"></i>
             <span slot="title">当前</span>
@@ -55,7 +55,7 @@
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-setting"></i>
-              <span slot="title">管理员 </span>
+              <span slot="title" class="hstyle">管理员 </span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/admin/user"><i class="el-icon-location"></i>用户</el-menu-item>
@@ -107,10 +107,10 @@
               <el-menu-item index="/configuration/Grade"><i class="el-icon-setting"></i>等级管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="7" disabled>
+          <!-- <el-menu-item index="7" disabled>
             <i class="el-icon-d-caret"></i>
             <span slot="title">仓储</span>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-submenu index="8">
             <template slot="title">
               <i class="el-icon-menu"></i>
@@ -130,6 +130,8 @@
               <span slot="title">库位库存</span>
             </template>
             <el-menu-item-group>
+              <el-menu-item index="/storage/warehouse"><i class="el-icon-setting"></i>仓库</el-menu-item>
+              <el-menu-item index="/storage/edit"><i class="el-icon-setting"></i>库位维护</el-menu-item>
               <el-menu-item index="/storage/view"><i class="el-icon-setting"></i>库位视图</el-menu-item>
               <el-menu-item index="/storage/plan"><i class="el-icon-setting"></i>库位计划</el-menu-item>
               <el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>
@@ -168,7 +170,7 @@
               <span slot="title">盘点SAP</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="7-1"><i class="el-icon-setting"></i>盘点</el-menu-item>
+              <el-menu-item index="/inventory/InventorySAP"><i class="el-icon-setting"></i>盘点</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
@@ -321,7 +323,14 @@ body > .el-container {
     min-width: 160px;
   }
 }
-
+.el-menu-item, .el-submenu__title {
+  height: 40px;
+  line-height: 40px;
+}
+.el-submenu__title {
+  height: 40px;
+  line-height: 40px;
+}
 /* 路由出口 */
 .child_router {
   color: #303133;
