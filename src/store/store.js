@@ -11,7 +11,8 @@ const store = new Vuex.Store({
     Lines: [],
     isWareLogin: false, // ware系统登陆
     dict: [], // 班次
-    batchList: [] // 批次
+    batchList: [], // 批次
+    silks: []
   },
   getters: {},
   mutations: {

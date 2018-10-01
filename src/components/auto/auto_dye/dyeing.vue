@@ -28,98 +28,9 @@
       <el-button icon="el-icon-search" type="primary" @click="search()"></el-button>
       <el-button @click="batchSubmit()" type="primary">提交</el-button>
     </el-row>
-          <template scope="" v-for="silkCar in silkCars">
-              <el-row type="flex" :gutter="20" :key="silkCar">
-                <el-col :span="1" class="checkbox">
-                  <el-checkbox v-model="silkCar.checkFlag" @change="handleCheckedSilkCarsChange" style="margin-top: 150px"></el-checkbox>
-                </el-col>
-                <el-col :span="22" style="margin-left: -10px">
-                  <el-card  class="card">
-                    <div slot="header" class="clearfix">
-                      <el-row type="flex" :gutter="20">
-                        <el-col :span="6" class="span">
-                          <span>落筒时间</span>
-                        </el-col>
-                        <el-col :span="6" class="value">
-                          <div>{{silkCar.doffingTime}}</div>
-                        </el-col>
-                        <el-col :span="6" class="span">
-                          <span>织袜时间</span>
-                        </el-col>
-                        <el-col :span="6" class="value">
-                          <span>{{silkCar.StockingTime}}</span>
-                        </el-col>
-                      </el-row>
-                      <el-row type="flex" :gutter="20">
-                        <el-col :span="3" class="span">
-                          <span>批号</span>
-                        </el-col>
-                        <el-col :span="3" class="value">
-                          <span>{{silkCar.batchNumber}}</span>
-                        </el-col>
-                        <el-col :span="3" class="span">
-                          <span>线别</span>
-                        </el-col>
-                        <el-col :span="3" class="value">
-                          <span>{{silkCar.line}}</span>
-                        </el-col>
-                        <el-col :span="6" class="span">
-                          <span>位号/落次</span>
-                        </el-col>
-                        <el-col :span="6" class="value">
-                          <span>{{silkCar.item}}/{{silkCar.fallOrder}}</span>
-                        </el-col>
-                      </el-row>
-                      <el-row type="flex" :gutter="20">
-                        <el-col :span="3" class="span">
-                          <span>织袜类型</span>
-                        </el-col>
-                        <el-col :span="3" class="value">
-                          <span>{{silkCar.StockingType}}</span>
-                        </el-col>
-                        <el-col :span="3" class="span">
-                          <span>织袜工号</span>
-                        </el-col>
-                        <el-col :span="3" class="value">
-                          <span>{{silkCar.userId}}</span>
-                        </el-col>
-                        <el-col :span="3" class="span">
-                          <span>落筒方式</span>
-                        </el-col>
-                        <el-col :span="3" class="value">
-                          <span>{{silkCar.doffingType}}</span>
-                        </el-col>
-                        <el-col :span="3" class="span">
-                          <span>丝车号</span>
-                        </el-col>
-                        <el-col :span="3" class="value">
-                          <span>{{silkCar.silkCarCode}}</span>
-                        </el-col>
-                      </el-row>
-                    </div>
-                    <div class="silkCar">
-                      <el-row type="flex" :gutter="20">
-                        <el-col :span="1" class="span">
-                          <span>A</span>
-                        </el-col>
-                        <el-col :span="11" class="span">
-                          <silk-car-component :rows="rows" :cols="cols" :silkDetail="silkDetail"></silk-car-component>
-                        </el-col>
-                        <el-col :span="1" class="span">
-                          <span>B</span>
-                        </el-col>
-                        <el-col :span="11" class="span">
-                          <silk-car-component :rows="rows" :cols="cols" :silkDetail="silkDetail"></silk-car-component>
-                        </el-col>
-                      </el-row>
-                    </div>
-                    <div class="tag">
-                      <span>{{silkCar.num}}次</span>
-                    </div>
-                  </el-card>
-                </el-col>
-              </el-row>
-          </template>
+    <template v-for="(silkCar, index) in silkCars">
+      <silk-car-component @changeIsIndeterminate="changeIsIndeterminate" :silkCars="silkCars" :index="index" :silkCar="silkCar" :key="index" style="margin-top: 10px"></silk-car-component>
+    </template>
   </div>
 </template>
 <script>
@@ -156,58 +67,68 @@ export default {
       userId: '',
       startTime: this.util.getCurrentFormatDateSE().startTime,
       endTime: this.util.getCurrentFormatDateSE().endTime,
-      rows: 4, // 丝车行数
-      cols: 6, // 丝车列数
       isIndeterminate: false,
       silkCars: [
         {// 1次织袜一车一位的demo
+          id: 1,
+          rows: 4, // 丝车行数
+          cols: 4, // 丝车列数
           silkCarCode: '3000F2200',
           StockingTime: this.util.getCurrentFormatDateSE().startTime,
           batchNumber: 'D30111',
           line: 'D1',
-          item: '1',
-          fallOrder: 'C1',
+          itemFallOrders: ['1/C1'],
           StockingType: '单织',
           userId: '1000',
-          doffingType: '',
+          doffingType: '自动落筒',
           doffingTime: this.util.getCurrentFormatDateSE().startTime,
           value: '车1',
           checkFlag: false,
-          num: 1
+          num: 1,
+          silkDetail: {
+            note: '测试'
+          }
         },
         {// 1次织袜一车多位的demo
+          id: 2,
+          rows: 4, // 丝车行数
+          cols: 6, // 丝车列数
           silkCarCode: '3000F2201',
           StockingTime: this.util.getCurrentFormatDateSE().startTime,
           batchNumber: 'D30112',
           line: 'D2',
-          item: '2',
-          fallOrder: 'C2',
+          itemFallOrders: ['1/C1', '2/C2', '3/C3', '4/C4'],
           StockingType: '位与位',
           userId: '1000',
-          doffingType: '',
+          doffingType: '自动落筒',
           doffingTime: this.util.getCurrentFormatDateSE().startTime,
           value: '车1',
           checkFlag: false,
-          num: 2
+          num: 1,
+          silkDetail: {
+            note: '测试'
+          }
         },
         {// 多次织袜（拼车）
+          id: 3,
+          rows: 4, // 丝车行数
+          cols: 6, // 丝车列数
           silkCarCode: '3000F2201',
           StockingTime: this.util.getCurrentFormatDateSE().startTime,
           batchNumber: 'D30112',
           line: 'D2',
-          item: '2',
-          fallOrder: 'C2',
+          itemFallOrders: ['1/C1'],
           StockingType: '单织',
           userId: '1000',
-          doffingType: '',
+          doffingType: '自动落筒',
           doffingTime: this.util.getCurrentFormatDateSE().startTime,
           value: '车1',
           checkFlag: false,
-          num: 3
+          num: 3,
+          silkDetail: {
+            note: '测试'
+          }
         }],
-      silkDetail: {
-        note: '测试'
-      },
       checkedSilkCars: [],
       checkAll: false
     }
@@ -218,7 +139,7 @@ export default {
       console.log('搜索')
     },
     batchSubmit () {
-      console.log('提交')
+      console.log('批次提交')
     },
     handleCheckAllChange (val) {
       if (val) {
@@ -232,85 +153,15 @@ export default {
         })
       }
     },
-    handleCheckedSilkCarsChange (val) {
-      let countChecked = 0
-      this.silkCars.forEach((item) => {
-        if (item.checkFlag) {
-          countChecked++
-        }
-      })
-      if (countChecked === this.silkCars.length) {
-        this.checkAll = true
-        this.isIndeterminate = false
-      } else if (countChecked === 0) {
-        this.checkAll = false
-        this.isIndeterminate = false
-      } else {
-        this.isIndeterminate = true
-      }
+    changeIsIndeterminate (val) {
+      this.isIndeterminate = val
     }
   }
 }
 </script>
 <style lang="scss" scoped>
   .dyeing {
-    width: 100%;
+    width: 105%;
     height: 95%;
-    .card {
-      margin-top: 10px;
-      border: chocolate;
-    }
-    .clearfix:before,
-    .clearfix:after {
-      display: table;
-      content: "";
-    }
-    .clearfix:after {
-      clear: both;
-    }
-    .span {
-      text-align: right;
-      background: #eef2f6;
-      border: 1px solid #d9dfe5;
-    }
-    .value {
-      text-align: left;
-      border: 1px solid #d9dfe5;
-    }
-    .silkCar {
-      margin-top: -10px;
-      text-align: center;
-      .span {
-        /*margin-left: 10px;*/
-        padding: 10px;
-      }
-    }
-    .checkbox{
-      border: 1px solid #d9dfe5;
-      background: white;
-      margin-top: 10px;
-    }
-    .checkAll{
-      margin-top: 10px;
-    }
-  }
-  .tag{
-    position: absolute;
-    top: 10px;
-    left: 0;
-    width: 0;
-    height: 0;
-    color: #fff;
-    border: 15px solid #ff0000;
-    border-bottom-color: transparent;
-    border-right-color: transparent;
-    span{
-      width: 24px;
-      display: block;
-      font-size: 12px;
-      margin-left: -15px;
-      margin-top: -15px;
-      transform: rotateZ(-45deg);
-    }
   }
 </style>

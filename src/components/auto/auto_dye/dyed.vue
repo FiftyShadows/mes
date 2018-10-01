@@ -119,6 +119,9 @@
               </el-col>
             </el-row>
           </div>
+          <div class="tag">
+            <span>{{silkCar.num}}次</span>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -175,7 +178,8 @@ export default {
           doffingType: '',
           doffingTime: this.util.getCurrentFormatDateSE().startTime,
           value: '车1',
-          checkFlag: false
+          checkFlag: false,
+          num:1
         },
         {
           silkCarCode: '3000F2221',
@@ -189,7 +193,8 @@ export default {
           doffingType: '',
           doffingTime: this.util.getCurrentFormatDateSE().startTime,
           value: '车1',
-          checkFlag: false
+          checkFlag: false,
+          num:2
         }],
       silkDetail: {
         note: '测试'
@@ -282,4 +287,23 @@ export default {
       margin-top: 10px;
     }
   };
+  .tag{
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 0;
+    height: 0;
+    color: #fff;
+    border: 15px solid #ff0000;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    span{
+      width: 24px;
+      display: block;
+      font-size: 12px;
+      margin-left: -15px;
+      margin-top: -15px;
+      transform: rotateZ(-45deg);
+    }
+  }
 </style>
