@@ -90,7 +90,8 @@
         </el-form-item>
         <el-form-item label="丝锭" v-if="isDyeing" :label-width="formLabelWidth">
           <ul class="item">
-            <li v-for="item in DyeingSample.silkRuntimes" :key="item.id">{{item.sideType + '面—' + item.row + '—' + item.col + ' — — ' + item.silk.lineMachine.line.name + '/' + item.silk.lineMachine.item}}</li>
+            <li v-for="item in DyeingSample.silkRuntimes" :key="item.id">{{item}}</li>
+            <!-- <li v-for="item in DyeingSample.silkRuntimes" :key="item.id">{{item.sideType + '面—' + item.row + '—' + item.col + ' — — ' + item.silk.lineMachine.line.name + '/' + item.silk.lineMachine.item}}</li> -->
           </ul>
         </el-form-item>
       </el-form>
@@ -280,7 +281,7 @@ export default {
       })
     },
     productProcess (val) { // 打开event弹框
-      // console.log(val)
+      console.log(val)
       this.dialogName = val
       this.EventsForm.name = this.silkCarRecord.silkCar.code
       this.EventsForm.id = this.silkCarRecord.id
@@ -302,6 +303,7 @@ export default {
       // this.EventsForm.silkRuntimes = this.checkedBatchA.concat(this.checkedBatchB)
       // console.log(this.checkedSilkCarA.concat(this.checkedSilkCarB))
       this.EventsForm.silkRuntimes = this.checkedSilkCarA.concat(this.checkedSilkCarB)
+      console.log(this.checkedSilkCarA)
       this.DyeingSample.silkCarRecord = this.searchData.silkCarRecord // 标样丝
       console.log(this.EventsForm)
       this.DyeingSample.silkRuntimes = this.EventsForm.silkRuntimes // 标样丝
