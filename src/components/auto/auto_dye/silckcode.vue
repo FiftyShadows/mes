@@ -1,3 +1,4 @@
+<!--已染判丝车组件-->
 <template>
   <div class="silkCar">
     <el-row type="flex" :gutter="20" v-for="row in rows" :key="row">

@@ -125,7 +125,7 @@ export default {
       process: '',
       productsId: [], // 产品id
       // 多选框
-      checkedSilkCarA: [1], // A
+      checkedSilkCarA: [], // A
       isIndeterminateA: true,
       batchOptions: [],
       checkOptions: [],
@@ -272,9 +272,7 @@ export default {
             this.checkOptions.push({row: i, col: j})
           }
         }
-        this.batchOptions = this.searchData.silkRuntimes.sort(function (a, b) {
-          return a.row - b.row
-        })
+        this.batchOptions = this.searchData.silkRuntimes
         console.log(this.batchOptions)
         // this.fullscreenLoading = false
         this.getProcesses()

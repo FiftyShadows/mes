@@ -15,7 +15,8 @@ const store = new Vuex.Store({
     warehouseType: ['固定库', '临时库', '立体库', '车丝库'], // 仓库类型
     workshop: [], // 车间
     sapStorage: [], // sap库存点
-    warehouseList: [] // 仓库列表
+    warehouseList: [], // 仓库列表
+    silks: []
   },
   getters: {
     batchList: state => state.batchList,

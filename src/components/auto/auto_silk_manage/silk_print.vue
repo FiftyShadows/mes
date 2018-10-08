@@ -47,9 +47,13 @@
       center>
       <el-form :model="dialogForm" label-width="80px">
         <el-form-item label="机台">
-            <el-input-number v-model="dialogForm.lineMachine"></el-input-number>
-            <span>-</span>
-            <el-input-number v-model="dialogForm.lineMachine"></el-input-number>
+          <el-tag type="info" style="float: left; width: 80%;text-align: left;">
+            机台 *
+            <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="saveWorkshops()"></el-button>
+          </el-tag>
+          <ul class="item">
+            <li v-for="item in dialogForm.lineMachines" :key="item.id">{{item.line.workshop.name}}--{{item.line.name}}--{{item.item}}</li>
+          </ul>
         </el-form-item>
         <el-form-item label="落次">
           <el-input v-model="dialogForm.fallOrder" class="fallOrder"></el-input>
@@ -125,7 +129,7 @@ export default {
       multipleSelection: [],
       dialogVisible: false,
       dialogForm: {
-        lineMachine: '',
+        lineMachines: [],
         dialogForm: '',
         productTime: ''
       }
