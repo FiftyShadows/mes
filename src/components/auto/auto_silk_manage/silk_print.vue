@@ -40,45 +40,14 @@
       <el-table-column prop="printStatus" label="打印状态" width="180"></el-table-column>
       <el-table-column prop="productTime" label="打印时间" width="180"></el-table-column>
     </el-table>
-    <el-dialog
-      title="生成条码"
-      :visible.sync="dialogVisible"
-      width="30%"
-      center>
-      <el-form :model="dialogForm" label-width="80px">
-        <el-form-item label="机台">
-          <el-tag type="info" style="float: left; width: 80%;text-align: left;">
-            机台 *
-            <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="saveWorkshops()"></el-button>
-          </el-tag>
-          <ul class="item">
-            <li v-for="item in dialogForm.lineMachines" :key="item.id">{{item.line.workshop.name}}--{{item.line.name}}--{{item.item}}</li>
-          </ul>
-        </el-form-item>
-        <el-form-item label="落次">
-          <el-input v-model="dialogForm.fallOrder" class="fallOrder"></el-input>
-          <span>-</span>
-          <el-input v-model="dialogForm.fallOrder" class="fallOrder"></el-input>
-        </el-form-item>
-        <el-form-item label="生产日期">
-          <el-date-picker
-            v-model="dialogForm.productTime"
-            align="right"
-            type="date"
-            placeholder="选择日期"
-            :picker-options="pickerOptions">
-          </el-date-picker>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-  </span>
-    </el-dialog>
+    <create-barcode-dialog :dialogVisible.sync="dialogVisible"></create-barcode-dialog>
   </div>
 </template>
 <script>
+import CreateBarcodeDialog from './create-barcode-dialog'
+
 export default {
+  components: {CreateBarcodeDialog},
   name: 'silkPrint',
   data () {
     return {
@@ -127,12 +96,7 @@ export default {
         }
       ],
       multipleSelection: [],
-      dialogVisible: false,
-      dialogForm: {
-        lineMachines: [],
-        dialogForm: '',
-        productTime: ''
-      }
+      dialogVisible: false
     }
   },
   created () {
@@ -156,8 +120,5 @@ export default {
   }
   .el-input-number {
     width: 130px;
-  }
-  .fallOrder {
-    width: 40%;
   }
 </style>

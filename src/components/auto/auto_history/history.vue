@@ -2,18 +2,21 @@
   <div class="history">
     <div style="height: 50px">
       <el-date-picker
-        v-model="startTime"
-        type="datetime"
-        placeholder="选择日期时间" style="float: left">
+        style="float: left;"
+        v-model="time"
+        type="daterange"
+        align="right"
+        unlink-panels
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :picker-options="pickerOptions"
+        @change="getSilkCarRecords">
       </el-date-picker>
-      <span style="float: left;margin-top: 15px" class="el-icon-caret-right"></span>
-      <el-date-picker
-        v-model="endTime"
-        type="datetime"
-        placeholder="选择日期时间" style="float: left">
-      </el-date-picker>
-      <el-input placeholder="请输入丝车号" v-model="silkCarCode" style="float: left;width: auto;margin-left: 10px"></el-input>
-      <el-button type="primary" icon="el-icon-search" style="float: left;margin-left: 10px" circle @click="getSilkCarRecords()"></el-button>
+      <el-select placeholder="请输入丝车号" v-model="silkCarCode" style="float: left;width: auto;margin-left: 10px" filterable clearable remote reserve-keyword :remote-method="remoteMethod" @change="getSilkCarRecords">
+        <el-option v-for="item in options" :key="item.id" :label="item.code" :value="item"></el-option>
+      </el-select>
+      <!--<el-button type="primary" icon="el-icon-search" style="float: left;margin-left: 10px" circle @click="getSilkCarRecords()"></el-button>-->
       <el-radio-group v-model="order" style="float: right;" @change="changeOrder">
         <el-radio-button label="正序"></el-radio-button>
         <el-radio-button label="逆序"></el-radio-button>
@@ -91,12 +94,41 @@ export default {
       initEvent: [], // 初始化事件（落筒或拼车）
       initSilks: [], // 初始化丝锭
       eventSources: [], // 事件源（每一步操作）
+      options: [],
       silkCarCode: '',
       loading: false,
       order: '正序',
       silkCarRecords: [],
-      startTime: this.util.getCurrentFormatDateSE().startTime,
-      endTime: this.util.getCurrentFormatDateSE().endTime,
+      time: [this.util.getCurrentFormatDateSE().startTime, this.util.getCurrentFormatDateSE().endTime],
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
+      // startTime: this.util.getCurrentFormatDateSE().startTime,
+      // endTime: this.util.getCurrentFormatDateSE().endTime,
       data: {
         pageSize: null,
         first: 1,
@@ -107,14 +139,32 @@ export default {
   created () {
   },
   methods: {
-    getSilkCarRecords () {
-      let params = {
-        silkCarCode: this.silkCarCode,
-        startTime: this.startTime,
-        endTime: this.endTime
+    remoteMethod (query) {
+      if (query !== '') {
+        this.loading = true
+        this.$api.getCurrentSelect(query).then(res => {
+          if (res.errorCode === 'E00000') {
+            this.$message.error(res.errorMessage)
+          } else {
+            this.loading = false
+            this.options = res.data
+          }
+        })
+      } else {
+        this.options = []
       }
-      this.$api.getSilkCarRecords(params).then(res => {
-        this.silkCarRecords = res.data.silkCarRecords
+    },
+    getSilkCarRecords (val) {
+      // let params = {
+      //   silkCarCode: this.silkCarCode,
+      //   time: this.time
+      // }
+      // this.$api.getSilkCarRecords(params).then(res => {
+      //   this.silkCarRecords = res.data.silkCarRecords
+      // })
+      this.$api.getSearchData(val.code).then(res => {
+        console.log(res)
+        this.silkCarRecords = res.data
       })
     },
     getDetail () {
