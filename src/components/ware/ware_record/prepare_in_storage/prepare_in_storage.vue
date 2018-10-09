@@ -32,7 +32,7 @@
       <el-form-item style="float: left;">
         <el-button type="primary" icon="el-icon-search" @click="seachTableData()" circle></el-button>
         <el-button type="primary">入库</el-button>
-        <el-button type="primary">修改</el-button>
+        <el-button type="warning">修改</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="tableData" v-loading="loading" tooltip-effect="dark" border @selection-change="handleSelectionChange" style="width: 100%" height="500" stripe>
