@@ -1,10 +1,13 @@
 <template>
   <div class="detail">
-    <el-dialog title="盘点明细" :visible.sync="dialogTableVisible">
-      <el-table :data="gridData" v-loading="loading" height="400">
+    <el-dialog title="码单" :visible.sync="dialogTableVisible" width="80%">
+      <el-table :data="gridData" v-loading="loading" border height="400">
         <el-table-column property="lotNumber" label="码单号"></el-table-column>
-        <el-table-column property="createTime" :formatter="dateFormat" label="扫码时间"></el-table-column>
-        <el-table-column property="username" label="入库人"></el-table-column>
+        <el-table-column property="transDate" :formatter="dateFormat" label="扫码时间"></el-table-column>
+        <el-table-column property="productTime" :formatter="dateFormat" label="生产时间"></el-table-column>
+        <el-table-column property="transType" label="出入库类型" width="150"></el-table-column>
+        <el-table-column property="transOperator" label="操作员"></el-table-column>
+        <el-table-column property="netWeight" label="净重" width="120"></el-table-column>
       </el-table>
       <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
     </el-dialog>
@@ -17,11 +20,11 @@ export default {
   components: {
     Pagination
   },
-  props: ['stocktakingRecordId'],
   data () {
     return {
-      id: '',
       loading: false,
+      lotNum: '',
+      houseName: '',
       gridData: [],
       dialogTableVisible: false,
       pageNum: 1, // 当前页数
@@ -41,27 +44,31 @@ export default {
     changePage (value) {
       this.pageNum = value.pageNum
       this.pageSize = value.pageSize
-      this.show(this.id)
+      this.seachTableData()
     },
-    show (id) {
+    show (lotNum, houseName) {
       this.dialogTableVisible = true
+      this.lotNum = lotNum
+      this.houseName = houseName
+      this.seachTableData()
+      // console.log(lotNum, houseName)
+    },
+    seachTableData () {
       this.loading = true
-      this.id = id
-      console.log(id)
-      this.$api.getStocktakingDetail({
+      this.$api.selectStocktakingDetail({
+        sublotNumber: this.lotNum,
+        houseName: this.houseName,
         pageNum: this.pageNum,
-        pageSize: this.pageSize,
-        stocktakingRecordId: this.id,
-        lotNumber: this.lotNumber
+        pageSize: this.pageSize
       }).then(res => {
         console.log(res)
-        this.loading = false
         if (res.data.status === '200') {
+          this.loading = false
           this.gridData = res.data.data.list
           this.total = res.data.data.total
         } else {
           this.$notify.error({
-            title: '失败',
+            title: '错误',
             message: res.data.msg
           })
         }

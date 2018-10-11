@@ -179,7 +179,7 @@ export default {
           doffingTime: this.util.getCurrentFormatDateSE().startTime,
           value: '车1',
           checkFlag: false,
-          num:1
+          num: 1
         },
         {
           silkCarCode: '3000F2221',
@@ -194,7 +194,7 @@ export default {
           doffingTime: this.util.getCurrentFormatDateSE().startTime,
           value: '车1',
           checkFlag: false,
-          num:2
+          num: 2
         }],
       silkDetail: {
         note: '测试'

@@ -2,22 +2,22 @@
   <div class="inventorySAP">
     <el-tabs type="border-card">
       <el-tab-pane label="盘点记录">
-        <InventorySAP></InventorySAP>
+        <inventoryRecord></inventoryRecord>
       </el-tab-pane>
-      <el-tab-pane label="普通盘点">
-        <general></general>
+      <el-tab-pane label="开始盘点">
+        <InventoryStart></InventoryStart>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
-import InventorySAP from './inventorySAP'
-import GeneralInventory from './general_Inventory'
+import inventoryRecord from './inventoryRecord'
+import InventoryStart from './InventoryStart'
 export default {
   name: 'inventorySAP',
   components: {
-    InventorySAP,
-    'general': GeneralInventory
+    inventoryRecord,
+    InventoryStart
   },
   data () {
     return {

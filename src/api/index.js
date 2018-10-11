@@ -426,6 +426,12 @@ export default {
   getStocktakingDetail (data) { // 盘点SAP--查询盘点码单明细
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getStocktakingDetail`, data)
   },
+  selectStocktakingInfo (data) { // 盘点SAP--查询盘点信息
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/selectStocktakingInfo`, data)
+  },
+  selectStocktakingDetail (data) { // 盘点SAP--查询码单
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/selectStocktakingDetail`, data)
+  },
   getHouseNameList (data) { // 待入库--查询所有“车间”
     return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getHouseNameList`, data)
   },
@@ -437,5 +443,29 @@ export default {
   },
   getPageInroundRecordList (data) { // 查询所有“待入库记录”
     return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getPageInroundRecordList`, data)
+  },
+  selectLevelList (data) { // 入库记录--查询等级
+    return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/selectLevelList`, data)
+  },
+  selectBatchNoList (data) { // 入库记录--查询批号
+    return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/selectBatchNoList`, data)
+  },
+  selectProductList (data) { // 入库记录--查询产品名
+    return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/selectProductList`, data)
+  },
+  selectClassesList (data) { // 入库记录--查询班次
+    return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/selectClassesList`, data)
+  },
+  getPageInStorageRecordList (data) { // 入库记录--所有入库记录
+    return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/getPageInStorageRecordList`, data)
+  },
+  selectInStorageDetailList (data) { // 入库记录--码单明细记录
+    return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/selectInStorageDetailList`, data)
+  },
+  selectTransTypeList (data) { // 入库记录--码单明细--出入库类型
+    return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/selectTransTypeList`, data)
+  },
+  searchInStorageDetailList (data) { // 入库记录--码单明细--搜索
+    return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/searchInStorageDetailList`, data)
   }
 }

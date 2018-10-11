@@ -26,7 +26,7 @@
       </el-form-item>
       <el-form-item style="float: left;">
         <el-button type="primary" icon="el-icon-search" @click="seachTableData()" circle></el-button>
-        <el-button @click="startInventory()" type="primary">开始盘点</el-button>
+        <!-- <el-button @click="startInventory()" type="primary">开始盘点</el-button> -->
       </el-form-item>
     </el-form>
     <el-table v-loading="loading" :data="tableData" border style="width: 100%" height="500">
