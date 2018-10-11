@@ -10,11 +10,10 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        :picker-options="pickerOptions"
-        @change="getSilkCarRecords">
+        :picker-options="pickerOptions">
       </el-date-picker>
       <el-select placeholder="请输入丝车号" v-model="silkCarCode" style="float: left;width: auto;margin-left: 10px" filterable clearable remote reserve-keyword :remote-method="remoteMethod" @change="getSilkCarRecords">
-        <el-option v-for="item in options" :key="item.id" :label="item.code" :value="item"></el-option>
+        <el-option v-for="item in options" :key="item.id" :label="item.code" :value="item.code"></el-option>
       </el-select>
       <!--<el-button type="primary" icon="el-icon-search" style="float: left;margin-left: 10px" circle @click="getSilkCarRecords()"></el-button>-->
       <el-radio-group v-model="order" style="float: right;" @change="changeOrder">
@@ -25,17 +24,20 @@
     <div class="history-main">
       <div class="left">
         <div class="silkCarRecord">
+          <el-card v-if="silkCarRecords.length === 0">
+            暂无数据
+          </el-card>
           <el-card v-for="silkCarRecord in silkCarRecords" :key="silkCarRecord.id" shadow="hover">
             <div class="text item">
               <h3>开始时间：{{silkCarRecord.startDateTime|formatDate}} 结束时间：{{silkCarRecord.endDateTime|formatDate}}</h3>
               <h3>丝车车次：{{silkCarRecord.id}}  丝车条码：{{silkCarRecord.silkCar.code}}</h3>
               <h3>
                 丝车规格(行×列)：{{silkCarRecord.silkCar.row}}×{{silkCarRecord.silkCar.col}}
-                车间：{{silkCarRecord.batch.workshop.corporation.name}}{{silkCarRecord.batch.workshop.name}}
+                <!--车间：{{silkCarRecord.batch.workshop.corporation.name}}{{silkCarRecord.batch.workshop.name}}-->
               </h3>
               <h4>
                 <el-tag size="mini" v-if="silkCarRecord.doffingType != ''">{{silkCarRecord.doffingType === 'MANUAL'? '手动落筒': '自动落筒'}}</el-tag>
-                <el-tag size="mini">{{silkCarRecord.batch.product.name}}-{{silkCarRecord.batch.spec}}-{{silkCarRecord.batch.batchNo}}</el-tag>
+                <!--<el-tag size="mini">{{silkCarRecord.batch.product.name}}-{{silkCarRecord.batch.spec}}-{{silkCarRecord.batch.batchNo}}</el-tag>-->
               </h4>
               <el-button @click="getDetail()">查看详情</el-button>
             </div>
@@ -43,39 +45,41 @@
         </div>
       </div>
       <div class="right">
-        <el-card v-model="initEvent" class="box-card"></el-card>
-        <!--<el-card v-for="(item,index) in eventSources" v-if="item.productProcess" :key="index" class="box-card">-->
-          <!--<div slot="header" class="clearfix">-->
-      <!--<span style="float: left;">-->
-        <!--<span style="font-weight: bold; font-size: 17px; color: #409EFF;">{{item.operator.name}}</span>-->
-        <!--<span style="font-weight: bold;">{{item.operator.hrId}}</span>-->
-        <!--<br>-->
-        <!--<i>{{item.firstTime}}</i>-->
-      <!--</span>-->
-            <!--<el-button style="float: right;" type="warning" size="mini">{{item.productProcess.name}}</el-button>-->
-          <!--</div>-->
-          <!--<div class="silkRuntimes" v-if="item.silkRuntimes[0]">-->
-            <!--<el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭</el-tag>-->
-            <!--<el-button size="mini" class="btn silkbtn" v-for="runtimes in item.silkRuntimes" plain :key="runtimes.id">-->
-              <!--{{runtimes.sideType}}面 —— {{runtimes.row}} —— {{runtimes.col}}-->
-            <!--</el-button>-->
-          <!--</div>-->
-          <!--<div class="silkExceptions" v-if="item.silkExceptions">-->
-            <!--<el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭异常</el-tag>-->
-            <!--<el-button size="mini" class="btn" type="danger" v-for="exceptions in item.silkExceptions" plain round :key="exceptions.id">{{exceptions.name}}</el-button>-->
-          <!--</div>-->
-          <!--<div class="notes" style="margin-top: 10px;" v-if="item.silkNotes">-->
-            <!--<el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭备注</el-tag>-->
-            <!--<el-button size="mini" class="btn" type="info" v-for="notes in item.silkNotes" plain round :key="notes.id">{{notes.name}}</el-button>-->
-          <!--</div>-->
-          <!--<div class="silkform" style="margin-top: 10px;" v-if="item.formConfig">-->
-            <!--<el-tag type="info" style="float: left; width: 100%;text-align: left;">{{item.formConfig.name}}</el-tag>-->
-            <!--<div v-for="config in item.formConfig.formFieldConfigs" :key="config.id">-->
-              <!--<el-tag class="btn">{{config.name}}</el-tag>-->
-              <!--<el-tag v-if="config.value" class="btn">{{config.value}}</el-tag>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</el-card>-->
+        <el-card v-if="silkCarRecords.length === 0">
+          暂无数据
+        </el-card>
+        <el-card v-for="(item,index) in eventSources" v-if="item.productProcess" :key="index" class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="float: left;">
+              <span style="font-weight: bold; font-size: 17px; color: #409EFF;">{{item.operator.name}}</span>
+              <span style="font-weight: bold;">{{item.operator.hrId}}</span>
+              <br>
+              <i>{{item.firstTime}}</i>
+            </span>
+            <el-button style="float: right;" type="warning" size="mini">{{item.productProcess.name}}</el-button>
+          </div>
+          <div class="silkRuntimes" v-if="item.silkRuntimes[0]">
+            <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭</el-tag>
+            <el-button size="mini" class="btn silkbtn" v-for="runtimes in item.silkRuntimes" plain :key="runtimes.id">
+              {{runtimes.sideType}}面 —— {{runtimes.row}} —— {{runtimes.col}}
+            </el-button>
+          </div>
+          <div class="silkExceptions" v-if="item.silkExceptions">
+            <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭异常</el-tag>
+            <el-button size="mini" class="btn" type="danger" v-for="exceptions in item.silkExceptions" plain round :key="exceptions.id">{{exceptions.name}}</el-button>
+          </div>
+          <div class="notes" style="margin-top: 10px;" v-if="item.silkNotes">
+            <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭备注</el-tag>
+            <el-button size="mini" class="btn" type="info" v-for="notes in item.silkNotes" plain round :key="notes.id">{{notes.name}}</el-button>
+          </div>
+          <div class="silkform" style="margin-top: 10px;" v-if="item.formConfig">
+            <el-tag type="info" style="float: left; width: 100%;text-align: left;">{{item.formConfig.name}}</el-tag>
+            <div v-for="config in item.formConfig.formFieldConfigs" :key="config.id">
+              <el-tag class="btn">{{config.name}}</el-tag>
+              <el-tag v-if="config.value" class="btn">{{config.value}}</el-tag>
+            </div>
+          </div>
+        </el-card>
       </div>
     </div>
   </div>
@@ -127,8 +131,6 @@ export default {
           }
         }]
       },
-      // startTime: this.util.getCurrentFormatDateSE().startTime,
-      // endTime: this.util.getCurrentFormatDateSE().endTime,
       data: {
         pageSize: null,
         first: 1,
@@ -155,6 +157,31 @@ export default {
       }
     },
     getSilkCarRecords (val) {
+      this.silkCarRecords = []
+      let obj1 = {
+        id: '5b83a1831e1d9c6efd2933cc',
+        startDateTime: '2018-08-27 07:00:19.000Z',
+        endDateTime: '2018-08-27 07:00:19.000Z',
+        silkCar: {
+          code: '3000F1111',
+          row: '3',
+          col: '4'
+        },
+        doffingType: ''
+      }
+      let obj2 = {
+        id: '5b83a1831e1d9c6efd2933c2',
+        startDateTime: '2018-08-27 07:00:19.000Z',
+        endDateTime: '2018-08-27 07:00:19.000Z',
+        silkCar: {
+          code: '3000F1111',
+          row: '3',
+          col: '4'
+        },
+        doffingType: ''
+      }
+      this.silkCarRecords.push(obj1)
+      this.silkCarRecords.push(obj2)
       // let params = {
       //   silkCarCode: this.silkCarCode,
       //   time: this.time
@@ -162,10 +189,6 @@ export default {
       // this.$api.getSilkCarRecords(params).then(res => {
       //   this.silkCarRecords = res.data.silkCarRecords
       // })
-      this.$api.getSearchData(val.code).then(res => {
-        console.log(res)
-        this.silkCarRecords = res.data
-      })
     },
     getDetail () {
       console.log('测试')

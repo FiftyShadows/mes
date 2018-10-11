@@ -10,9 +10,9 @@ import global from '../window_global'
 // 9999是PDA用的端口，不是单点
 // 8080目前全部单点登录，正式会切到80
 // 这个token只能测试用，正式代码里不要用，后台密钥不同，会验证不成功
-// const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
+const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
 // 仓储token
-const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZW5neWkiLCJhZG1pbiI6InBhc3N3b3JkIiwiaWF0IjoxNTM3MzI0NDY0fQ.QGMzQXX09igK9gaKAq5jfniTpioa12st7h9FCZ-D7AY'
+// const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZW5neWkiLCJhZG1pbiI6InBhc3N3b3JkIiwiaWF0IjoxNTM3MzI0NDY0fQ.QGMzQXX09igK9gaKAq5jfniTpioa12st7h9FCZ-D7AY'
 
 // 自动化Token
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
@@ -227,6 +227,30 @@ export default {
     return axios.put(`${baseAutoUrl}/grades/${data.id}`, data)
   },
 
+  // 班次管理--获取班次
+  getPackageClass () {
+    return axios.get(`${baseAutoUrl}/packageClasses`)
+  },
+  // 班次管理--增加班次
+  addPackageClass (data) {
+    return axios.post(`${baseAutoUrl}/packageClasses`, data)
+  },
+  // 班次管理--修改保存班次
+  savePackageClass (data) {
+    return axios.put(`${baseAutoUrl}/packageClasses/${data.id}`, data)
+  },
+
+  // 暂存箱管理--获取暂存箱列表
+  getTemporaryBoxs () {
+    return axios.get(`${baseAutoUrl}/temporaryBoxs`)
+  },
+  addTemporaryBoxs (data) {
+    return axios.get(`${baseAutoUrl}/temporaryBoxs`, data)
+  },
+  saveTemporaryBoxs (data) {
+    return axios.get(`${baseAutoUrl}/temporaryBoxs`, data)
+  },
+
   // 车间生产计划
   getLinePlans (data) {
     return axios.get(`${baseAutoUrl}/reports/workshopProductPlanReport?workshopId=${data}`)
@@ -331,6 +355,14 @@ export default {
   // 获取丝车历史信息
   getSilkCarRecords (data) {
     return axios.get(`${baseAutoUrl}/silkCarRecords?startTime=${data.startTime}&endTime=${data.endTime}&q=${data.silkCarCode}`)
+  },
+  // 获取丝锭条码查询
+  getSilkBarCodes (data) {
+    return axios.get(`${baseAutoUrl}/silkBarcodes`, data)
+  },
+  // 批量生成丝锭条码
+  batchAddSilkBarCodes (data) {
+    return axios.post(`${baseAutoUrl}/batchSilkBarcodes`, data)
   },
 
   // =========================================== 仓储 ===========================================

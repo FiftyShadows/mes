@@ -10,7 +10,7 @@
           <div slot="header" class="clearfix">
             <el-row type="flex" :gutter="20">
               <el-col :span="6" class="span">
-                <span>落筒时间</span>
+                <span>落筒(拼车)时间</span>
               </el-col>
               <el-col :span="6" class="value">
                 <div v-if="silkCar.num == 1">{{silkCar.doffingTime}}</div>
@@ -63,11 +63,11 @@
                 <span>{{silkCar.userId}}</span>
               </el-col>
               <el-col :span="3" class="span">
-                <span>落筒方式</span>
+                <span>丝锭来源</span>
               </el-col>
               <el-col :span="3" class="value">
                 <span v-if="silkCar.num == 1">{{silkCar.doffingType}}</span>
-                <div v-if="silkCar.num != 1">\</div>
+                <div v-if="silkCar.num != 1">拼车</div>
               </el-col>
               <el-col :span="3" class="span">
                 <span>丝车号</span>
@@ -85,8 +85,14 @@
               <el-col :span="10" class="span">
                 <el-row type="flex" :gutter="20" v-for="row in silkCar.rows" :key="row">
                   <el-col :span="24/silkCar.cols" class="span" v-for="col in silkCar.cols " :key="col">
-                    <span>{{row}}×{{col}}</span><br>
+                    <!--<template v-for="(batch,index) in batchOptions">-->
+                      <!--<span style="color: #F56C6C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'B' && batch.row === checkOption.row + 1 && batch.col === checkOption.col + 1">-->
+                        <!--{{batch.silk.lineMachine.line.name}}-{{batch.silk.spindle}}/{{batch.silk.lineMachine.item}}-->
+                      <!--</span>-->
+                    <!--</template>-->
+                    <span style="font-size: 13px;font-weight: bolder">D3-11/22</span>
                     <Buttons :resetFlag="resetFlag" :register="register" :allFlag="allFlag" :row="row" :col="col" :face="'A'"></Buttons>
+                    <!--<span>{{row}}×{{col}}</span>-->
                   </el-col>
                 </el-row>
               </el-col>
@@ -96,8 +102,9 @@
               <el-col :span="10" class="span">
                 <el-row type="flex" :gutter="20" v-for="row in silkCar.rows" :key="row">
                   <el-col :span="24/silkCar.cols" class="span" v-for="col in silkCar.cols " :key="col">
-                    <span>{{row}}×{{col}}</span><br>
+                    <span style="font-size: 13px;font-weight: bolder">D3-11/22</span>
                     <Buttons :resetFlag="resetFlag" :register="register" :allFlag="allFlag" :row="row" :col="col" :face="'B'"></Buttons>
+                    <!--<span>{{row}}×{{col}}</span>-->
                   </el-col>
                 </el-row>
                 <!--<silk-car-component :register="register" :face="'B'" :rows="silkCar.rows" :cols="silkCar.cols" :silkDetail="silkCar.silkDetail"></silk-car-component>-->

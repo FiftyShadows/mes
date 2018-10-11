@@ -5,7 +5,7 @@ import Help from '@/components/help'
 // import Login from '@/components/login' // 仓储登陆
 // ================================自动化===============================
 // 当前
-import Current from '@/components/auto/auto-current/index'
+import Current from '@/components/auto/auto_current/index'
 // 历史
 import History from '@/components/auto/auto_history/history'
 // 丝锭管理
@@ -30,6 +30,8 @@ import Product from '@/components/auto/auto_configuration/product_manage'
 import Configurat from '@/components/auto/auto_configuration/product_configurat'
 import SlikCar from '@/components/auto/auto_configuration/silkCar_manage'
 import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage'
+import PackageClass from '@/components/auto/auto_configuration/package_class'
+import TemporaryBox from '@/components/auto/auto_configuration/temporary_box'
 // ================================仓储=================================
 // 包装计量
 import AutoPackage from '@/components/ware/ware_measurement/autoPackage/autoPackage'
@@ -150,6 +152,14 @@ export default new Router({
           path: '/configuration/WorkshopManage',
           name: 'WorkshopManage',
           component: WorkshopManage
+        }, {// 打包班次管理
+          path: '/configuration/PackageClass',
+          name: 'PackageClass',
+          component: PackageClass
+        }, {// 暂存箱管理
+          path: '/configuration/TemporaryBox',
+          name: 'TemporaryBox',
+          component: TemporaryBox
         },
         // ================================仓储===============================
         {// 包装计量--自动打唛头

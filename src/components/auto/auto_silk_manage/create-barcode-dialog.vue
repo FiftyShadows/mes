@@ -6,8 +6,8 @@
       :before-close="cancel"
       width="30%"
       center>
-      <el-form :model="dialogForm" label-width="80px">
-        <el-form-item label="机台">
+      <el-form :model="dialogForm" :rules="barCodeRule" ref="dialogForm" label-width="80px" class="demo-ruleForm demo-form-inline">
+        <el-form-item label="机台" prop="lineMachines">
           <el-tag type="info" style="float: left; width: 80%;text-align: left;">
             机台 *
             <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="selectMachines()"></el-button>
@@ -16,25 +16,26 @@
             <li v-for="item in dialogForm.lineMachines" :key="item.id">{{item.line.workshop.name}}--{{item.line.name}}--{{item.item}}</li>
           </ul>
         </el-form-item>
-        <el-form-item label="落次">
-          <el-input v-model="dialogForm.fallOrder" class="fallOrder"></el-input>
+        <el-form-item label="落次" prop="fallOrder1">
+          <el-input v-model="dialogForm.fallOrder1" class="fallOrder"></el-input>
           <span>-</span>
-          <el-input v-model="dialogForm.fallOrder" class="fallOrder"></el-input>
+          <el-input v-model="dialogForm.fallOrder2" class="fallOrder"></el-input>
         </el-form-item>
-        <el-form-item label="生产日期">
+        <el-form-item label="生产日期" prop="productTime">
           <el-date-picker
             v-model="dialogForm.productTime"
             align="right"
             type="date"
             placeholder="选择日期"
-            :picker-options="pickerOptions">
+            :picker-options="pickerOptions"
+            value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="cancel()">取 消</el-button>
-        <el-button type="primary" @click="ok()">确 定</el-button>
-      </span>
+        <el-button type="primary" @click="ok('dialogForm')">确 定</el-button>
+      </div>
       <!--内嵌dialog选择某线别下的机台-->
       <el-dialog width="40%" title="* 选择机台" :visible.sync="machineVisible" tooltip-effect="dark" append-to-body>
         <!--再内嵌新增线别对话框-->
@@ -92,10 +93,18 @@
 </template>
 
 <script>
+
 export default {
   props: ['dialogVisible'],
   name: 'create-barcode-dialog',
   data () {
+    let ruleMachine = (rule, value, callback) => {
+      if (!value && value.length === 0) {
+        return callback(new Error('机台不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
       machineVisible: false,
       addMachineVisible: false,
@@ -123,7 +132,9 @@ export default {
       },
       dialogForm: {
         lineMachines: [],
-        productTime: ''
+        productTime: '',
+        fallOrder1: '',
+        fallOrder2: ''
       },
       seachLine: '', // 线别搜索
       linesOptions: [], // 获得的线别列表
@@ -138,6 +149,12 @@ export default {
         spindleSeq: [1],
         line: {}
       },
+      barCodeRule: {
+        lineMachines: [{ validator: ruleMachine, message: '必输项...', trigger: 'blur' }],
+        fallOrder1: [{ required: true, message: '请输入落次', trigger: 'blur' }],
+        // fallOrder: [{ required: true, message: '请输入结束落次', trigger: 'blur' }],
+        productTime: [{ required: true, message: '请选择生产时间', trigger: 'blur' }]
+      },
       rules: {
         name: [{ required: true, message: '必输项...', trigger: 'blur' }],
         batchNo: [{ required: true, message: '必输项...', trigger: 'change' }],
@@ -150,8 +167,33 @@ export default {
     cancel (done) {
       this.$emit('update:dialogVisible', false)
     },
-    ok () {
-      this.$emit('update:dialogVisible', false)
+    ok (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let params = []
+          this.dialogForm.lineMachines.forEach((item, index) => {
+            let num = parseInt(this.dialogForm.fallOrder2.substr(1, this.dialogForm.fallOrder2.length - 1)) - parseInt(this.dialogForm.fallOrder1.substr(1, this.dialogForm.fallOrder1.length - 1)) + 1
+            let str = this.dialogForm.fallOrder2.substr(0, this.dialogForm.fallOrder1.length - 1)
+            for (let i = 1; i <= num; i++) {
+              let obj = {
+                lineMachine: {
+                  id: item.id
+                },
+                codeDate: this.dialogForm.productTime,
+                doffingNum: str + i
+              }
+              params.push(obj)
+            }
+          })
+          console.log(params)
+          this.$api.batchAddSilkBarCodes(params).then(res => {
+            this.$emit('update:dialogVisible', false)
+            this.$message({message: '成功生成条码', type: 'success'})
+          })
+        } else {
+          return false
+        }
+      })
     },
     selectMachines () {
       this.machineVisible = true
@@ -212,9 +254,7 @@ export default {
           this.Lines.line = this.options[i]
         }
       }
-      console.log(this.Lines)
       this.$api.AddMachine(this.Lines).then(res => {
-        console.log(res)
         this.data.push(res.data)
         this.Lines = {}
         this.addLine = false
@@ -230,7 +270,6 @@ export default {
       for (let j = 0; j < arr.length; j++) {
         this.Lines.spindleSeq.push(arr[j])
       }
-      console.log(this.Lines.spindleSeq)
     },
     down (i) {
       let arr = this.Lines.spindleSeq
@@ -241,7 +280,6 @@ export default {
       for (let j = 0; j < arr.length; j++) {
         this.Lines.spindleSeq.push(arr[j])
       }
-      // console.log(this.form.spindleSeq)
     }
   }
 }

@@ -63,5 +63,36 @@ export default {
       num = '0' + num
     }
     return num
+  },
+  // 深克隆
+  deepClone (source) {
+    if (!source && typeof source !== 'object') {
+      throw new Error('error arguments', 'shallowClone')
+    }
+    const targetObj = source.constructor === Array ? [] : {}
+    for (const keys in source) {
+      if (source.hasOwnProperty(keys)) {
+        if (source[keys] && typeof source[keys] === 'object') {
+          targetObj[keys] = source[keys].constructor === Array ? [] : {}
+          targetObj[keys] = this.deepClone(source[keys])
+        } else {
+          targetObj[keys] = source[keys]
+        }
+      }
+    }
+    return targetObj
+  },
+  sumCallBack (x, y) {
+    return x + y
+  },
+  timestampToTime (timestamp) {
+    var date = new Date(timestamp * 1000) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-'
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+    var D = date.getDate() + ' '
+    var h = date.getHours() + ':'
+    var m = date.getMinutes() + ':'
+    var s = date.getSeconds()
+    return Y + M + D + h + m + s
   }
 }
