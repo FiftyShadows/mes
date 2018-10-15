@@ -60,7 +60,7 @@
 </template>
 <script>
 import moment from 'moment' // 处理时间
-import Pagination from './../../common/pagination.vue'
+import Pagination from '../../../common/pagination.vue'
 import DialogDetail from './Dialog_detail'
 import DialogStart from './Dialog_start'
 export default {

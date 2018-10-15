@@ -4,9 +4,12 @@
     <el-select v-model="name" clearable placeholder="请选择" style="float: left;margin-bottom: 10px;" @change="getMachine()">
       <el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>
     </el-select>
-    <el-button type="primary" style="float:right;margin-bottom: 10px;" @click="dialogVisibleAdd = true">批量新增</el-button>
-    <el-button type="primary" @click="dialogVisibleSingleAdd = true" style="float: right; margin-right: 10px;margin-bottom: 10px;">新增</el-button>
-    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
+    <el-button type="primary" icon="el-icon-plus" style="float:right;margin-bottom: 10px;" @click="dialogVisibleAdd = true">批量</el-button>
+    <el-button type="primary" icon="el-icon-plus" @click="dialogVisibleSingleAdd = true" style="float: right; margin-right: 10px;margin-bottom: 10px;"></el-button>
+    <el-button type="success" icon="el-icon-printer" style="float: right; margin-right: 10px;margin-bottom: 10px;" @click="batchPrint()" circle></el-button>
+    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55">
+      </el-table-column>
       <el-table-column fixed prop="id" label="ID" min-width="250">
       </el-table-column>
       <el-table-column prop="line.name" label="线别">
@@ -21,6 +24,9 @@
         </template>
       </el-table-column>
     </el-table>
+    <div v-show="false">
+      <print-machine :printData="printData"></print-machine>
+    </div>
     <el-dialog title="新 增" :visible.sync="dialogVisibleSingleAdd" width="50%">
       <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
         <el-form-item label="线别" :label-width="formLabelWidth" prop="name" required>
@@ -119,8 +125,12 @@
   </div>
 </template>
 <script>
+import printMachine from '../../common/print_machine'
 export default {
   name: 'machine',
+  components: {
+    'print-machine': printMachine
+  },
   data () {
     return {
       loading: false,
@@ -154,7 +164,8 @@ export default {
         item: [{ required: true, message: '请输入...', trigger: 'change' }],
         spindleNum: [{ type: 'number', required: true, message: '请输入...', trigger: 'change' }]
       },
-      formLabelWidth: '180px'
+      formLabelWidth: '180px',
+      printData: []
     }
   },
   created () {
@@ -339,7 +350,15 @@ export default {
       for (let j = 0; j < arr.length; j++) {
         this.form1.spindleSeq.push(arr[j])
       }
-      // console.log(this.form.spindleSeq)
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
+    batchPrint () {
+      let selection = this.util.deepClone(this.multipleSelection)
+      this.$nextTick(() => {
+        this.printData = selection
+      })
     }
   }
 }

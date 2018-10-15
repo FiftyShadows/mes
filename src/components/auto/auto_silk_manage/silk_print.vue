@@ -47,7 +47,9 @@
     </el-table>
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="50" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
     </el-pagination>
-    <create-barcode-dialog :dialogVisible.sync="dialogVisible"></create-barcode-dialog>
+    <div v-show="false">
+      <create-barcode-dialog :dialogVisible.sync="dialogVisible"></create-barcode-dialog>
+    </div>
   </div>
 </template>
 <script>
@@ -92,6 +94,7 @@ export default {
       tableData: [],
       currentPage: 5,
       total: 0,
+      pageSize: 50,
       multipleSelection: [],
       dialogVisible: false
     }
@@ -118,7 +121,9 @@ export default {
       let params = {
         lineMachineId: this.formInline.lineMachineId,
         doffingNum: this.formInline.doffingNum,
-        codeTime: this.formInline.codeTime
+        codeTime: this.formInline.codeTime,
+        first: this.first,
+        pageSize: this.pageSize
       }
       this.$api.getSilkBarCodes(params).then(res => {
         this.tableData = res.data.silkBarcodes.sort()

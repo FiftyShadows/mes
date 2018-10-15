@@ -33,7 +33,7 @@
 </template>
 <script>
 import moment from 'moment' // 处理时间
-import Pagination from './../../common/pagination.vue'
+import Pagination from '../../../common/pagination.vue'
 export default {
   components: {
     Pagination

@@ -30,11 +30,11 @@
       <div class="right-box">
         <div class="line3">
           <div class="p_label"></div>
-          <div class="p_value">{{item.boxNetWeight}}</div>
+          <div class="p_value">{{item.netWeight}}</div>
         </div>
         <div class="line3">
           <div class="p_label"></div>
-          <div class="p_value">{{item.boxGrossWeight}}</div>
+          <div class="p_value">{{item.roughWeight}}</div>
         </div>
         <div class="line4">
           <div class="qrcode" ref="qrcode"></div>
@@ -113,7 +113,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  @import '../../../../static/css/print-12-10.css';
+  @import '../../../static/css/print-12-10.css';
 .print {
   display: none;
 }

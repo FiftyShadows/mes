@@ -2,13 +2,13 @@
   <div>
     <el-form :model="seachForm" :rules="rules" ref="seachForm" label-width="10px" class="demo-ruleForm">
       <el-form-item label="" prop="workshop" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.workshop" placeholder="请选择车间">
-          <el-option label="A" value="shanghai"></el-option>
+        <el-select v-model="seachForm.workshop" placeholder="请选择车间" clearable>
+          <el-option v-for="workshop in workshops" :key="workshop.id" :label="workshop.name" :value="workshop.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="lines" style="float: left;width: 150px;">
         <el-select v-model="seachForm.lines" placeholder="请选择线别">
-          <el-option label="A" value="shanghai"></el-option>
+          <el-option v-for="line in lines" :key="line.id" :label="line.id" :value="line.name"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="shift" style="float: left;width: 150px;">
@@ -117,6 +117,8 @@ export default {
         date1: '',
         date2: ''
       },
+      workshops: [],
+      lines: [],
       BatchOptions: [], // 批号选择列表
       tableData: [
         {

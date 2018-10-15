@@ -1,6 +1,6 @@
 import axios from 'axios'
 import vue from '../main.js'
-import global from '../window_global'
+import global from '../../static/window_global'
 // import promiseFinally from 'promise.prototype.finally'
 
 // promiseFinally.shim()
@@ -228,27 +228,27 @@ export default {
   },
 
   // 班次管理--获取班次
-  getPackageClass () {
-    return axios.get(`${baseAutoUrl}/packageClasses`)
+  getPackageClasses (data) {
+    return axios.get(`${baseAutoUrl}/packageClasses`, data)
   },
   // 班次管理--增加班次
   addPackageClass (data) {
     return axios.post(`${baseAutoUrl}/packageClasses`, data)
   },
   // 班次管理--修改保存班次
-  savePackageClass (data) {
+  updatePackageClass (data) {
     return axios.put(`${baseAutoUrl}/packageClasses/${data.id}`, data)
   },
 
   // 暂存箱管理--获取暂存箱列表
-  getTemporaryBoxs () {
-    return axios.get(`${baseAutoUrl}/temporaryBoxs`)
-  },
-  addTemporaryBoxs (data) {
+  getTemporaryBoxs (data) {
     return axios.get(`${baseAutoUrl}/temporaryBoxs`, data)
   },
-  saveTemporaryBoxs (data) {
-    return axios.get(`${baseAutoUrl}/temporaryBoxs`, data)
+  addTemporaryBox (data) {
+    return axios.post(`${baseAutoUrl}/temporaryBoxs`, data)
+  },
+  updateTemporaryBox (data) {
+    return axios.put(`${baseAutoUrl}/temporaryBoxs/${data.id}`, data)
   },
 
   // 车间生产计划
@@ -290,8 +290,13 @@ export default {
   },
 
   // 批号管理--获取数据
-  getBatches (data) {
-    return axios.get(`${baseAutoUrl}/batches?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)
+  getBatches (params) {
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/batches`,
+      params: params
+    })
+    // return axios.get(`${baseAutoUrl}/batches?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)
   },
   // 批号管理--新增
   addBatch (data) {

@@ -97,7 +97,7 @@
 <script>
 // import ArtificialAddDialog from './artificial_edit_dialog.vue'
 // import ArtificialAddMoreDialog from './artificial_editmore_dialog.vue'
-import printMarks from '../../common/print_marks'
+import printMarks from '../../../common/print_marks'
 export default {
   name: 'artificial_have_to_print',
   components: {

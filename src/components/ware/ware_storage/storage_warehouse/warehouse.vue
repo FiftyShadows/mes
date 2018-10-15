@@ -76,7 +76,7 @@
 </template>
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import Pagination from './../../common/pagination.vue'
+import Pagination from '../../../common/pagination.vue'
 export default {
   components: {
     'pagination': Pagination

@@ -83,7 +83,7 @@
   </div>
 </template>
 <script>
-import printMarks from '../../common/print_marks'
+import printMarks from '../../../common/print_marks'
 export default {
   name: 'have_to_print',
   components: {
