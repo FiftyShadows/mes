@@ -53,14 +53,14 @@
       </el-table-column>
       <el-table-column prop="level" label="等级" width="100">
       </el-table-column>
-      <el-table-column prop="level" label="包装来源" width="150">
-      </el-table-column>
+      <!-- <el-table-column prop="level" label="包装来源" width="150">
+      </el-table-column> -->
       <el-table-column prop="packageType" label="包装类型" width="150">
       </el-table-column>
-      <el-table-column prop="createTime" :formatter="dateFormat" label="托盘类型" width="150">
+      <el-table-column prop="yoke" label="托盘类型" width="150">
       </el-table-column>
-      <el-table-column prop="singleWeight" label="单包净重" width="120">
-      </el-table-column>
+      <!-- <el-table-column prop="singleWeight" label="单包净重" width="120">
+      </el-table-column> -->
       <el-table-column prop="totalWeight" label="总净重" width="120">
       </el-table-column>
       <el-table-column prop="totalQuantity" label="箱数" width="100">
@@ -137,7 +137,7 @@ export default {
 
     seachTableData (formName) {
       console.log(this.warehouseOptions)
-      this.loading = true
+      // this.loading = true
       let houseId
       for (let i = 0; i < this.warehouseOptions.length; i++) {
         if (this.warehouseOptions[i].houseName === this.seachForm.houseId) {
@@ -147,6 +147,7 @@ export default {
       console.log(this.seachForm)
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.loading = true
           this.$api.selectStocktakingInfo({
             batchNo: this.seachForm.batchNo,
             houseId: houseId,
@@ -177,7 +178,7 @@ export default {
     changePage (value) {
       this.pageNum = value.pageNum
       this.pageSize = value.pageSize
-      this.seachTableData()
+      this.seachTableData('seachForm')
     },
     reading (row) {
       console.log(row)

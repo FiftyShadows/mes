@@ -12,10 +12,9 @@
       <el-table-column prop="houseType" label="仓库类型" min-width="100">
       </el-table-column>
       <el-table-column prop="lgort" label="SAP仓库点" min-width="150">
-        <template slot-scope="scope">
-          <!-- <span>{{scope.row.lgort}}</span> -->
+        <!-- <template slot-scope="scope">
           <span v-for="item in scope.row.lgort" :key="item">{{item}}</span>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column prop="houseLocation" label="车间" min-width="100">
       </el-table-column>
@@ -50,12 +49,12 @@
         </el-form-item>
         <el-form-item label="SAP仓库点" prop="lgort" :label-width="formLabelWidth">
           <el-select v-model="addForm.lgort" multiple placeholder="请选择SAP仓库点" class="floatLeft">
-            <el-option v-for="item in sapStorage" :key="item.id" :label="item.lgobe" :value="item.lgobe"></el-option>
+            <el-option v-for="item in sapStorageData" :key="item.id" :label="item.lgobe" :value="item.lgobe"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="车间" prop="workshop" :label-width="formLabelWidth">
           <el-select v-model="addForm.workshop" placeholder="请选择车间" class="floatLeft">
-            <el-option v-for="item in workshop" :key="item.id" :label="item.workshop" :value="item.workshop"></el-option>
+            <el-option v-for="item in workShopData" :key="item.id" :label="item.workshop" :value="item.workshop"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="库位行数" prop="storageRow" :label-width="formLabelWidth">
@@ -95,8 +94,8 @@ export default {
         poyCount: '',
         userId: 1
       },
-      workshop: [], // 车间
-      sapStorage: [], // sap库位点
+      workShopData: [], // 车间
+      sapStorageData: [], // sap库位点
       warehouseType: this.$store.state.warehouseType, // 仓库类型
       dialogAddFormVisible: false,
       formLabelWidth: '140px',
@@ -134,8 +133,15 @@ export default {
         pageNum: this.pageNum
       }).then(res => {
         console.log(res)
-        this.tableData = res.data.data.list
-        this.total = res.data.data.total
+        if (res.data.status === '200') {
+          this.tableData = res.data.data.list
+          this.total = res.data.data.total
+        } else {
+          this.$notify.error({
+            title: '失败',
+            message: res.data.msg
+          })
+        }
       })
     },
     changePage (value) {
@@ -144,8 +150,8 @@ export default {
       this.getTableData()
     },
     openAdd () {
-      this.workshop = this.$store.state.workshop.workshop
-      this.sapStorage = this.$store.state.sapStorage.sapStorage
+      this.workShopData = this.$store.state.workshop.workshop
+      this.sapStorageData = this.$store.state.sapStorage.sapStorage
       this.dialogAddFormVisible = true
     },
     addWarehouse (formName) {

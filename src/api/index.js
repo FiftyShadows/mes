@@ -1,6 +1,6 @@
 import axios from 'axios'
 import vue from '../main.js'
-import global from '../window_global'
+import global from '../../static/js/window_global'
 // import promiseFinally from 'promise.prototype.finally'
 
 // promiseFinally.shim()
@@ -440,6 +440,9 @@ export default {
   },
   getSelectProductNameList (data) { // 待入库--查询所有“品名”
     return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/selectProductNameList`, data)
+  },
+  addInbound (data) { // 待入库--入库
+    return axios.post(`${baseWareUrl}/mes/trans/inbound/addInbound`, data)
   },
   getPageInroundRecordList (data) { // 查询所有“待入库记录”
     return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getPageInroundRecordList`, data)

@@ -8,7 +8,7 @@
       </el-form-item>
       <el-form-item label="" prop="Batch" class="floatLeft">
         <el-select v-model="seachForm.sublotNumber" filterable clearable placeholder="请选择批号">
-          <el-option v-for="item in batchNoOptions" :key="item.sublotNumber" :label="item.sublotNumber" :value="item.sublotNumber"></el-option>
+          <el-option v-for="item in batchNoOptions" :key="item.batchNo" :label="item.batchNo" :value="item.batchNo"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="productName" class="floatLeft">
@@ -31,7 +31,7 @@
       </el-form-item>
       <el-form-item style="float: left;">
         <el-button type="primary" icon="el-icon-search" @click="seachTableData()" circle></el-button>
-        <el-button type="primary">入库</el-button>
+        <el-button type="primary" @click="openStorage()">入库</el-button>
         <el-button type="warning">修改</el-button>
       </el-form-item>
     </el-form>
@@ -57,15 +57,18 @@
       <el-table-column prop="spec" label="打包时间" width="150">
       </el-table-column>
     </el-table>
-    <pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></pagination>
+    <DialogStorage ref="dialog_storage"></DialogStorage>
+    <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
   </div>
 </template>
 <script>
 // import {mapActions, mapGetters} from 'vuex'
-import Pagination from './../../common/pagination.vue'
+import Pagination from './../../common/pagination'
+import DialogStorage from './Dialog_in_storage'
 export default {
   components: {
-    'pagination': Pagination
+    Pagination,
+    DialogStorage
   },
   data () {
     return {
@@ -86,8 +89,6 @@ export default {
       pageSize: 10, // 默认每页显示条数
       total: 0 // 总数
     }
-  },
-  computed: {
   },
   created () {
     this.getHouseNameList()
@@ -115,6 +116,7 @@ export default {
         houseName: this.seachForm.houseName
       }).then(res => {
         if (res.data.status === '200') {
+          console.log(res)
           this.batchNoOptions = res.data.data
         } else {
           this.$notify.error({
@@ -172,6 +174,9 @@ export default {
     },
     handleSelectionChange (val) {
       console.log(val)
+    },
+    openStorage () {
+      this.$refs.dialog_storage.show()
     }
   }
 }
