@@ -44,18 +44,26 @@
       </el-form-item>
       <el-form-item style="float: left;">
         <el-button type="primary" icon="el-icon-search" @click="seachTableData('seachForm')" circle></el-button>
-        <el-button type="success" icon="el-icon-printer" circle></el-button>
-        <el-button type="warning" icon="el-icon-plus" @click="addSingle()" circle></el-button>
-        <el-button type="warning" icon="el-icon-circle-plus" @click="addMore()">批量</el-button>
+        <el-button type="success" icon="el-icon-printer" @click="batchPrint()" circle></el-button>
+        <!--<el-button type="warning" icon="el-icon-plus" @click="addSingle()" circle></el-button>-->
+        <!--<el-button type="warning" icon="el-icon-circle-plus" @click="addMore()">批量</el-button>-->
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" style="width: 100%" height="500" stripe>
+    <el-table
+      :data="tableData"
+      style="width: 100%" height="500"
+      stripe
+      border
+      ref="multipleTable"
+      @selection-change="handleSelectionChange">
+      <el-table-column type="selection">
+      </el-table-column>
       <el-table-column fixed prop="code" label="码单号">
       </el-table-column>
       <el-table-column prop="name" label="成品">
       </el-table-column>
-      <el-table-column prop="type" label="成品种类">
-      </el-table-column>
+      <!--<el-table-column prop="type" label="成品种类">-->
+      <!--</el-table-column>-->
       <el-table-column prop="batch" label="批号">
       </el-table-column>
       <el-table-column prop="spec" label="规格">
@@ -64,35 +72,38 @@
       </el-table-column>
       <el-table-column prop="color" label="管色" width="120">
       </el-table-column>
-      <el-table-column prop="name" label="净重" width="100">
+      <el-table-column prop="netWeight" label="净重" width="100">
       </el-table-column>
-      <el-table-column prop="name" label="毛重" width="100">
+      <el-table-column prop="roughWeight" label="毛重" width="100">
       </el-table-column>
       <el-table-column prop="silkNum" label="丝锭数" width="100">
       </el-table-column>
-      <el-table-column prop="name" label="班次" width="100">
+      <el-table-column prop="class" label="班次" width="100">
       </el-table-column>
       <el-table-column prop="date" label="包装时间">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="120">
-        <template slot-scope="scope">
-          <el-button type="text" size="small">计量</el-button>
-          <el-button type="text" size="small">删除</el-button>
-        </template>
-      </el-table-column>
+      <!--<el-table-column fixed="right" label="操作" width="120">-->
+        <!--<template slot-scope="scope">-->
+          <!--<el-button type="text" size="small" @click="edit(scope)">编辑</el-button>-->
+          <!--<el-button type="text" size="small" @click="del(scope)">删除</el-button>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
     </el-table>
-    <add-dialog ref="add_dialog"></add-dialog>
-    <addmore-dialog ref="addmore_dialog"></addmore-dialog>
+    <!--<add-dialog ref="add_dialog"></add-dialog>-->
+    <!--<addmore-dialog ref="addmore_dialog"></addmore-dialog>-->
+    <print-marks :printData="printData"></print-marks>
   </div>
 </template>
 <script>
-import ArtificialAddDialog from './artificial_add_dialog.vue'
-import ArtificialAddMoreDialog from './artificial_addmore_dialog.vue'
+// import ArtificialAddDialog from './artificial_edit_dialog.vue'
+// import ArtificialAddMoreDialog from './artificial_editmore_dialog.vue'
+import printMarks from '../../../common/print_marks'
 export default {
   name: 'artificial_have_to_print',
   components: {
-    'add-dialog': ArtificialAddDialog,
-    'addmore-dialog': ArtificialAddMoreDialog
+    // 'add-dialog': ArtificialAddDialog,
+    // 'addmore-dialog': ArtificialAddMoreDialog,
+    'print-marks': printMarks
   },
   data () {
     return {
@@ -107,7 +118,49 @@ export default {
         date2: ''
       },
       BatchOptions: [], // 批号选择列表
-      tableData: [], // 列表数据
+      tableData: [
+        {
+          code: '020320180621000C71017C22005',
+          name: 'POY',
+          batch: 'C71017',
+          spec: '185dtex*144mm',
+          grade: 'AA',
+          color: '黑色',
+          netWeight: '744',
+          roughWeight: '780',
+          silkNum: '',
+          class: '乙',
+          date: '2018-06-22 13:44'
+        },
+        {
+          code: '020320180621000C71017C22006',
+          name: 'POY',
+          batch: 'C71017',
+          spec: '185dtex*144mm',
+          grade: 'AA',
+          color: '黑色',
+          netWeight: '744',
+          roughWeight: '780',
+          silkNum: '',
+          class: '乙',
+          date: '2018-06-22 13:44'
+        },
+        {
+          code: '020320180621000C71017C22007',
+          name: 'POY',
+          batch: 'C71017',
+          spec: '185dtex*144mm',
+          grade: 'AA',
+          color: '黑色',
+          netWeight: '744',
+          roughWeight: '780',
+          silkNum: '',
+          class: '乙',
+          date: '2018-06-22 13:44'
+        }
+      ], // 列表数据
+      printData: [],
+      multipleSelection: [],
       rules: {
         workshop: { required: true, message: '请选择车间', trigger: 'change' },
         lines: { required: true, message: '请选择线别', trigger: 'change' },
@@ -122,11 +175,14 @@ export default {
     }
   },
   methods: {
-    addSingle () {
+    // addSingle () {
+    //   this.$refs.add_dialog.show()
+    // },
+    // addMore () {
+    //   this.$refs.addmore_dialog.show()
+    // },
+    edit () {
       this.$refs.add_dialog.show()
-    },
-    addMore () {
-      this.$refs.addmore_dialog.show()
     },
     seachTableData (formName) {
       this.$refs[formName].validate((valid) => {
@@ -134,6 +190,15 @@ export default {
         } else {
           return false
         }
+      })
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
+    batchPrint () {
+      let selection = this.util.deepClone(this.multipleSelection)
+      this.$nextTick(() => {
+        this.printData = selection
       })
     }
   }

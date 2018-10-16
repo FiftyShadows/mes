@@ -27,7 +27,7 @@
             <br>
               <template v-for="(batch,index) in batchOptions">
                 <span style="color: #E6A23C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'A' && batch.row === checkOption.row + 1 && batch.col === checkOption.col + 1">
-                  {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
+                  {{batch.silk.lineMachine.line.name}}-{{batch.silk.spindle}}/{{batch.silk.lineMachine.item}}
                 </span>
               </template>
             </el-checkbox>
@@ -42,7 +42,7 @@
               <br>
               <template v-for="(batch,index) in batchOptions">
                 <span style="color: #F56C6C; font-weight: bolder;" :key="index" v-if="batch.sideType === 'B' && batch.row === checkOption.row + 1 && batch.col === checkOption.col + 1">
-                  {{batch.silk.lineMachine.line.name}}-{{index}}/{{batch.silk.lineMachine.item}}
+                  {{batch.silk.lineMachine.line.name}}-{{batch.silk.spindle}}/{{batch.silk.lineMachine.item}}
                 </span>
               </template>
             </el-checkbox>
@@ -274,7 +274,6 @@ export default {
         }
         this.batchOptions = this.searchData.silkRuntimes
         console.log(this.batchOptions)
-        // this.fullscreenLoading = false
         this.getProcesses()
       })
     },

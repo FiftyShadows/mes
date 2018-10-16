@@ -85,7 +85,7 @@
 <script>
 // import {mapActions, mapGetters} from 'vuex'
 import DialogMX from './dialog_MX'
-import Pagination from './../../common/pagination.vue'
+import Pagination from '../../../common/pagination.vue'
 export default {
   components: {
     Pagination,

@@ -80,7 +80,7 @@
 <script>
 // import {mapActions, mapGetters} from 'vuex'
 import moment from 'moment' // 处理时间
-import Pagination from './../../common/pagination'
+import Pagination from '../../../common/pagination'
 import LotNumber from './Dialog_lotNumber'
 // import menu from './../../common/menuList'
 export default {

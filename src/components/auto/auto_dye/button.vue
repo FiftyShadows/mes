@@ -121,6 +121,7 @@ export default {
     line-height: 0.5px;
     /*color: #00BFFF;*/
     font-weight: 100;
+    width: 10px;
   }
   .buttonColor {
     background-color: cornflowerblue;

@@ -105,6 +105,8 @@
               <el-menu-item index="/configuration/Product"><i class="el-icon-setting"></i>产品管理</el-menu-item>
               <el-menu-item index="/configuration/SlikCar"><i class="el-icon-setting"></i>丝车管理</el-menu-item>
               <el-menu-item index="/configuration/Grade"><i class="el-icon-setting"></i>等级管理</el-menu-item>
+              <el-menu-item index="/configuration/PackageClass"><i class="el-icon-setting"></i>打包班次管理</el-menu-item>
+              <el-menu-item index="/configuration/TemporaryBox"><i class="el-icon-setting"></i>暂存箱管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <!-- <el-menu-item index="7" disabled>
@@ -117,8 +119,7 @@
               <span slot="title">包装计量</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/measurement/autoPackage"><i class="el-icon-setting"></i>自动打包唛头</el-menu-item>
-              <el-menu-item index="/measurement/artificial"><i class="el-icon-setting"></i>人工唛头</el-menu-item>
+              <el-menu-item index="/measurement/artificial"><i class="el-icon-setting"></i>包装唛头打印</el-menu-item>
               <el-menu-item index="/measurement/smallPackage"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>
               <el-menu-item index="/measurement/BoxManagement"><i class="el-icon-setting"></i>暂存箱管理</el-menu-item>
               <el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item>
