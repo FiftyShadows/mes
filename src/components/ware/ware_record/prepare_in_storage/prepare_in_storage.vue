@@ -63,12 +63,8 @@
 </template>
 <script>
 // import {mapActions, mapGetters} from 'vuex'
-<<<<<<< HEAD
-import Pagination from './../../common/pagination'
 import DialogStorage from './Dialog_in_storage'
-=======
 import Pagination from '../../../common/pagination.vue'
->>>>>>> 32ddd7b5868f1abc3a4108579d128568ffafb91d
 export default {
   components: {
     Pagination,

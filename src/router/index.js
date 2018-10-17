@@ -34,7 +34,7 @@ import PackageClass from '@/components/auto/auto_configuration/package_class'
 import TemporaryBox from '@/components/auto/auto_configuration/temporary_box'
 // ================================仓储=================================
 // 包装计量
-import AutoPackage from '@/components/ware/ware_measurement/autoPackage/autoPackage'
+import ShortSilk from '@/components/ware/ware_measurement/shortSilk/shortSilkPrint'
 import Artificial from '@/components/ware/ware_measurement/artificial/artificial'
 import SmallPackage from '@/components/ware/ware_measurement/smallPackage/smallPackage'
 import BoxManagement from '@/components/ware/ware_measurement/boxManagement/boxManagement'
@@ -163,9 +163,9 @@ export default new Router({
         },
         // ================================仓储===============================
         {// 包装计量--自动打唛头
-          path: '/measurement/autoPackage',
-          name: 'AutoPackage',
-          component: AutoPackage
+          path: '/measurement/ShortSilk',
+          name: 'ShortSilk',
+          component: ShortSilk
         }, {// 包装计量--人工唛头
           path: '/measurement/artificial',
           name: 'Artificial',

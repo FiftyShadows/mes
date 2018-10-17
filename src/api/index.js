@@ -1,10 +1,6 @@
 import axios from 'axios'
 import vue from '../main.js'
-<<<<<<< HEAD
 import global from '../../static/js/window_global'
-=======
-import global from '../../static/window_global'
->>>>>>> 32ddd7b5868f1abc3a4108579d128568ffafb91d
 // import promiseFinally from 'promise.prototype.finally'
 
 // promiseFinally.shim()
@@ -14,9 +10,9 @@ import global from '../../static/window_global'
 // 9999是PDA用的端口，不是单点
 // 8080目前全部单点登录，正式会切到80
 // 这个token只能测试用，正式代码里不要用，后台密钥不同，会验证不成功
-const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
+// const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
 // 仓储token
-// const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZW5neWkiLCJhZG1pbiI6InBhc3N3b3JkIiwiaWF0IjoxNTM3MzI0NDY0fQ.QGMzQXX09igK9gaKAq5jfniTpioa12st7h9FCZ-D7AY'
+const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZW5neWkiLCJhZG1pbiI6InBhc3N3b3JkIiwiaWF0IjoxNTM3MzI0NDY0fQ.QGMzQXX09igK9gaKAq5jfniTpioa12st7h9FCZ-D7AY'
 
 // 自动化Token
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
@@ -472,6 +468,15 @@ export default {
   },
   selectStocktakingDetail (data) { // 盘点SAP--查询码单
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/selectStocktakingDetail`, data)
+  },
+  getWaitStocktakingRecord (data) { // 盘点SAP--漏扫码单--获取数据
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getWaitStocktakingRecord`, data)
+  },
+  selectAutoStocktakingDetail (data) { // 盘点SAP--漏扫码单详情
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/selectAutoStocktakingDetail`, data)
+  },
+  getLotNumberIdInboundList (data) { // 盘点SAP--漏扫码单--自动补入
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getLotNumberIdInboundList`, data)
   },
   getHouseNameList (data) { // 待入库--查询所有“车间”
     return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getHouseNameList`, data)

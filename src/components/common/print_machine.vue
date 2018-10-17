@@ -41,7 +41,7 @@
             <li v-for="(item,index) in printData" :key="index">
               <div class="qrcode" ref="qrcode"></div>
               <span>{{item.line.workshop.name}}-{{item.line.name}}-{{item.item}}-{{index}}</span>
-              <div class="pageBreak" v-if="(index+1)%20 === 0"><!--如果需要强制换页就在上一页的未尾出加上此代码-->
+              <div class="pageBreak" v-if="(index+1)%16 === 0"><!--如果需要强制换页就在上一页的未尾出加上此代码-->
               </div>
             </li>
           </ul>
@@ -59,6 +59,7 @@ export default {
   watch: {
     printData (data) {
       this.printData = data
+      // console.log(this.printData)
       this.$nextTick(function () {
         let qrcodeDoms = this.$refs.qrcode
         // console.log(qrcodeDoms)
