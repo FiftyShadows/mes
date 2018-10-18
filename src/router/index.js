@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import Help from '@/components/help'
-import api from '../../src/api'
+// import api from '../../src/api'
 import store from '../store/store'
 // import Login from '@/components/login' // 仓储登陆
 // ================================仓储=================================
@@ -41,14 +41,14 @@ let route = new Router({
       path: '/',
       name: 'index',
       component: Index,
-      beforeEnter: (to, from, next) => {
-        api.getAuth().then(res => {
-          let userInfo = res.data
-          store.commit('UserInfo', userInfo)
-          console.log()
-          next()
-        })
-      },
+      // beforeEnter: (to, from, next) => {
+      //   api.getAuth().then(res => {
+      //     let userInfo = res.data
+      //     store.commit('UserInfo', userInfo)
+      //     console.log()
+      //     next()
+      //   })
+      // },
       children: [
         // ================================自动化===============================
         ...store.getters.routers,
