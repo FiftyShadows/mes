@@ -27,17 +27,17 @@
         </el-select>
       </el-form-item>
       <el-form-item label="批号" prop="batch" :label-width="formLabelWidth">
-        <el-select class="floatLeft" v-model="addForm.batch" placeholder="请选择销售类型" disabled>
+        <el-select class="floatLeft" v-model="addForm.batch" placeholder="请选择销售类型">
           <el-option label="区域一" value="shanghai"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="等级" prop="grade" :label-width="formLabelWidth">
-        <el-select class="floatLeft" v-model="addForm.grade" placeholder="请选择等级" disabled>
+        <el-select class="floatLeft" v-model="addForm.grade" placeholder="请选择等级">
           <el-option label="区域一" value="shanghai"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="规格/管色" :label-width="formLabelWidth">
-        <el-input class="floatLeft" v-model="addForm.spec" disabled></el-input>
+      <!-- <el-form-item label="规格/管色" :label-width="formLabelWidth">
+        <el-input class="floatLeft" v-model="addForm.spec"></el-input>
       </el-form-item>
       <el-form-item label="丝锭数量" prop="silkNum" :label-width="formLabelWidth">
         <el-input-number class="floatLeft" v-model="addForm.silkNum" :min="1" label=""></el-input-number>
@@ -45,7 +45,7 @@
       <el-form-item label="生产日期" prop="startData" :label-width="formLabelWidth">
         <el-date-picker class="floatLeft" v-model="addForm.startData" type="date" placeholder="选择日期">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="净重" prop="net" :label-width="formLabelWidth">
         <el-input class="floatLeft" v-model="addForm.net" placeholder="请输入净重"></el-input>
       </el-form-item>
@@ -62,7 +62,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="sap库位" prop="sapStorage" :label-width="formLabelWidth">
-        <el-input class="floatLeft" v-model="addForm.sapStorage" placeholder="请输入sap库位"></el-input>
+        <!-- <el-input class="floatLeft" v-model="addForm.sapStorage" placeholder="请输入sap库位"></el-input> -->
+        <el-select class="floatLeft" v-model="addForm.sapStorage" placeholder="请输入sap库位">
+          <el-option label="区域一" value="shanghai"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="预设库位" prop="readyStorage" :label-width="formLabelWidth">
         <el-select class="floatLeft" v-model="addForm.readyStorage" placeholder="请选择预设库位">
