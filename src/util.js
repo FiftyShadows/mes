@@ -94,5 +94,27 @@ export default {
     var m = date.getMinutes() + ':'
     var s = date.getSeconds()
     return Y + M + D + h + m + s
+  },
+  divideArray (array) {
+    let result = []
+    // 当前循环节点
+    let start = 0
+    // 当前循环的下一个节点
+    let end = 0
+    // 分界点
+    let flag = array[0].item
+    array.forEach((item, index) => {
+      if (index < array.length - 1) {
+        start = item.item
+        end = array[index + 1].item
+        if (end - start !== 1) {
+          result.push(flag + '——' + start)
+          flag = end
+        }
+      } else {
+        result.push(flag + '——' + item.item)
+      }
+    })
+    return result
   }
 }

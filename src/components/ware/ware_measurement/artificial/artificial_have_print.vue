@@ -91,7 +91,9 @@
     </el-table>
     <!--<add-dialog ref="add_dialog"></add-dialog>-->
     <!--<addmore-dialog ref="addmore_dialog"></addmore-dialog>-->
-    <print-marks :printData="printData"></print-marks>
+    <div v-show="false">
+      <print-marks :printData="printData"></print-marks>
+    </div>
   </div>
 </template>
 <script>

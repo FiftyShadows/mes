@@ -1,53 +1,13 @@
 <template>
-<!--<div class="printonly">-->
-  <!--<div class="print" ref="printBox">-->
-    <!--<div class="printTest">-->
-      <!--&lt;!&ndash;<h3 class="title">打印标题</h3>&ndash;&gt;-->
-      <!--&lt;!&ndash;<h4 class="line">打印内容1：hehehhheheheheheh</h4>&ndash;&gt;-->
-      <!--&lt;!&ndash;<h4 class="line">打印内容2：12312312312312312312</h4>&ndash;&gt;-->
-      <!--<div id="qrcode" ref="qrcode"></div>-->
-    <!--</div>-->
-    <!--<div class="box"></div>-->
-  <!--</div>-->
-  <!--&lt;!&ndash;<el-button type="primary" @click="batchPrint()">打印</el-button>&ndash;&gt;-->
-<!--</div>-->
 <div class="package-print" ref="printBox">
-  <!--<ul>-->
-    <!--<li >-->
-      <!--<div class="left-box"></div>-->
-      <!--<div class="center-box">-->
-        <!--<div class="line1 bold">{{item.batch}}</div>-->
-        <!--<div class="line1">{{item.spec}}</div>-->
-        <!--<div class="line1 bold">{{item.grade}}</div>-->
-        <!--<div class="line1">{{item.silkNum}}</div>-->
-        <!--<div class="line1">{{item.color}}</div>-->
-        <!--<div class="line1">{{item.date}}</div>-->
-        <!--<div class="line2">-->
-          <!--<div>{{item.code.substring(0, 12)}}</div>-->
-          <!--<div>{{item.code.substring(12)}}</div>-->
-        <!--</div>-->
-        <!--<div class="qrcode" ref="qrcode"></div>-->
-      <!--</div>-->
-      <!--<div class="right-box">-->
-        <!--<div class="line3">-->
-          <!--<div class="p_label"></div>-->
-          <!--<div class="p_value">{{item.boxNetWeight}}</div>-->
-        <!--</div>-->
-        <!--<div class="line3">-->
-          <!--<div class="p_label"></div>-->
-          <!--<div class="p_value">{{item.boxGrossWeight}}</div>-->
-        <!--</div>-->
           <ul>
-            <li v-for="(item,index) in printData" :key="index">
+            <li v-for="(item,index) in printData" :key="index" style="text-align: center">
               <div class="qrcode" ref="qrcode"></div>
-              <span>{{item.line.workshop.name}}-{{item.line.name}}-{{item.item}}-{{index}}</span>
+              <span>{{item.line.name}}-{{item.item}}</span>
               <div class="pageBreak" v-if="(index+1)%16 === 0"><!--如果需要强制换页就在上一页的未尾出加上此代码-->
               </div>
             </li>
           </ul>
-      <!--</div>-->
-    <!--</li>-->
-  <!--</ul>-->
 </div>
 </template>
 <script>
@@ -59,7 +19,6 @@ export default {
   watch: {
     printData (data) {
       this.printData = data
-      // console.log(this.printData)
       this.$nextTick(function () {
         let qrcodeDoms = this.$refs.qrcode
         // console.log(qrcodeDoms)
@@ -68,10 +27,11 @@ export default {
           let qrcode = new QRCode(qrcodeDoms[i], {
             text: JSON.stringify({
               'id': this.printData[i].id,
-              'item': this.printData[i].item
+              'item': this.printData[i].item,
+              'name': this.printData[i].line.name + '-' + this.printData[i].item
             })
           })
-          // console.log(qrcode)
+          console.log(qrcode)
         }
         this.$nextTick(function () {
           setTimeout(() => {

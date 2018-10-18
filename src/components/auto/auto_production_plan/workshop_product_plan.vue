@@ -14,7 +14,10 @@
       </el-table-column>
       <el-table-column prop="batch.tubeColor" label="纸管颜色">
       </el-table-column>
-      <el-table-column prop="machines" label="机台">
+      <el-table-column label="机台">
+        <template itemscope>
+          <span :key="machine" v-for="machine in machines"><br/>{{machine}}aaa</span>
+        </template>
       </el-table-column>
       <el-table-column prop="lineMachines.length" label="机台数">
       </el-table-column>
@@ -44,12 +47,10 @@ export default {
   methods: {
     getPlan () { // 获取select数据
       this.$api.getWorkShopsLine().then(res => {
-        console.log(res)
         this.LinesTable = res.data
         this.options = res.data.map(item => {
           return {name: item.name}
         })
-        console.log(this.options)
       })
     },
     getLinePlans () {
@@ -60,13 +61,12 @@ export default {
         }
       }
       this.$api.getLinePlans(this.seachId).then(res => {
-        console.log(res)
         this.allData = res.data
-        this.tableData = res.data.items
+        this.tableData = res.data.items.sort((x, y) => { return x.id - y.id })
         console.log(this.tableData)
+        console.log(this.util.divideArray(this.tableData[0].lineMachines.sort((x, y) => { return x.item - y.item })))
         for (let j = 0; j < this.tableData.length; j++) {
-          this.MachinesNum = this.tableData[j].lineMachines
-          this.tableData[j].machines = this.tableData[j].lineMachines[0].item + '——' + this.tableData[j].lineMachines[this.tableData[j].lineMachines.length - 1].item
+          this.tableData[j].machines = this.util.divideArray(this.tableData[j].lineMachines.sort((x, y) => { return x.item - y.item }))
         }
         this.loading = false
       })

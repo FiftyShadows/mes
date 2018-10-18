@@ -2,36 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import Help from '@/components/help'
+import api from '../../src/api'
+import store from '../store/store'
 // import Login from '@/components/login' // 仓储登陆
-// ================================自动化===============================
-// 当前
-import Current from '@/components/auto/auto_current/index'
-// 历史
-import History from '@/components/auto/auto_history/history'
-// 丝锭管理
-import silkPrint from '@/components/auto/auto_silk_manage/silk_print'
-// 染判
-import Dyed from '@/components/auto/auto_dye/dyed'
-import Dyeing from '@/components/auto/auto_dye/dyeing'
-// 管理员
-import Permissions from '@/components/auto/auto_admin/admin_permissions'
-import User from '@/components/auto/auto_admin/user'
-import UserGroups from '@/components/auto/auto_admin/user_groups'
-// 生产计划
-import Batch from '@/components/auto/auto_production_plan/Batch_manage'
-import Notice from '@/components/auto/auto_production_plan/notice'
-import NoticePerform from '@/components/auto/auto_production_plan/notice_perform'
-import WorkPlan from '@/components/auto/auto_production_plan/workshop_product_plan'
-// 自动化配置
-import Grade from '@/components/auto/auto_configuration/grade_manage'
-import LineControl from '@/components/auto/auto_configuration/line_control'
-import Machine from '@/components/auto/auto_configuration/machine_manage'
-import Product from '@/components/auto/auto_configuration/product_manage'
-import Configurat from '@/components/auto/auto_configuration/product_configurat'
-import SlikCar from '@/components/auto/auto_configuration/silkCar_manage'
-import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage'
-import PackageClass from '@/components/auto/auto_configuration/package_class'
-import TemporaryBox from '@/components/auto/auto_configuration/temporary_box'
 // ================================仓储=================================
 // 包装计量
 import ShortSilk from '@/components/ware/ware_measurement/shortSilk/shortSilkPrint'
@@ -62,105 +35,23 @@ import ReturngoodsRequisition from '@/components/ware/ware_transfers/returngoods
 import InventorySAP from '@/components/ware/ware_inventory_SAP/inventorySAP/index'
 
 Vue.use(Router)
-
-export default new Router({
+let route = new Router({
   routes: [
     {
       path: '/',
       name: 'index',
       component: Index,
+      beforeEnter: (to, from, next) => {
+        api.getAuth().then(res => {
+          let userInfo = res.data
+          store.commit('UserInfo', userInfo)
+          console.log()
+          next()
+        })
+      },
       children: [
         // ================================自动化===============================
-        {// 当前
-          path: '/current/index',
-          name: 'current',
-          component: Current
-        },
-        {// 历史
-          path: '/history',
-          name: 'history',
-          component: History
-        },
-        {// 丝锭打印
-          path: '/silkManage/silkPrint',
-          name: 'silkPrint',
-          component: silkPrint
-        },
-        {// 待染判
-          path: '/dye/dyeing',
-          name: 'dyeing',
-          component: Dyeing
-        },
-        {// 已染判
-          path: '/dye/dyed',
-          name: 'dyed',
-          component: Dyed
-        },
-        {// 权限
-          path: '/admin/perminssions',
-          name: 'permissions',
-          component: Permissions
-        }, {// 用户
-          path: '/admin/user',
-          name: 'user',
-          component: User
-        }, {// 用户组
-          path: '/admin/userGroups',
-          name: 'UserGroups',
-          component: UserGroups
-        }, {// 批号管理
-          path: '/productPlan/Batch',
-          name: 'Batch',
-          component: Batch
-        }, {// 通知单
-          path: '/productPlan/Notice',
-          name: 'Notice',
-          component: Notice
-        }, {// 通知单--执行情况
-          path: '/productPlan/Notice-perform',
-          name: 'Notice-perform',
-          component: NoticePerform
-        }, {// 车间生产计划
-          path: '/productPlan/WorkPlan',
-          name: 'WorkPlan',
-          component: WorkPlan
-        }, {// 等级管理
-          path: '/configuration/Grade',
-          name: 'Grade',
-          component: Grade
-        }, {// 线别控制
-          path: '/configuration/LineControl',
-          name: 'LineControl',
-          component: LineControl
-        }, {// 机台管理
-          path: '/configuration/Machine',
-          name: 'Machine',
-          component: Machine
-        }, {// 产品管理
-          path: '/configuration/Product',
-          name: 'Product',
-          component: Product
-        }, {// 产品管理--配置
-          path: '/configuration/Product/configurat',
-          name: 'Configurat',
-          component: Configurat
-        }, {// 丝车管理
-          path: '/configuration/SlikCar',
-          name: 'SlikCar',
-          component: SlikCar
-        }, {// 车间管理
-          path: '/configuration/WorkshopManage',
-          name: 'WorkshopManage',
-          component: WorkshopManage
-        }, {// 打包班次管理
-          path: '/configuration/PackageClass',
-          name: 'PackageClass',
-          component: PackageClass
-        }, {// 暂存箱管理
-          path: '/configuration/TemporaryBox',
-          name: 'TemporaryBox',
-          component: TemporaryBox
-        },
+        ...store.getters.routers,
         // ================================仓储===============================
         {// 包装计量--自动打唛头
           path: '/measurement/ShortSilk',
@@ -265,6 +156,13 @@ export default new Router({
     // }
   ]
 })
+route.beforeEach((to, from, next) => {
+  // console.log(store.state.userInfo.admin)
+  // if (store.state) {
+  next()
+  // }
+})
+export default route
 
 // 路由从定向
 // ...

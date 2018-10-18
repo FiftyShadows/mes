@@ -1,6 +1,7 @@
 <!-- 产品管理 -->
 <template>
-  <div class="product">
+  <div>
+    <div class="product" v-if="productVisible">
     <el-button type="primary" @click="openAdd()" style="float: right; margin-right: 10px;margin-bottom: 10px;">新增</el-button>
     <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="name" label="等级">
@@ -36,6 +37,10 @@
         <el-button type="primary" @click="saveProduct('form1')">确 定</el-button>
       </div>
     </el-dialog>
+    </div>
+    <div>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 <script>
@@ -44,6 +49,7 @@ export default {
   data () {
     return {
       loading: false,
+      productVisible: true,
       tableData: [],
       form: {
         name: ''
@@ -117,8 +123,8 @@ export default {
       })
     },
     setting (row) {
-      console.log(row)
       this.$router.push({path: '/configuration/Product/configurat', query: row})
+      this.productVisible = false
     }
   }
 }

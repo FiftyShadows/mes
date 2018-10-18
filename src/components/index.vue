@@ -44,75 +44,28 @@
             <i class="el-icon-d-caret"></i>
             <span slot="title">自动化</span>
           </el-menu-item> -->
-          <el-menu-item index="/current/index">
-            <i class="el-icon-search"></i>
-            <span slot="title">当前</span>
-          </el-menu-item>
-          <el-menu-item index="/history">
-            <i class="el-icon-tickets"></i>
-            <span slot="title">历史</span>
-          </el-menu-item>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-setting"></i>
-              <span slot="title" class="hstyle">管理员 </span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/user"><i class="el-icon-location"></i>用户</el-menu-item>
-              <el-menu-item index="/admin/userGroups"><i class="el-icon-location"></i>用户组</el-menu-item>
-              <el-menu-item index="/admin/perminssions"><i class="el-icon-location"></i>权限</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-setting"></i>
-              <span slot="title">生产计划</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/productPlan/WorkPlan"><i class="el-icon-document"></i>车间生产计划</el-menu-item>
-              <el-menu-item index="/productPlan/Notice"><i class="el-icon-document"></i>通知单</el-menu-item>
-              <el-menu-item index="/productPlan/Batch"><i class="el-icon-document"></i>批号管理</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="4">
-            <template slot="title">
-              <i class="el-icon-setting"></i>
-              <span slot="title">丝锭管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/silkManage/silkPrint"><i class="el-icon-document"></i>丝锭打印</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="5">
-            <template slot="title">
-              <i class="el-icon-setting"></i>
-              <span slot="title">染判</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/dye/dyeing"><i class="el-icon-document"></i>待染判</el-menu-item>
-              <el-menu-item index="/dye/dyed"><i class="el-icon-document"></i>已染判</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="6">
-            <template slot="title">
-              <i class="el-icon-setting"></i>
-              <span slot="title">自动化配置</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/configuration/WorkshopManage"><i class="el-icon-setting"></i>车间管理</el-menu-item>
-              <el-menu-item index="/configuration/LineControl"><i class="el-icon-setting"></i>线别控制</el-menu-item>
-              <el-menu-item index="/configuration/Machine"><i class="el-icon-setting"></i>机台管理</el-menu-item>
-              <el-menu-item index="/configuration/Product"><i class="el-icon-setting"></i>产品管理</el-menu-item>
-              <el-menu-item index="/configuration/SlikCar"><i class="el-icon-setting"></i>丝车管理</el-menu-item>
-              <el-menu-item index="/configuration/Grade"><i class="el-icon-setting"></i>等级管理</el-menu-item>
-              <el-menu-item index="/configuration/PackageClass"><i class="el-icon-setting"></i>打包班次管理</el-menu-item>
-              <el-menu-item index="/configuration/TemporaryBox"><i class="el-icon-setting"></i>暂存箱管理</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <!-- <el-menu-item index="7" disabled>
-            <i class="el-icon-d-caret"></i>
-            <span slot="title">仓储</span>
-          </el-menu-item> -->
+            <li v-for="(router, index) in routers" :key="index">
+              <el-menu-item :index="router.path" v-if="index === 0 || index === 1">
+              <i :class="router.class"></i>
+              <span slot="title">{{router.name}}</span>
+              </el-menu-item>
+              <el-submenu :index="index.toString()" v-if="index != 0 && index != 1">
+                <template slot="title">
+                  <i :class="router.class"></i>
+                  <span>{{router.name}}</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item v-for="(child, index2) in router.children" :index="router.path + '/' + child.path" :key="index2">
+                    <i :class="child.class"></i>
+                    <span>{{child.name}}</span>
+                  </el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+            </li>
+          <!--<el-menu-item index="/current/index">-->
+            <!--<i class="el-icon-search"></i>-->
+            <!--<span slot="title">当前</span>-->
+          <!--</el-menu-item>-->
           <el-submenu index="8">
             <template slot="title">
               <i class="el-icon-menu"></i>
@@ -179,7 +132,9 @@
         <el-container>
           <el-main>
             <!-- main路由出口 -->
-            <router-view></router-view>
+            <!--<keep-alive>-->
+              <router-view ></router-view>
+            <!--</keep-alive>-->
           </el-main>
         </el-container>
       </el-container>
@@ -190,6 +145,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Login from './ware_login/login.vue'
 import Registered from './ware_login/registered.vue'
 export default {
@@ -197,6 +153,13 @@ export default {
   components: {
     'dialog-login': Login,
     'dialog-registered': Registered
+  },
+  computed: {
+    ...mapGetters({
+      routers: 'routers'
+    })
+  },
+  created () {
   },
   data () {
     return {

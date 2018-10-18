@@ -1,221 +1,224 @@
 <!-- 通知单 -->
 <template>
-<div class="notice">
-  <div style="float: left; margin-bottom: 10px;">
-    <el-input v-model="q" placeholder="请输入内容..." style="width: 200px;"></el-input>
-    <el-button type="primary" icon="el-icon-search" circle @click="getNotice()" ></el-button>
+  <div>
+    <div class="notice" v-if="noticeVisible">
+      <div style="float: left; margin-bottom: 10px;">
+        <el-input v-model="q" placeholder="请输入内容..." style="width: 200px;"></el-input>
+        <el-button type="primary" icon="el-icon-search" circle @click="getNotice()" ></el-button>
+      </div>
+      <el-button type="primary" @click="openAddNotice()" style="float: right; margin-bottom: 10px;">新 增</el-button>
+      <el-table :data="tableData" border v-loading="tableLoading" :stripe="true" style="width: 100%" height="500">
+        <el-table-column fixed prop="type" label="类型">
+        </el-table-column>
+        <el-table-column prop="name" label="名称">
+        </el-table-column>
+        <el-table-column prop="batch.batchNo" label="批号">
+        </el-table-column>
+        <el-table-column prop="startDate" label="开始日期">
+        </el-table-column>
+        <el-table-column prop="endDate" label="结束日期">
+          <template slot-scope="scope">
+            <span v-if="scope.row.endDate">{{scope.row.endDate}}</span>
+            <el-button v-else type="danger" @click="finish(scope.row)" size="mini">结束</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" width="160">
+          <template slot-scope="scope">
+            <el-button @click="openSaveNotice(scope.row)" type="text" size="small">修 改</el-button>
+            <el-button @click="perform(scope.row)" type="text" size="small">执行情况</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
+      </el-pagination>
+      <!-- 第一层 -->
+      <el-dialog title="新 增" :visible.sync="dialogFormVisibleAdd" :before-close="closeAddDialog" width="50%">
+        <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
+          <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
+            <el-input v-model="form.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
+          </el-form-item>
+          <el-form-item label="类型" prop="type" :label-width="formLabelWidth">
+            <el-radio-group v-model="form.type" style="float: left;">
+              <el-radio-button label="样品"></el-radio-button>
+              <el-radio-button label="改批"></el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="批号" prop="batch" :label-width="formLabelWidth" required>
+            <!-- <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
+            <el-select v-model="form.batch" filterable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
+              <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="开始日期" prop="startDate" :label-width="formLabelWidth" required>
+            <el-date-picker v-model="form.startDate" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="timestamp" style="float: left;"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="" :label-width="formLabelWidth" required>
+            <el-tag type="info" style="float: left; width: 80%;text-align: left;">
+              机台 *
+              <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="saveWorkshops()"></el-button>
+            </el-tag>
+            <ul class="item">
+              <li v-for="item in form.lineMachines" :key="item.id">{{item.line.workshop.name}}--{{item.line.name}}--{{item.item}}</li>
+            </ul>
+          </el-form-item>
+        </el-form>
+        <!-- 第二层 -->
+        <el-dialog width="50%" title="* 选择机台" :visible.sync="innerVisible" tooltip-effect="dark" append-to-body>
+          <!-- 第三层 -->
+          <el-dialog width="50%" title="新增机台" :visible.sync="addLine" append-to-body>
+            <el-form :model="Lines" :rules="rules" ref="Lines" class="demo-ruleForm">
+              <el-form-item label="线别" :label-width="formLabelWidth" required>
+                <!-- <el-input v-model="Lines.name" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
+                <el-select v-model="Lines.name" clearable placeholder="请选择" style="float: left;">
+                  <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="机台位号" :label-width="formLabelWidth" required>
+                <el-input-number v-model="Lines.item" :min="1" label="输入位号..."></el-input-number>
+              </el-form-item>
+              <el-form-item label="锭数" :label-width="formLabelWidth" required>
+                <el-input-number v-model="Lines.spindleNum" :min="1" label="输入锭数..." @change="setSpindleSeq"></el-input-number>
+              </el-form-item>
+              <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
+                <el-tag title="" type="info" v-model="Lines.spindleSeq" v-for="(item,index) in Lines.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
+                  <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
+                  <div style="float: right;">
+                    <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="Lines.spindleSeq.indexOf(item) != 0" @click="up(index)" circle></el-button>
+                    <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="Lines.spindleSeq.indexOf(item) != Lines.spindleNum-1" @click="down(index)" circle></el-button>
+                  </div>
+                </el-tag>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="addLines()">确 定</el-button>
+            </span>
+          </el-dialog>
+          <div style="float: left;">
+            <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
+              <el-option v-for="item in linesOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
+            </el-select>
+          </div>
+          <el-button type="primary" @click="createLines()" style="float: right;">新 增</el-button>
+          <el-table ref="multipleTable" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
+            <el-table-column prop="line.workshop.name" label="车间" width="180">
+            </el-table-column>
+            <el-table-column prop="line.name" label="线别" width="180">
+            </el-table-column>
+            <el-table-column prop="item" label="机台">
+            </el-table-column>
+          </el-table>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="selectItem()">确 定</el-button>
+          </span>
+        </el-dialog>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="addNotice('form')">确 定</el-button>
+        </div>
+      </el-dialog>
+
+      <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave" width="50%">
+        <el-form :model="form1" :rules="rules" ref="form1" class="demo-ruleForm">
+          <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
+            <el-input v-model="form1.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
+          </el-form-item>
+          <el-form-item label="类型" prop="type" :label-width="formLabelWidth">
+            <el-radio-group v-model="form1.type" style="float: left;">
+              <el-radio-button label="样品"></el-radio-button>
+              <el-radio-button label="改批"></el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="批号" :label-width="formLabelWidth" required>
+            <!-- <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
+            <el-select v-model="form1.batch.batchNo" filterable remote reserve-keyword placeholder="请输入位号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
+              <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="开始日期" prop="startDate" :label-width="formLabelWidth" required>
+            <el-date-picker v-model="form1.startDate" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="float: left;"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="" prop="lineMachines" :label-width="formLabelWidth" required>
+            <el-tag type="info" style="float: left; width: 80%;text-align: left;">
+              机台 *
+              <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="saveWorkshops()"></el-button>
+            </el-tag>
+            <ul class="item">
+              <li v-for="item in form1.lineMachines" :key="item.id">{{item.line.workshop.name}}--{{item.line.name}}--{{item.item}}</li>
+            </ul>
+          </el-form-item>
+        </el-form>
+        <!-- 第二层 -->
+        <el-dialog width="50%" title="* 选择机台" :visible.sync="innerVisible" tooltip-effect="dark" :before-close="closeChoseItem" append-to-body>
+          <!-- 第三层 -->
+          <el-dialog width="50%" title="新增机台" :visible.sync="addLine" append-to-body>
+            <el-form :model="Lines" :rules="rules" ref="Lines" class="demo-ruleForm">
+              <el-form-item label="线别" :label-width="formLabelWidth" required>
+                <!-- <el-input v-model="Lines.name" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
+                <el-select v-model="Lines.name" clearable placeholder="请选择" style="float: left;">
+                  <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="机台位号" :label-width="formLabelWidth" required>
+                <el-input-number v-model="Lines.item" :min="1" label="输入位号..."></el-input-number>
+              </el-form-item>
+              <el-form-item label="锭数" :label-width="formLabelWidth" required>
+                <el-input-number v-model="Lines.spindleNum" :min="1" label="输入锭数..." @change="setSpindleSeq"></el-input-number>
+              </el-form-item>
+              <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
+                <el-tag title="" type="info" v-model="Lines.spindleSeq" v-for="(item,index) in Lines.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
+                  <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
+                  <div style="float: right;">
+                    <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="Lines.spindleSeq.indexOf(item) != 0" @click="up(index)" circle></el-button>
+                    <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="Lines.spindleSeq.indexOf(item) != Lines.spindleNum-1" @click="down(index)" circle></el-button>
+                  </div>
+                </el-tag>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="addLine = false">取 消</el-button>
+              <el-button type="primary" @click="addLines()">确 定</el-button>
+            </span>
+          </el-dialog>
+          <div style="float: left;">
+            <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
+              <el-option v-for="item in linesOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
+            </el-select>
+          </div>
+          <el-button type="primary" @click="createLines()" style="float: right;">新 增</el-button>
+          <el-table ref="multipleTable1" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
+            <el-table-column prop="line.workshop.name" label="车间">
+            </el-table-column>
+            <el-table-column prop="line.name" label="线别">
+            </el-table-column>
+            <el-table-column prop="item" label="机台">
+            </el-table-column>
+          </el-table>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="saveItem()">确 定</el-button>
+          </span>
+        </el-dialog>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+          <el-button type="primary" @click="saveNotice('form1')">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+      <div>
+        <router-view></router-view>
+      </div>
   </div>
-  <el-button type="primary" @click="openAddNotice()" style="float: right; margin-bottom: 10px;">新 增</el-button>
-  <el-table :data="tableData" border v-loading="tableLoading" :stripe="true" style="width: 100%" height="500">
-    <el-table-column fixed prop="type" label="类型">
-    </el-table-column>
-    <el-table-column prop="name" label="名称">
-    </el-table-column>
-    <el-table-column prop="batch.batchNo" label="批号">
-    </el-table-column>
-    <el-table-column prop="startDate" label="开始日期">
-    </el-table-column>
-    <el-table-column prop="endDate" label="结束日期">
-      <template slot-scope="scope">
-        <span v-if="scope.row.endDate">{{scope.row.endDate}}</span>
-        <el-button v-else type="danger" @click="finish(scope.row)" size="mini">结束</el-button>
-      </template>
-    </el-table-column>
-    <el-table-column fixed="right" label="操作" width="160">
-      <template slot-scope="scope">
-        <el-button @click="openSaveNotice(scope.row)" type="text" size="small">修 改</el-button>
-        <el-button @click="perform(scope.row)" type="text" size="small">执行情况</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
-  </el-pagination>
-  <!-- 第一层 -->
-  <el-dialog title="新 增" :visible.sync="dialogFormVisibleAdd" :before-close="closeAddDialog" width="50%">
-    <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
-      <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
-        <el-input v-model="form.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
-      </el-form-item>
-      <el-form-item label="类型" prop="type" :label-width="formLabelWidth">
-        <el-radio-group v-model="form.type" style="float: left;">
-          <el-radio-button label="样品"></el-radio-button>
-          <el-radio-button label="改批"></el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="批号" prop="batch" :label-width="formLabelWidth" required>
-        <!-- <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
-        <el-select v-model="form.batch" filterable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
-          <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="开始日期" prop="startDate" :label-width="formLabelWidth" required>
-        <el-date-picker v-model="form.startDate" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="timestamp" style="float: left;"></el-date-picker>
-      </el-form-item>
-      <el-form-item label="" :label-width="formLabelWidth" required>
-        <el-tag type="info" style="float: left; width: 80%;text-align: left;">
-          机台 *
-          <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="saveWorkshops()"></el-button>
-        </el-tag>
-        <ul class="item">
-          <li v-for="item in form.lineMachines" :key="item.id">{{item.line.workshop.name}}--{{item.line.name}}--{{item.item}}</li>
-        </ul>
-      </el-form-item>
-    </el-form>
-    <!-- 第二层 -->
-    <el-dialog width="50%" title="* 选择机台" :visible.sync="innerVisible" tooltip-effect="dark" append-to-body>
-      <!-- 第三层 -->
-      <el-dialog width="50%" title="新增机台" :visible.sync="addLine" append-to-body>
-        <el-form :model="Lines" :rules="rules" ref="Lines" class="demo-ruleForm">
-          <el-form-item label="线别" :label-width="formLabelWidth" required>
-            <!-- <el-input v-model="Lines.name" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
-            <el-select v-model="Lines.name" clearable placeholder="请选择" style="float: left;">
-              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="机台位号" :label-width="formLabelWidth" required>
-            <el-input-number v-model="Lines.item" :min="1" label="输入位号..."></el-input-number>
-          </el-form-item>
-          <el-form-item label="锭数" :label-width="formLabelWidth" required>
-            <el-input-number v-model="Lines.spindleNum" :min="1" label="输入锭数..." @change="setSpindleSeq"></el-input-number>
-          </el-form-item>
-          <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
-            <el-tag title="" type="info" v-model="Lines.spindleSeq" v-for="(item,index) in Lines.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
-              <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
-              <div style="float: right;">
-                <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="Lines.spindleSeq.indexOf(item) != 0" @click="up(index)" circle></el-button>
-                <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="Lines.spindleSeq.indexOf(item) != Lines.spindleNum-1" @click="down(index)" circle></el-button>
-              </div>
-            </el-tag>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="addLines()">确 定</el-button>
-        </span>
-      </el-dialog>
-      <div style="float: left;">
-        <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
-          <el-option v-for="item in linesOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
-        </el-select>
-      </div>
-      <el-button type="primary" @click="createLines()" style="float: right;">新 增</el-button>
-      <el-table ref="multipleTable" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
-        <el-table-column type="selection" width="55">
-        </el-table-column>
-        <el-table-column prop="line.workshop.name" label="车间" width="180">
-        </el-table-column>
-        <el-table-column prop="line.name" label="线别" width="180">
-        </el-table-column>
-        <el-table-column prop="item" label="机台">
-        </el-table-column>
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="selectItem()">确 定</el-button>
-      </span>
-    </el-dialog>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="addNotice('form')">确 定</el-button>
-    </div>
-  </el-dialog>
-
-  <el-dialog title="修 改" :visible.sync="dialogFormVisibleSave" width="50%">
-    <el-form :model="form1" :rules="rules" ref="form1" class="demo-ruleForm">
-      <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
-        <el-input v-model="form1.name" auto-complete="off" style="width: 60%; float: left;"></el-input>
-      </el-form-item>
-      <el-form-item label="类型" prop="type" :label-width="formLabelWidth">
-        <el-radio-group v-model="form1.type" style="float: left;">
-          <el-radio-button label="样品"></el-radio-button>
-          <el-radio-button label="改批"></el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="批号" :label-width="formLabelWidth" required>
-        <!-- <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
-        <el-select v-model="form1.batch.batchNo" filterable remote reserve-keyword placeholder="请输入位号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
-          <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="开始日期" prop="startDate" :label-width="formLabelWidth" required>
-        <el-date-picker v-model="form1.startDate" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="float: left;"></el-date-picker>
-      </el-form-item>
-      <el-form-item label="" prop="lineMachines" :label-width="formLabelWidth" required>
-        <el-tag type="info" style="float: left; width: 80%;text-align: left;">
-          机台 *
-          <el-button size="mini" type="danger" icon="el-icon-edit" circle style="float: right;" @click="saveWorkshops()"></el-button>
-        </el-tag>
-        <ul class="item">
-          <li v-for="item in form1.lineMachines" :key="item.id">{{item.line.workshop.name}}--{{item.line.name}}--{{item.item}}</li>
-        </ul>
-      </el-form-item>
-    </el-form>
-    <!-- 第二层 -->
-    <el-dialog width="50%" title="* 选择机台" :visible.sync="innerVisible" tooltip-effect="dark" :before-close="closeChoseItem" append-to-body>
-      <!-- 第三层 -->
-      <el-dialog width="50%" title="新增机台" :visible.sync="addLine" append-to-body>
-        <el-form :model="Lines" :rules="rules" ref="Lines" class="demo-ruleForm">
-          <el-form-item label="线别" :label-width="formLabelWidth" required>
-            <!-- <el-input v-model="Lines.name" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
-            <el-select v-model="Lines.name" clearable placeholder="请选择" style="float: left;">
-              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="机台位号" :label-width="formLabelWidth" required>
-            <el-input-number v-model="Lines.item" :min="1" label="输入位号..."></el-input-number>
-          </el-form-item>
-          <el-form-item label="锭数" :label-width="formLabelWidth" required>
-            <el-input-number v-model="Lines.spindleNum" :min="1" label="输入锭数..." @change="setSpindleSeq"></el-input-number>
-          </el-form-item>
-          <el-form-item label="人工落筒锭位顺序" :label-width="formLabelWidth" prop="spindleSeq" required>
-            <el-tag title="" type="info" v-model="Lines.spindleSeq" v-for="(item,index) in Lines.spindleSeq" :key="index" :closable="false" style="float: left; width: 60%; text-align: left; margin-bottom: 5px;">
-              <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
-              <div style="float: right;">
-                <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="Lines.spindleSeq.indexOf(item) != 0" @click="up(index)" circle></el-button>
-                <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="Lines.spindleSeq.indexOf(item) != Lines.spindleNum-1" @click="down(index)" circle></el-button>
-              </div>
-            </el-tag>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="addLine = false">取 消</el-button>
-          <el-button type="primary" @click="addLines()">确 定</el-button>
-        </span>
-      </el-dialog>
-      <div style="float: left;">
-        <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
-          <el-option v-for="item in linesOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
-        </el-select>
-      </div>
-      <el-button type="primary" @click="createLines()" style="float: right;">新 增</el-button>
-      <el-table ref="multipleTable1" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
-        <el-table-column type="selection" width="55">
-        </el-table-column>
-        <el-table-column prop="line.workshop.name" label="车间">
-        </el-table-column>
-        <el-table-column prop="line.name" label="线别">
-        </el-table-column>
-        <el-table-column prop="item" label="机台">
-        </el-table-column>
-      </el-table>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveItem()">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
-      <el-button type="primary" @click="saveNotice('form1')">确 定</el-button>
-    </div>
-  </el-dialog>
-
-</div>
 </template>
 <script>
 export default {
   name: 'notice',
   data () {
     return {
+      noticeVisible: true,
       isNew: false,
       tableLoading: false, // 表格加载
       lineLoading: false, // 列表加载
@@ -534,8 +537,8 @@ export default {
       // this.data = this.form1.lineMachines
     },
     perform (row) {
-      console.log(row)
-      this.$router.push({path: '/productPlan/Notice-perform', query: {id: row.id, startDate: row.startDate}})
+      this.$router.push({path: '/productPlan/Notice/Notice-perform', query: {id: row.id, startDate: row.startDate}})
+      this.noticeVisible = false
     },
     saveItem () {
       this.data = []
