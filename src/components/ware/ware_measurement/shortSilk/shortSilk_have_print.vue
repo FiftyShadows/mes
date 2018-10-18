@@ -94,12 +94,12 @@
   </div>
 </template>
 <script>
-import Dialog_addShourtSilk from './Dialog_addShourtSilk.vue'
+import dialogAddShourtSilk from './Dialog_addShourtSilk.vue'
 // import printMarks from '../../../common/print_marks'
 export default {
   name: 'artificial_have_to_print',
   components: {
-    'add-dialog': Dialog_addShourtSilk
+    'add-dialog': dialogAddShourtSilk
     // 'print-marks': printMarks
   },
   data () {

@@ -83,6 +83,7 @@
 </template>
 <script>
 export default {
+  name: 'dialogAddShourtSilk',
   props: [],
   data () {
     return {

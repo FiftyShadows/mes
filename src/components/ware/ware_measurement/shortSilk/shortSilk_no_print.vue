@@ -95,14 +95,14 @@
   </div>
 </template>
 <script>
-import Dialog_addShourtSilk from './Dialog_addShourtSilk'
+import dialogAddShourtSilk from './Dialog_addShourtSilk'
 // import EditDialog from './artificial_edit_dialog.vue'
 // import ArtificialEditMoreDialog from './artificial_editmore_dialog.vue'
 // import printMarks from '../../common/print_marks'
 export default {
   name: 'artificial_have_to_print',
   components: {
-    'add-dialog': Dialog_addShourtSilk
+    'add-dialog': dialogAddShourtSilk
     // 'edit-dialog': EditDialog
     // 'print-marks': printMarks
   },

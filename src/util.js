@@ -95,6 +95,11 @@ export default {
     var s = date.getSeconds()
     return Y + M + D + h + m + s
   },
+  // 获取字符串中的数组
+  getNum (str) {
+    return str.replace(/[^0-9]/ig, '')
+  },
+  // 将数组分段
   divideArray (array) {
     let result = []
     // 当前循环节点

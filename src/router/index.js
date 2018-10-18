@@ -45,13 +45,12 @@ let route = new Router({
         api.getAuth().then(res => {
           let userInfo = res.data
           store.commit('UserInfo', userInfo)
-          console.log()
-          next()
         })
+        next()
       },
       children: [
         // ================================自动化===============================
-        ...store.getters.routers,
+        ...store.state.routers,
         // ================================仓储===============================
         {// 包装计量--自动打唛头
           path: '/measurement/ShortSilk',
@@ -157,10 +156,7 @@ let route = new Router({
   ]
 })
 route.beforeEach((to, from, next) => {
-  // console.log(store.state.userInfo.admin)
-  // if (store.state) {
   next()
-  // }
 })
 export default route
 
