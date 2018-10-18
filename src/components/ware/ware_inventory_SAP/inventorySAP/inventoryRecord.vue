@@ -55,19 +55,17 @@
     </el-table>
     <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
     <DialogDetail ref="detail"></DialogDetail>
-    <DialogStart ref="start"></DialogStart>
+    <!-- <DialogStart ref="start"></DialogStart> -->
   </div>
 </template>
 <script>
 import moment from 'moment' // 处理时间
 import Pagination from '../../../common/pagination.vue'
 import DialogDetail from './Dialog_detail'
-import DialogStart from './Dialog_start'
 export default {
   components: {
     Pagination,
-    DialogDetail,
-    DialogStart
+    DialogDetail
   },
   data () {
     return {
@@ -140,10 +138,6 @@ export default {
       this.pageNum = value.pageNum
       this.pageSize = value.pageSize
       this.seachTableData()
-    },
-    startInventory () {
-      // console.log(this.$refs.start)
-      this.$refs.start.show()
     },
     openDetail (row) {
       this.stocktakingRecordId = row.stocktakingRecordId

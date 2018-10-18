@@ -44,7 +44,7 @@
           <el-radio v-model="addForm.storageCode" label="2" border style="float: left;">未使用</el-radio>
         </el-form-item> -->
         <el-form-item label="批号" prop="batchNo" :label-width="formLabelWidth">
-          <el-select v-model="addForm.batchNo" clearable multiple placeholder="请选择批号" class="floatLeft">
+          <el-select v-model="addForm.batchNo" filterable clearable multiple placeholder="请选择批号" class="floatLeft">
             <el-option v-for="item in batchNo" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
           </el-select>
         </el-form-item>
@@ -70,7 +70,7 @@
           <el-radio v-model="addForm.storageCode" label="2" border style="float: left;">未使用</el-radio>
         </el-form-item> -->
         <el-form-item label="批号" :label-width="formLabelWidth">
-          <el-select v-model="saveForm.batchNo" clearable multiple placeholder="请选择批号" class="floatLeft">
+          <el-select v-model="saveForm.batchNo" filterable clearable multiple placeholder="请选择批号" class="floatLeft">
             <el-option v-for="item in batchNo" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
           </el-select>
         </el-form-item>

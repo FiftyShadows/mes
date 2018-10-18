@@ -466,13 +466,12 @@ body {
 }
 
 @page {
-  /*size: 19.1cm 14.16cm;*/
+  /* size: 19.1cm 14.16cm; */
   size: 21cm 29.7cm;
   /*margin-top: 3px;*/
   margin: 0;
 }
-.pageBreak
-{
+.pageBreak{
   page-break-before: always;
   /*page-break-after: always;*/
 }
@@ -481,7 +480,7 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: baseline;
-  /*justify-content: space-between;*/
+  /* justify-content: space-between; */
 }
 .package-print li{
   padding-left: 0.5cm;

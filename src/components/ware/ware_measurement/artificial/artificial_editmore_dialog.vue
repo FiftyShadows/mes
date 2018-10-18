@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="批 量 修改" :visible.sync="dialogAddFormVisible" width="400px">
+  <el-dialog title="批 量 修 改" :visible.sync="dialogAddFormVisible" width="400px">
     <el-form :model="addForm" :rules="rules" ref="addForm">
       <!--<el-form-item label="销售类型" prop="type" :label-width="formLabelWidth">-->
         <!--<el-select class="floatLeft" v-model="addForm.type" placeholder="请选择销售类型">-->

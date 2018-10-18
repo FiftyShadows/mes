@@ -1,6 +1,6 @@
 <template>
-  <!-- 包装唛头打印 -->
-  <div class="artificial">
+  <!-- 短丝唛头打印 -->
+  <div class="shortSilk">
     <el-tabs type="border-card">
       <el-tab-pane label="待打印">
         <no-print></no-print>
@@ -12,20 +12,13 @@
   </div>
 </template>
 <script>
-import HaveToPrint from './artificial_have_print.vue'
-import NoToPrint from './artificial_no_print.vue'
+import HaveToPrint from './shortSilk_have_print.vue'
+import NoToPrint from './shortSilk_no_print.vue'
 export default {
-  name: 'artificial',
+  name: 'shortSilk',
   components: {
     'have-print': HaveToPrint,
     'no-print': NoToPrint
-  },
-  data () {
-    return {
-    }
-  },
-  created () {
-    this.$store.dispatch('getDict', '班次')
   },
   methods: {
   }
