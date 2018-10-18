@@ -380,7 +380,7 @@ export default {
   getSelectRole () { // 角色下拉接口
     return axios.post(`${baseWareUrl}/mes/system/role/selectRole`)
   },
-  getBatchList () { // 查询所有批次
+  getBatchList () { // 查询所有批号
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/getBatchList`)
   },
   getSelectWorkshop () { // 查询车间接口
@@ -516,5 +516,11 @@ export default {
   },
   searchInStorageDetailList (data) { // 入库记录--码单明细--搜索
     return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/searchInStorageDetailList`, data)
+  },
+  addBarcode (data) { // 短丝唛头--新增唛头
+    return axios.post(`${baseWareUrl}/productCodeController/addBarcode`, data)
+  },
+  getSelectCode (data) { // 短丝唛头-获取表格数据
+    return axios.post(`${baseWareUrl}/productCodeController/selectCode`, data)
   }
 }
