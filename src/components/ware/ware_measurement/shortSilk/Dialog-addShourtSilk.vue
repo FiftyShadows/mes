@@ -159,6 +159,10 @@ export default {
       this.$api.getDict({key: '打包方式'}).then(res => {
         this.packageTypeOption = res.data.data
       })
+      this.$api.getDict({key: '线别'}).then(res => {
+        // console.log(res)
+        this.lineOption = res.data.data
+      })
       this.$api.getBatchList().then(res => {
         // console.log(res)
         this.batchNoOption = res.data.data
@@ -176,10 +180,6 @@ export default {
       this.$api.getDict({key: this.addForm.productName}).then(res => {
         // console.log(res)
         this.productTypeOption = res.data.data
-      })
-      this.$api.getDict({key: `${this.addForm.productName}线别`}).then(res => {
-        // console.log(res)
-        this.lineOption = res.data.data
       })
     },
     show () {

@@ -48,6 +48,14 @@ let route = new Router({
         })
         next()
       },
+      // beforeEnter: (to, from, next) => {
+      //   api.getAuth().then(res => {
+      //     let userInfo = res.data
+      //     store.commit('UserInfo', userInfo)
+      //     console.log()
+      //     next()
+      //   })
+      // },
       children: [
         // ================================自动化===============================
         ...store.state.routers,
