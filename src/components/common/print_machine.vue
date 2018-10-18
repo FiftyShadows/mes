@@ -31,7 +31,7 @@ export default {
               'name': this.printData[i].line.name + '-' + this.printData[i].item
             })
           })
-          // console.log(qrcode)
+          console.log(qrcode)
         }
         this.$nextTick(function () {
           setTimeout(() => {

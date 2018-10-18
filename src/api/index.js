@@ -58,6 +58,9 @@ axios.interceptors.response.use(function (response) {
 export default {
   axios,
   // =========================================== 自动化 ===========================================
+  getAuth () {
+    return axios.get(`${baseAutoUrl}/auth`)
+  },
   // 当前--搜索
   getCurrentSelect (data) {
     return axios.get(`${baseAutoUrl}/autoComplete/silkCar?q=${data}`)
