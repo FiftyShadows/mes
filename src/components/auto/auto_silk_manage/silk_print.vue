@@ -45,11 +45,9 @@
       <!--<el-table-column prop="printStatus" label="打印状态" width="180"></el-table-column>-->
       <el-table-column prop="codeDate" :formatter="dateFormat" label="日期" width="180"></el-table-column>
     </el-table>
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="50" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
-    </el-pagination>
-    <div v-show="false">
+    <!--<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="50" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">-->
+    <!--</el-pagination>-->
       <create-barcode-dialog :dialogVisible.sync="dialogVisible"></create-barcode-dialog>
-    </div>
   </div>
 </template>
 <script>

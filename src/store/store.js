@@ -34,9 +34,8 @@ import TemporaryBox from '@/components/auto/auto_configuration/temporary_box'
 
 Vue.use(Vuex)
 let addRouter = (state) => {
-  console.log(store.state.routers)
+  console.log(state.userInfo.admin)
   let array = []
-  // if (state.userInfo.admin !== undefined) {
   if (state.userInfo.admin) {
     array = [
       {// 当前
@@ -215,7 +214,6 @@ let addRouter = (state) => {
       }
     ]
   }
-  // }
   state.routers = [...state.routers, ...array]
 }
 const store = new Vuex.Store({

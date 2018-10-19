@@ -188,10 +188,8 @@ export default {
     },
     startGetMachine () {
       this.loading = true
-      // console.log(this.arrLineName[0])
       this.name = this.arrLineName[0].name
       this.$api.getMachines(this.arrLineName[0].id).then(res => {
-        // console.log(res)
         this.tableData = res.data
         this.loading = false
       })
@@ -204,7 +202,6 @@ export default {
         }
       }
       this.$api.getMachines(this.seachMachine.id).then(res => {
-        console.log(res)
         this.tableData = res.data
         this.loading = false
       })
@@ -219,7 +216,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$api.AddMachine(this.form).then(res => {
-            // console.log(res)
             this.$notify({
               title: '成功',
               message: '新增成功',
@@ -234,7 +230,6 @@ export default {
       })
     },
     AddBatchMachine (formName) {
-      console.log(this.form.items.endItem, this.form.items.startItem)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let regPos = /^\d+$/
