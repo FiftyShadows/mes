@@ -2,27 +2,27 @@
   <div>
     <el-form :model="seachForm" ref="seachForm" label-width="10px">
       <el-form-item label="" prop="workshop" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.workshop" placeholder="请选择车间" clearable>
+        <el-select v-model="seachForm.workshop" clearable placeholder="请选择车间">
           <el-option v-for="item in workshopOption" :key="item.id" :label="item.workshop" :value="item.workshop"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="line" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.line" placeholder="请选择线别">
+        <el-select v-model="seachForm.line" clearable placeholder="请选择线别">
           <el-option v-for="item in lineOption" :key="item.dictKey" :label="item.dictValue" :value="item.dictValue"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="classes" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.classes" placeholder="请选择班次">
+        <el-select v-model="seachForm.classes" clearable placeholder="请选择班次">
           <el-option v-for="item in classesOption" :key="item.dictKey" :label="item.dictValue" :value="item.dictValue"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="" prop="line" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.line" filterable placeholder="请输入等级">
+      <el-form-item label="" prop="level" style="float: left;width: 150px;">
+        <el-select v-model="seachForm.level" filterable clearable placeholder="请输入等级">
           <el-option v-for="item in levelOption" :key="item.dictKey" :label="item.dictValue" :value="item.dictValue"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="Batch" style="float: left;width: 150px;">
-        <el-select v-model="seachForm.Batch" filterable placeholder="请输入批号">
+        <el-select v-model="seachForm.Batch" filterable clearable placeholder="请输入批号">
           <el-option v-for="item in BatchOption" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
         </el-select>
       </el-form-item>
@@ -93,6 +93,7 @@ export default {
   data () {
     return {
       seachForm: { // 搜索列表数据
+        printFlag: 'Y',
         workshop: '', // 车间
         line: '', // 线别
         classes: '', // 班次

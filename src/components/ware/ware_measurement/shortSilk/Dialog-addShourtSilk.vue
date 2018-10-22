@@ -37,7 +37,7 @@
       </el-form-item>
       <el-form-item label="线别" prop="line" :label-width="formLabelWidth">
         <el-select class="floatLeft" v-model="addForm.line" clearable placeholder="请选择线别">
-          <el-option v-for="item in lineOption" :key="item.dictKey" :label="item.dictValue" :value="item.dictValue"></el-option>
+          <el-option v-for="item in lineOption" :key="item.dictValue" :label="item.dictValue" :value="item.dictValue"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="班次" prop="classes" :label-width="formLabelWidth">
