@@ -15,8 +15,8 @@
       <el-table-column prop="batch.tubeColor" label="纸管颜色">
       </el-table-column>
       <el-table-column label="机台">
-        <template itemscope>
-          <span :key="machine" v-for="machine in machines"><br/>{{machine}}aaa</span>
+        <template slot-scope="scope">
+          <p :key="machine" v-for="machine in scope.row.machines">{{machine}}</p>
         </template>
       </el-table-column>
       <el-table-column prop="lineMachines.length" label="机台数">
@@ -62,9 +62,7 @@ export default {
       }
       this.$api.getLinePlans(this.seachId).then(res => {
         this.allData = res.data
-        this.tableData = res.data.items.sort((x, y) => { return x.id - y.id })
-        console.log(this.tableData)
-        console.log(this.util.divideArray(this.tableData[0].lineMachines.sort((x, y) => { return x.item - y.item })))
+        this.tableData = res.data.items.sort((x, y) => { return this.util.getNum(x.line.name) - this.util.getNum(y.line.name) })
         for (let j = 0; j < this.tableData.length; j++) {
           this.tableData[j].machines = this.util.divideArray(this.tableData[j].lineMachines.sort((x, y) => { return x.item - y.item }))
         }

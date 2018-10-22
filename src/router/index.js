@@ -2,9 +2,37 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import Help from '@/components/help'
-// import api from '../../src/api'
-import store from '../store/store'
+import mainLayout from '../../src/components/main_layout'
 // import Login from '@/components/login' // 仓储登陆
+// ================================自动化===============================
+// 当前
+import Current from '@/components/auto/auto_current/index'
+// 历史
+import History from '@/components/auto/auto_history/history'
+// 丝锭管理
+import silkPrint from '@/components/auto/auto_silk_manage/silk_print'
+// 染判
+import Dyed from '@/components/auto/auto_dye/dyed'
+import Dyeing from '@/components/auto/auto_dye/dyeing'
+// 管理员
+import Permissions from '@/components/auto/auto_admin/admin_permissions'
+import User from '@/components/auto/auto_admin/user'
+import UserGroups from '@/components/auto/auto_admin/user_groups'
+// 生产计划
+import Batch from '@/components/auto/auto_production_plan/Batch_manage'
+import Notice from '@/components/auto/auto_production_plan/notice'
+import NoticePerform from '@/components/auto/auto_production_plan/notice_perform'
+import WorkPlan from '@/components/auto/auto_production_plan/workshop_product_plan'
+// 自动化配置
+import Grade from '@/components/auto/auto_configuration/grade_manage'
+import LineControl from '@/components/auto/auto_configuration/line_control'
+import Machine from '@/components/auto/auto_configuration/machine_manage'
+import Product from '@/components/auto/auto_configuration/product_manage'
+import Configurat from '@/components/auto/auto_configuration/product_configurat'
+import SlikCar from '@/components/auto/auto_configuration/silkCar_manage'
+import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage'
+import PackageClass from '@/components/auto/auto_configuration/package_class'
+import TemporaryBox from '@/components/auto/auto_configuration/temporary_box'
 // ================================仓储=================================
 // 包装计量
 import ShortSilk from '@/components/ware/ware_measurement/shortSilk/shortSilkPrint'
@@ -33,6 +61,8 @@ import SalesRequisition from '@/components/ware/ware_transfers/sales_requisition
 import ReturngoodsRequisition from '@/components/ware/ware_transfers/returngoods_requisition/returngoods_requisition'
 // 盘点SAP
 import InventorySAP from '@/components/ware/ware_inventory_SAP/inventorySAP/index'
+import api from '../api'
+import store from '../store/store'
 
 Vue.use(Router)
 let route = new Router({
@@ -41,17 +71,175 @@ let route = new Router({
       path: '/',
       name: 'index',
       component: Index,
-      // beforeEnter: (to, from, next) => {
-      //   api.getAuth().then(res => {
-      //     let userInfo = res.data
-      //     store.commit('UserInfo', userInfo)
-      //     console.log()
-      //     next()
-      //   })
-      // },
+      beforeEnter: (to, from, next) => {
+        api.getAuth().then(res => {
+          let userInfo = res.data
+          store.commit('UserInfo', userInfo)
+          console.log(store.state)
+        })
+        next()
+      },
       children: [
         // ================================自动化===============================
-        ...store.getters.routers,
+
+        {// 当前
+          path: '/current/index',
+          name: '当前',
+          component: Current,
+          class: 'el-icon-search',
+          permissions: ''
+        },
+        {// 历史
+          path: '/history',
+          name: '历史',
+          component: History,
+          class: 'el-icon-search'
+        },
+        {// 管理员
+          path: '/admin',
+          component: mainLayout,
+          name: '管理员',
+          class: 'el-icon-setting',
+          children: [
+            {// 权限
+              path: 'perminssions',
+              name: '权限',
+              component: Permissions,
+              class: 'el-icon-location'
+            }, {// 用户
+              path: 'user',
+              name: '用户',
+              component: User,
+              class: 'el-icon-location'
+            }, {// 用户组
+              path: 'userGroups',
+              name: '用户组',
+              component: UserGroups,
+              class: 'el-icon-location'
+            }
+          ]
+        },
+        {// 自动化配置
+          path: '/configuration',
+          name: '自动化配置',
+          component: mainLayout,
+          class: 'el-icon-setting',
+          children: [
+            {// 等级管理
+              path: 'Grade',
+              name: '等级管理',
+              component: Grade,
+              class: 'el-icon-location'
+            }, {// 线别控制
+              path: 'LineControl',
+              name: '线别管理',
+              component: LineControl,
+              class: 'el-icon-location'
+            }, {// 机台管理
+              path: 'Machine',
+              name: '机台管理',
+              component: Machine,
+              class: 'el-icon-location'
+            }, {// 产品管理
+              path: 'Product',
+              name: '产品管理',
+              component: Product,
+              class: 'el-icon-location',
+              children: [
+                {// 产品管理--配置
+                  path: 'configurat',
+                  name: '产品管理--配置',
+                  component: Configurat
+                }
+              ]
+            }, {// 丝车管理
+              path: 'SlikCar',
+              name: '丝车管理',
+              component: SlikCar,
+              class: 'el-icon-location'
+            }, {// 车间管理
+              path: 'WorkshopManage',
+              name: '车间管理',
+              component: WorkshopManage,
+              class: 'el-icon-location'
+            }, {// 打包班次管理
+              path: 'PackageClass',
+              name: '打包班次管理',
+              component: PackageClass,
+              class: 'el-icon-location'
+            }, {// 暂存箱管理
+              path: 'TemporaryBox',
+              name: '暂存箱管理',
+              component: TemporaryBox,
+              class: 'el-icon-location'
+            }
+          ]
+        },
+        {// 丝锭打印
+          path: '/silkManage',
+          name: '丝锭管理',
+          component: mainLayout,
+          class: 'el-icon-setting',
+          children: [
+            {
+              path: 'silkPrint',
+              name: '丝锭打印',
+              component: silkPrint,
+              class: 'el-icon-location'
+            }
+          ]
+        },
+        {// 染判
+          path: '/dye',
+          name: '染判',
+          component: mainLayout,
+          class: 'el-icon-setting',
+          children: [
+            {// 待染判
+              path: 'dyeing',
+              name: '待染判',
+              component: Dyeing,
+              class: 'el-icon-location'
+            },
+            {// 已染判
+              path: 'dyed',
+              name: '已染判',
+              component: Dyed,
+              class: 'el-icon-location'
+            }
+          ]
+        },
+        {// 生产计划
+          path: '/productPlan',
+          name: '生产计划',
+          component: mainLayout,
+          class: 'el-icon-setting',
+          children: [
+            {// 批号管理
+              path: 'Batch',
+              name: '批号管理',
+              component: Batch,
+              class: 'el-icon-location'
+            }, {// 通知单
+              path: 'Notice',
+              name: '通知单',
+              component: Notice,
+              class: 'el-icon-location',
+              children: [
+                {// 通知单--执行情况
+                  path: 'Notice-perform',
+                  name: '执行情况',
+                  component: NoticePerform
+                }
+              ]
+            }, {// 车间生产计划
+              path: 'WorkPlan',
+              name: '车间生产计划',
+              component: WorkPlan,
+              class: 'el-icon-location'
+            }
+          ]
+        },
         // ================================仓储===============================
         {// 包装计量--自动打唛头
           path: '/measurement/ShortSilk',
@@ -157,10 +345,7 @@ let route = new Router({
   ]
 })
 route.beforeEach((to, from, next) => {
-  // console.log(store.state.userInfo.admin)
-  // if (store.state) {
   next()
-  // }
 })
 export default route
 

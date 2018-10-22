@@ -36,7 +36,6 @@ Vue.use(Vuex)
 let addRouter = (state) => {
   console.log(state.userInfo.admin)
   let array = []
-  // if (state.userInfo.admin !== undefined) {
   if (state.userInfo.admin) {
     array = [
       {// 当前
@@ -72,6 +71,62 @@ let addRouter = (state) => {
             path: 'userGroups',
             name: '用户组',
             component: UserGroups,
+            class: 'el-icon-location'
+          }
+        ]
+      },
+      {// 自动化配置
+        path: '/configuration',
+        name: '自动化配置',
+        component: mainLayout,
+        class: 'el-icon-setting',
+        children: [
+          {// 等级管理
+            path: 'Grade',
+            name: '等级管理',
+            component: Grade,
+            class: 'el-icon-location'
+          }, {// 线别控制
+            path: 'LineControl',
+            name: '线别管理',
+            component: LineControl,
+            class: 'el-icon-location'
+          }, {// 机台管理
+            path: 'Machine',
+            name: '机台管理',
+            component: Machine,
+            class: 'el-icon-location'
+          }, {// 产品管理
+            path: 'Product',
+            name: '产品管理',
+            component: Product,
+            class: 'el-icon-location',
+            children: [
+              {// 产品管理--配置
+                path: 'configurat',
+                name: '产品管理--配置',
+                component: Configurat
+              }
+            ]
+          }, {// 丝车管理
+            path: 'SlikCar',
+            name: '丝车管理',
+            component: SlikCar,
+            class: 'el-icon-location'
+          }, {// 车间管理
+            path: 'WorkshopManage',
+            name: '车间管理',
+            component: WorkshopManage,
+            class: 'el-icon-location'
+          }, {// 打包班次管理
+            path: 'PackageClass',
+            name: '打包班次管理',
+            component: PackageClass,
+            class: 'el-icon-location'
+          }, {// 暂存箱管理
+            path: 'TemporaryBox',
+            name: '暂存箱管理',
+            component: TemporaryBox,
             class: 'el-icon-location'
           }
         ]
@@ -156,66 +211,9 @@ let addRouter = (state) => {
             class: 'el-icon-location'
           }
         ]
-      },
-      {// 丝锭打印
-        path: '/configuration',
-        name: '自动化配置',
-        component: mainLayout,
-        class: 'el-icon-setting',
-        children: [
-          {// 等级管理
-            path: 'Grade',
-            name: '等级管理',
-            component: Grade,
-            class: 'el-icon-location'
-          }, {// 线别控制
-            path: 'LineControl',
-            name: '线别控制',
-            component: LineControl,
-            class: 'el-icon-location'
-          }, {// 机台管理
-            path: 'Machine',
-            name: '机台管理',
-            component: Machine,
-            class: 'el-icon-location'
-          }, {// 产品管理
-            path: 'Product',
-            name: '产品管理',
-            component: Product,
-            class: 'el-icon-location',
-            children: [
-              {// 产品管理--配置
-                path: 'configurat',
-                name: '产品管理--配置',
-                component: Configurat
-              }
-            ]
-          }, {// 丝车管理
-            path: 'SlikCar',
-            name: '丝车管理',
-            component: SlikCar,
-            class: 'el-icon-location'
-          }, {// 车间管理
-            path: 'WorkshopManage',
-            name: '车间管理',
-            component: WorkshopManage,
-            class: 'el-icon-location'
-          }, {// 打包班次管理
-            path: 'PackageClass',
-            name: '打包班次管理',
-            component: PackageClass,
-            class: 'el-icon-location'
-          }, {// 暂存箱管理
-            path: 'TemporaryBox',
-            name: '暂存箱管理',
-            component: TemporaryBox,
-            class: 'el-icon-location'
-          }
-        ]
       }
     ]
   }
-  // }
   state.routers = [...state.routers, ...array]
 }
 const store = new Vuex.Store({
@@ -240,10 +238,7 @@ const store = new Vuex.Store({
     warehouseList: state => state.warehouseList,
     sapStorage: state => state.sapStorage,
     userInfo: state => state.userInfo,
-    routers: state => {
-      addRouter(state)
-      return state.routers
-    }
+    routers: state => state.routers
   },
   mutations: {
     BatchList (state, batchList) {
@@ -260,10 +255,10 @@ const store = new Vuex.Store({
     },
     UserInfo (state, userInfo) {
       state.userInfo = userInfo
+      addRouter(state)
     },
     Routers (state) {
       // state.routers = routers
-      addRouter(state)
     }
   },
   actions: {
@@ -274,7 +269,6 @@ const store = new Vuex.Store({
     },
     getBatchList ({commit}) {
       api.getBatchList().then(res => {
-        console.log(res)
         commit('BatchList', {batchList: res.data.data})
       })
     },
@@ -285,13 +279,11 @@ const store = new Vuex.Store({
     },
     getselectSapStorage ({commit}) {
       api.getselectSapStorage().then(res => {
-        console.log(res)
         commit('SapStorage', {sapStorage: res.data.data})
       })
     },
     getSelectWarehouseList ({commit}) {
       api.getSelectWarehouseList().then(res => {
-        console.log(res)
         commit('WarehouseList', {warehouseList: res.data.data})
       })
     }
