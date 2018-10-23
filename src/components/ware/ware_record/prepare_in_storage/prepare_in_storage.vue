@@ -40,15 +40,15 @@
       </el-table-column>
       <el-table-column prop="houseName" label="仓库" width="120">
       </el-table-column>
-      <el-table-column prop="lotNumber" label="码单" width="80">
+      <el-table-column prop="lotNumber" label="码单" min-width="300">
       </el-table-column>
-      <el-table-column prop="sublotNumber" label="批号" width="250">
+      <el-table-column prop="sublotNumber" label="批号" width="150">
       </el-table-column>
-      <el-table-column prop="materialtext" label="规格" min-width="300">
+      <el-table-column prop="materialtext" label="规格" min-width="150">
       </el-table-column>
       <el-table-column prop="productType" label="成品类型" width="100">
       </el-table-column>
-      <el-table-column prop="level" label="等级" width="150">
+      <el-table-column prop="level" label="等级" width="100">
       </el-table-column>
       <el-table-column prop="yoke" label="托盘类型" width="150">
       </el-table-column>

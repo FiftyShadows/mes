@@ -84,55 +84,55 @@
               <el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <!--<el-submenu index="9">-->
-            <!--<template slot="title">-->
-              <!--<i class="el-icon-menu"></i>-->
-              <!--<span slot="title">库位库存</span>-->
-            <!--</template>-->
-            <!--<el-menu-item-group>-->
-              <!--<el-menu-item index="/storage/warehouse"><i class="el-icon-setting"></i>仓库</el-menu-item>-->
-              <!--<el-menu-item index="/storage/edit"><i class="el-icon-setting"></i>库位维护</el-menu-item>-->
-              <!--<el-menu-item index="/storage/view"><i class="el-icon-setting"></i>库位视图</el-menu-item>-->
-              <!--<el-menu-item index="/storage/plan"><i class="el-icon-setting"></i>库位计划</el-menu-item>-->
-              <!--<el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>-->
-              <!--<el-menu-item index="/storage/trace"><i class="el-icon-setting"></i>箱包追溯</el-menu-item>-->
-              <!--<el-menu-item index="/storage/SAPMessage"><i class="el-icon-setting"></i>SAP信息</el-menu-item>-->
-              <!--<el-menu-item index="/storage/FBreason"><i class="el-icon-setting"></i>翻包原因</el-menu-item>-->
-            <!--</el-menu-item-group>-->
-          <!--</el-submenu>-->
-          <!--<el-submenu index="10">-->
-            <!--<template slot="title">-->
-              <!--<i class="el-icon-menu"></i>-->
-              <!--<span slot="title">仓储记录</span>-->
-            <!--</template>-->
-            <!--<el-menu-item-group>-->
-              <!--<el-menu-item index="/record/PrepareInStorage"><i class="el-icon-setting"></i>待入库</el-menu-item>-->
-              <!--<el-menu-item index="/record/instorage"><i class="el-icon-setting"></i>入库记录</el-menu-item>-->
-              <!--<el-menu-item index="/record/OutStorage"><i class="el-icon-setting"></i>出库记录</el-menu-item>-->
-              <!--<el-menu-item index="/record/Returngoods"><i class="el-icon-setting"></i>退货记录</el-menu-item>-->
-              <!--<el-menu-item index="/record/OnceAgainPackage"><i class="el-icon-setting"></i>翻包记录</el-menu-item>-->
-            <!--</el-menu-item-group>-->
-          <!--</el-submenu>-->
-          <!--<el-submenu index="11">-->
-            <!--<template slot="title">-->
-              <!--<i class="el-icon-menu"></i>-->
-              <!--<span slot="title">调拨处理</span>-->
-            <!--</template>-->
-            <!--<el-menu-item-group>-->
-              <!--<el-menu-item index="/record/SalesRequisition"><i class="el-icon-setting"></i>销售调拨单</el-menu-item>-->
-              <!--<el-menu-item index="/record/ReturngoodsRequisition"><i class="el-icon-setting"></i>退货调拨单</el-menu-item>-->
-              <!--<el-menu-item index="/record/SilkCarShipped"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item>-->
-            <!--</el-menu-item-group>-->
-          <!--</el-submenu>-->
-          <!--<el-submenu index="12">-->
-            <!--<template slot="title">-->
-              <!--<i class="el-icon-menu"></i>-->
-              <!--<span slot="title">盘点SAP</span>-->
-            <!--</template>-->
-            <!--<el-menu-item-group>-->
-              <!--<el-menu-item index="/inventory/InventorySAP"><i class="el-icon-setting"></i>盘点</el-menu-item>-->
-            <!--</el-menu-item-group>-->
-          <!--</el-submenu>-->
+          <el-submenu index="9">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span slot="title">库位库存</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/storage/warehouse"><i class="el-icon-setting"></i>仓库</el-menu-item>
+              <el-menu-item index="/storage/edit"><i class="el-icon-setting"></i>库位维护</el-menu-item>
+              <el-menu-item index="/storage/view"><i class="el-icon-setting"></i>库位视图</el-menu-item>
+              <el-menu-item index="/storage/plan"><i class="el-icon-setting"></i>库位计划</el-menu-item>
+              <el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>
+              <el-menu-item index="/storage/trace"><i class="el-icon-setting"></i>箱包追溯</el-menu-item>
+              <el-menu-item index="/storage/SAPMessage"><i class="el-icon-setting"></i>SAP信息</el-menu-item>
+              <el-menu-item index="/storage/FBreason"><i class="el-icon-setting"></i>翻包原因</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="10">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span slot="title">仓储记录</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/record/PrepareInStorage"><i class="el-icon-setting"></i>待入库</el-menu-item>
+              <el-menu-item index="/record/instorage"><i class="el-icon-setting"></i>入库记录</el-menu-item>
+              <el-menu-item index="/record/OutStorage"><i class="el-icon-setting"></i>出库记录</el-menu-item>
+              <el-menu-item index="/record/Returngoods"><i class="el-icon-setting"></i>退货记录</el-menu-item>
+              <el-menu-item index="/record/OnceAgainPackage"><i class="el-icon-setting"></i>翻包记录</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="11">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span slot="title">调拨处理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/record/SalesRequisition"><i class="el-icon-setting"></i>销售调拨单</el-menu-item>
+              <el-menu-item index="/record/ReturngoodsRequisition"><i class="el-icon-setting"></i>退货调拨单</el-menu-item>
+              <el-menu-item index="/record/SilkCarShipped"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="12">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span slot="title">盘点SAP</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/inventory/InventorySAP"><i class="el-icon-setting"></i>盘点</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
         </el-menu>
         <el-container>
           <el-main>

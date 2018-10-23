@@ -39,7 +39,7 @@
         </el-col>
       </el-form-item>
       <el-form-item style="float: left;">
-        <el-button type="primary" icon="el-icon-search" @click="seachTableData('seachForm')" circle></el-button>
+        <el-button type="primary" icon="el-icon-search" @click="seachTableData()" circle></el-button>
         <el-button type="success" icon="el-icon-printer" @click="batchPrint()" circle></el-button>
         <el-button type="warning" icon="el-icon-plus" @click="addSingle()" circle></el-button>
       </el-form-item>
@@ -78,17 +78,20 @@
     </el-table>
     <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
     <add-dialog ref="add_dialog"></add-dialog>
+    <DialogPrint :printData="printData"></DialogPrint>
   </div>
 </template>
 <script>
 import DialogAddShourtSilk from './Dialog-addShourtSilk'
+import DialogPrint from './Dialog-staple-fiber-print'
 import Pagination from '../../../common/pagination'
 import moment from 'moment' // 处理时间
 export default {
   name: 'artificial_have_to_print',
   components: {
     'add-dialog': DialogAddShourtSilk,
-    Pagination
+    Pagination,
+    DialogPrint
   },
   data () {
     return {
@@ -121,6 +124,7 @@ export default {
   },
   created () {
     this.getData()
+    this.seachTableData()
   },
   methods: {
     dateFormat (row, column) {
@@ -152,31 +156,26 @@ export default {
         this.lineOption = res.data.data
       })
     },
-    seachTableData (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          console.log(this.seachForm)
-          this.seachForm.page = this.pageNum
-          this.seachForm.pageSize = this.pageSize
-          this.$api.getSelectCode(this.seachForm).then(res => {
-            console.log(res)
-            if (res.data.status === '200') {
-              this.tableData = res.data.data.list
-              this.total = res.data.data.total
-            } else {
-              this.$notify.error({
-                title: '失败',
-                message: res.data.msg
-              })
-            }
-          })
+    seachTableData () {
+      console.log(this.seachForm)
+      this.seachForm.page = this.pageNum
+      this.seachForm.pageSize = this.pageSize
+      this.$api.getSelectCode(this.seachForm).then(res => {
+        console.log(res)
+        if (res.data.status === '200') {
+          this.tableData = res.data.data.list
+          this.total = res.data.data.total
         } else {
-          return false
+          this.$notify.error({
+            title: '失败',
+            message: res.data.msg
+          })
         }
       })
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
+      console.log(val)
     },
     addSingle () {
       this.$refs.add_dialog.show()
@@ -184,7 +183,10 @@ export default {
     changePage (value) {
       this.pageNum = value.pageNum
       this.pageSize = value.pageSize
-      this.seachTableData('seachForm')
+      this.seachTableData()
+    },
+    batchPrint () {
+      this.printData = this.multipleSelection
     }
   }
 }
