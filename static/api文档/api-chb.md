@@ -542,3 +542,70 @@ post请求
     },
     "token": null
 }}
+
+
+
+
+待入库和已入库接口：
+http://192.168.129.78:8080//warehouseInfo/InboundRecord/getPageInroundRecordList
+{
+	"sublotNumber":"",
+	"houseName":"",  仓库名称
+	"lotNumber":"",  码单号
+	"productName":"POY"，产品名
+	"startTime":"",  开始时间
+	"endTime":"",    结束时间
+	"pageNum":1,    
+	"pageSize":10,
+	"synSap":"N"  待入库为N，已入库为Y
+}
+
+返回参数
+{
+    "status": "200",
+    "msg": "查询成功",
+    "data": {
+        "messageType": 1,
+        "message": "查询未入库成功",
+        "data": {
+            "pageNum": 1,
+            "pageSize": 10,
+            "size": 1,
+            "startRow": 1,
+            "endRow": 1,
+            "total": 1,
+            "pages": 1,
+            "list": [
+                {
+                    "id": null,
+                    "spec": "178dtex/72f",
+                    "houseName": "POY仓库",
+                    "lotNumber": "020120180930GC11023C230001",
+                    "productName": "POY",
+                    "sublotNumber": "GC11023",
+                    "saleType": "内销",
+                    "level": "AA",
+                    "yoke": "木架托盘",
+                    "packageType": "人工打包",
+                    "transDate": "2018-09-29T16:00:00.000+0000",  入库时间
+                    "username": "admin"
+                }
+            ],
+            "prePage": 0,
+            "nextPage": 0,
+            "isFirstPage": true,
+            "isLastPage": true,
+            "hasPreviousPage": false,
+            "hasNextPage": false,
+            "navigatePages": 8,
+            "navigatepageNums": [
+                1
+            ],
+            "navigateFirstPage": 1,
+            "navigateLastPage": 1,
+            "lastPage": 1,
+            "firstPage": 1
+        }
+    },
+    "token": null
+}

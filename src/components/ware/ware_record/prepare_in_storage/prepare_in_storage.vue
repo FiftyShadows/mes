@@ -44,17 +44,19 @@
       </el-table-column>
       <el-table-column prop="sublotNumber" label="批号" width="150">
       </el-table-column>
-      <el-table-column prop="materialtext" label="规格" min-width="150">
+      <el-table-column prop="spec" label="规格" min-width="150">
       </el-table-column>
-      <el-table-column prop="productType" label="成品类型" width="100">
+      <el-table-column prop="saleType" label="销售类型" width="100">
       </el-table-column>
       <el-table-column prop="level" label="等级" width="100">
       </el-table-column>
-      <el-table-column prop="yoke" label="托盘类型" width="150">
+      <el-table-column prop="yoke" label="托盘类型" width="120">
       </el-table-column>
       <el-table-column prop="packageType" label="包装类型" width="150">
       </el-table-column>
-      <el-table-column prop="spec" label="打包时间" width="150">
+      <el-table-column prop="transDate" label="入库时间" :formatter="dateFormat" min-width="200">
+      </el-table-column>
+      <el-table-column prop="username" label="操作员" width="100">
       </el-table-column>
     </el-table>
     <DialogStorage ref="dialog_storage"></DialogStorage>
@@ -63,6 +65,7 @@
 </template>
 <script>
 // import {mapActions, mapGetters} from 'vuex'
+import moment from 'moment' // 处理时间
 import DialogStorage from './Dialog_in_storage'
 import Pagination from '../../../common/pagination.vue'
 export default {
@@ -99,6 +102,13 @@ export default {
   mounted () {
   },
   methods: {
+    dateFormat (row, column) {
+      var date = row[column.property]
+      if (date === undefined) {
+        return ''
+      }
+      return moment(date).format('YYYY-MM-DD HH:mm:ss')
+    },
     getHouseNameList () {
       this.$api.getHouseNameList().then(res => {
         if (res.data.status === '200') {
@@ -151,7 +161,8 @@ export default {
         startTime: this.seachForm.startTime,
         endTime: this.seachForm.endTime,
         pageNum: this.pageNum,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        synSap: 'N' // 待入库为N，已入库为Y
       }).then(res => {
         console.log(res)
         this.loading = false

@@ -115,8 +115,8 @@ export default {
       pageSize: 10, // 默认每页显示条数
       total: 0, // 总数
       rules: {
-        startTime: {required: true, message: '必输项', trigger: 'change'},
-        endTime: {required: true, message: '必输项', trigger: 'change'}
+        // startTime: {required: true, message: '必输项', trigger: 'change'},
+        // endTime: {required: true, message: '必输项', trigger: 'change'}
       }
     }
   },
@@ -202,14 +202,15 @@ export default {
           this.$api.getPageInStorageRecordList({
             classes: this.seachForm.classes,
             houseName: this.seachForm.houseName,
-            batchNo: this.seachForm.batchNo,
+            sublotNumber: this.seachForm.batchNo,
             productName: this.seachForm.productName,
             startTime: this.seachForm.startTime,
             endTime: this.seachForm.endTime,
             productTime: this.seachForm.productTime,
             level: this.seachForm.level,
             pageNum: this.pageNum,
-            pageSize: this.pageSize
+            pageSize: this.pageSize,
+            synSap: 'Y' // 待入库为N，已入库为Y
           }).then(res => {
             console.log(res)
             this.loading = false
