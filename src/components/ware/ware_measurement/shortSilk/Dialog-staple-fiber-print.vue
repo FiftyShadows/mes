@@ -38,7 +38,6 @@ export default {
       this.printData = data
       this.$nextTick(function () {
         let qrcodeDoms = this.$refs.qrcode
-//          console.log(qrcodeDoms)
         for (let i = 0; i < this.printData.length; i++) {
           qrcodeDoms[i].innerHTML = ''
           let qrcode = new QRCode(qrcodeDoms[i], {

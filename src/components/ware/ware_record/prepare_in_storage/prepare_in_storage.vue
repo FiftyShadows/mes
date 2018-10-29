@@ -167,8 +167,16 @@ export default {
         console.log(res)
         this.loading = false
         if (res.data.status === '200') {
-          this.tableData = res.data.data.data.list
-          this.total = res.data.data.data.total
+          if (!res.data.data.data) {
+            this.$notify({
+              type: 'warning',
+              title: '提示',
+              message: res.data.data.message
+            })
+          } else {
+            this.tableData = res.data.data.data.list
+            this.total = res.data.data.data.total
+          }
           // console.log(this.tableData)
         } else {
           this.$notify.error({

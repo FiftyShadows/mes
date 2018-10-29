@@ -523,7 +523,13 @@ export default {
   addBarcode (data) { // 短丝唛头--新增唛头
     return axios.post(`${baseWareUrl}/productCodeController/addBarcode`, data)
   },
-  getSelectCode (data) { // 短丝唛头-获取表格数据
+  getSelectCode (data) { // 短丝唛头--获取表格数据
     return axios.post(`${baseWareUrl}/productCodeController/selectCode`, data)
+  },
+  saynAllocationBySap (data) { // 销售调拨单--Sap调拨单同步
+    return axios.post(`${baseWareUrl}/mes/sapManagement/sap/saynAllocationBySap`, data)
+  },
+  selectAllocation (data) { // 销售调拨单--调拨单报表
+    return axios.post(`${baseWareUrl}/mes/sapManagement/sap/selectAllocation`, data)
   }
 }
