@@ -4,7 +4,7 @@
     <!-- 同步调拨单 -->
     <el-card class="box-card">
       <el-form :inline="true" :rules="rules" ref="sametimeForm" :model="sametimeForm" label-width="10px" class="demo-form-inline demo-ruleForm" style="float: left;">
-        <el-form-item label="">
+        <el-form-item label="" prop="factory">
           <el-input v-model="sametimeForm.factory" clearable placeholder="工厂编号"></el-input>
         </el-form-item>
         <el-form-item label="">
@@ -17,7 +17,7 @@
           <el-input v-model="sametimeForm.loadingSpot" clearable placeholder="装运点/接收点"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="success" @click="sameTime()">同步调拨单</el-button>
+          <el-button type="success" @click="sameTime('sametimeForm')">同步调拨单</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -107,7 +107,7 @@ export default {
       pageSize: 10,
       total: 0,
       rules: {
-        // factory: {required: true, message: '必输项', trigger: 'blur'},
+        factory: {required: true, message: '必输项', trigger: 'blur'}
         // date: {required: true, message: '必输项', trigger: 'change'},
         // requisitionId: {required: true, message: '必输项', trigger: 'blur'},
         // customerName: {required: true, message: '必输项', trigger: 'blur'},
@@ -129,8 +129,26 @@ export default {
       return moment(date).format('YYYY-MM-DD')
     },
     sameTime (formName) {
-      this.$api.saynAllocationBySap(this.sametimeForm).then(res => {
-        console.log(res)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.saynAllocationBySap(this.sametimeForm).then(res => {
+            console.log(res)
+            if (res.data.status === '200') {
+              this.$notify({
+                type: 'success',
+                title: '成功',
+                message: res.data.msg
+              })
+            } else {
+              this.$notify.error({
+                title: '错误',
+                message: res.data.msg
+              })
+            }
+          })
+        } else {
+          return false
+        }
       })
     },
     seachTableData () {

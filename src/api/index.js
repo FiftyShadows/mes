@@ -527,7 +527,7 @@ export default {
     return axios.post(`${baseWareUrl}/productCodeController/selectCode`, data)
   },
   saynAllocationBySap (data) { // 销售调拨单--Sap调拨单同步
-    return axios.post(`${baseWareUrl}/mes/sapManagement/sap/saynAllocationBySap`, data)
+    return axios.post(`${baseWareUrl}/mes/sapManagement/sap/synAllocationBySap`, data)
   },
   selectAllocation (data) { // 销售调拨单--调拨单报表
     return axios.post(`${baseWareUrl}/mes/sapManagement/sap/selectAllocation`, data)

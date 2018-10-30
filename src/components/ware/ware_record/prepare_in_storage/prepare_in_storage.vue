@@ -126,7 +126,7 @@ export default {
         houseName: this.seachForm.houseName
       }).then(res => {
         if (res.data.status === '200') {
-          console.log(res)
+          // console.log(res)
           this.batchNoOptions = res.data.data
         } else {
           this.$notify.error({
@@ -143,7 +143,6 @@ export default {
       }).then(res => {
         if (res.data.status === '200') {
           this.productOptions = res.data.data
-          // console.log()
         } else {
           this.$notify.error({
             title: '错误',
