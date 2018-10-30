@@ -304,3 +304,308 @@ http://localhost:8080/warehouseInfo/sapStorage/selectSapStorage
     },
     "token": null
 }
+
+新增唛头接口：http://192.168.129.97:8080/productCodeController/addBarcode
+参数
+{
+	"salesType":"内销",   //销售类型   ---数据字典调用   传入参数:销售类型
+	"batchNo":"AAM12345",   批号      
+	"sapStorage":"短纤测试库",   sap库存点  ----  http://192.168.129.97:8080/warehouseInfo/sapStorage/getSapStorage接口获取
+	"productTime":"2018-10-16",  入库时间
+	"productName":"短纤",   产品名称	----数据字典调用 传入参数:产品名称
+	"productType":"棉型",   产品类型	----数据字典调用 传入参数:选择的产品名称
+	"workshop":"短纤车间",  车间     -----http://192.168.129.97:8080/warehouseInfo/workshop/selectWorkshop
+	"line":"A1",           线别	-----数据字典调用  传入参数：选择的产品名称+线别
+	"classes":"甲",        班次	----数据字典调用  传入参数：班次
+	"level":"优等",       等级	----数据字典调用  传入参数：等级
+	"packageType":"人工打包",       ----数据字典调用  传入参数：打包方式
+	"netWeight":"380",      净重	
+	"count":"3"         唛头数量
+}
+
+返回参数
+{
+    "status": "200",
+    "msg": "成功",
+    "data": null,
+    "token": null
+}
+
+
+
+
+通用下拉接口 数据字典
+post请求
+http://localhost:8080/mes/system/dict/getDict
+传入参数：
+{
+"key":"班次"
+}
+
+返回参数：
+{
+"status": "200",
+"msg": "查询成功",
+"data":[
+{
+"dictValue": "白班",
+"dictKey": "bb"
+},
+{
+"dictValue": "晚班",
+"dictKey": "wb"
+},
+{
+"dictValue": "中班",
+"dictKey": "zb"
+}
+],
+"token": null
+}
+
+
+
+
+查询接口：http://192.168.129.97:8080/productCodeController/selectCode
+post请求
+参数:
+{
+	"workshop":"",
+	"line":"",
+	"classes":"",
+	"batchNo":"",
+	"level":"",
+	"startDate":"",
+	"endDate":"",
+	"page":"1",
+	"pageSize":"4"
+}
+
+返回参数
+{
+{
+    "status": "200",
+    "msg": "查询成功",
+    "data": {
+        "pageNum": 1,
+        "pageSize": 4,
+        "size": 4,
+        "startRow": 1,
+        "endRow": 4,
+        "total": 7,
+        "pages": 2,
+        "list": [
+            {
+                "id": 107,
+                "lotNumber": "010320181016AAM12345A110001",
+                "sublotNumber": "AAM12345",
+                "level": "优等",
+                "material": null,
+                "saleType": "内销",
+                "yoke": null,
+                "foamType": null,
+                "foamNum": null,
+                "netWeight": 380,
+                "packageType": "人工打包",
+                "silkCount": null,
+                "yarnKind": null,
+                "twistDirection": null,
+                "productTime": "2018-10-15T16:00:00.000+0000",
+                "lineName": "A1",
+                "classes": "甲",
+                "preStorage": null,
+                "printFlag": null,
+                "printCount": null,
+                "lgort": "短纤测试库",
+                "remark": null,
+                "isDeleted": null,
+                "createTime": null,
+                "modifiedTime": null,
+                "creatorId": null,
+                "modifierId": null,
+                "workshop": "短纤车间",
+                "productName": "短纤",
+                "productType": "棉型"
+            },
+            {
+                "id": 108,
+                "lotNumber": "010320181016AAM12345A110002",
+                "sublotNumber": "AAM12345",
+                "level": "优等",
+                "material": null,
+                "saleType": "内销",
+                "yoke": null,
+                "foamType": null,
+                "foamNum": null,
+                "netWeight": 380,
+                "packageType": "人工打包",
+                "silkCount": null,
+                "yarnKind": null,
+                "twistDirection": null,
+                "productTime": "2018-10-12T16:00:00.000+0000",
+                "lineName": "A1",
+                "classes": "甲",
+                "preStorage": null,
+                "printFlag": null,
+                "printCount": null,
+                "lgort": "短纤测试库",
+                "remark": null,
+                "isDeleted": null,
+                "createTime": null,
+                "modifiedTime": "2018-10-17T12:56:43.000+0000",
+                "creatorId": null,
+                "modifierId": null,
+                "workshop": "短纤车间",
+                "productName": "短纤",
+                "productType": "棉型"
+            },
+            {
+                "id": 109,
+                "lotNumber": "010320181016AAM12345A110003",
+                "sublotNumber": "AAM12345",
+                "level": "优等",
+                "material": null,
+                "saleType": "内销",
+                "yoke": null,
+                "foamType": null,
+                "foamNum": null,
+                "netWeight": 380,
+                "packageType": "人工打包",
+                "silkCount": null,
+                "yarnKind": null,
+                "twistDirection": null,
+                "productTime": "2018-10-13T16:00:00.000+0000",
+                "lineName": "A1",
+                "classes": "甲",
+                "preStorage": null,
+                "printFlag": null,
+                "printCount": null,
+                "lgort": "短纤测试库",
+                "remark": null,
+                "isDeleted": null,
+                "createTime": null,
+                "modifiedTime": "2018-10-17T12:56:51.000+0000",
+                "creatorId": null,
+                "modifierId": null,
+                "workshop": "短纤车间",
+                "productName": "短纤",
+                "productType": "棉型"
+            },
+            {
+                "id": 110,
+                "lotNumber": "010320181016AAM12345A110004",
+                "sublotNumber": "AAM12345",
+                "level": "优等",
+                "material": null,
+                "saleType": "内销",
+                "yoke": null,
+                "foamType": null,
+                "foamNum": null,
+                "netWeight": 380,
+                "packageType": "人工打包",
+                "silkCount": null,
+                "yarnKind": null,
+                "twistDirection": null,
+                "productTime": "2018-10-11T16:00:00.000+0000",
+                "lineName": "A1",
+                "classes": "甲",
+                "preStorage": null,
+                "printFlag": null,
+                "printCount": null,
+                "lgort": "短纤测试库",
+                "remark": null,
+                "isDeleted": null,
+                "createTime": null,
+                "modifiedTime": "2018-10-17T12:56:57.000+0000",
+                "creatorId": null,
+                "modifierId": null,
+                "workshop": "短纤车间",
+                "productName": "短纤",
+                "productType": "棉型"
+            }
+        ],
+        "prePage": 0,
+        "nextPage": 2,
+        "isFirstPage": true,
+        "isLastPage": false,
+        "hasPreviousPage": false,
+        "hasNextPage": true,
+        "navigatePages": 8,
+        "navigatepageNums": [
+            1,
+            2
+        ],
+        "navigateFirstPage": 1,
+        "navigateLastPage": 2,
+        "firstPage": 1,
+        "lastPage": 2
+    },
+    "token": null
+}}
+
+
+
+
+待入库和已入库接口：
+http://192.168.129.78:8080//warehouseInfo/InboundRecord/getPageInroundRecordList
+{
+	"sublotNumber":"",
+	"houseName":"",  仓库名称
+	"lotNumber":"",  码单号
+	"productName":"POY"，产品名
+	"startTime":"",  开始时间
+	"endTime":"",    结束时间
+	"pageNum":1,    
+	"pageSize":10,
+	"synSap":"N"  待入库为N，已入库为Y
+}
+
+返回参数
+{
+    "status": "200",
+    "msg": "查询成功",
+    "data": {
+        "messageType": 1,
+        "message": "查询未入库成功",
+        "data": {
+            "pageNum": 1,
+            "pageSize": 10,
+            "size": 1,
+            "startRow": 1,
+            "endRow": 1,
+            "total": 1,
+            "pages": 1,
+            "list": [
+                {
+                    "id": null,
+                    "spec": "178dtex/72f",
+                    "houseName": "POY仓库",
+                    "lotNumber": "020120180930GC11023C230001",
+                    "productName": "POY",
+                    "sublotNumber": "GC11023",
+                    "saleType": "内销",
+                    "level": "AA",
+                    "yoke": "木架托盘",
+                    "packageType": "人工打包",
+                    "transDate": "2018-09-29T16:00:00.000+0000",  入库时间
+                    "username": "admin"
+                }
+            ],
+            "prePage": 0,
+            "nextPage": 0,
+            "isFirstPage": true,
+            "isLastPage": true,
+            "hasPreviousPage": false,
+            "hasNextPage": false,
+            "navigatePages": 8,
+            "navigatepageNums": [
+                1
+            ],
+            "navigateFirstPage": 1,
+            "navigateLastPage": 1,
+            "lastPage": 1,
+            "firstPage": 1
+        }
+    },
+    "token": null
+}

@@ -8,7 +8,7 @@
       </el-form-item>
       <el-form-item label="" prop="Batch" class="floatLeft">
         <el-select v-model="seachForm.batchNo" filterable clearable placeholder="请选择批号">
-          <el-option v-for="item in batchNoOptions" :key="item.batchNo" :label="item.batchNo" :value="item.batchNo"></el-option>
+          <el-option v-for="item in batchNoOptions" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="username" class="floatLeft">
@@ -96,6 +96,7 @@ export default {
     getBatchList () {
       this.$api.getBatchList().then(res => {
         this.batchNoOptions = res.data.data
+        console.log(this.batchNoOptions)
       })
     },
     getSelectWarehouseList () {

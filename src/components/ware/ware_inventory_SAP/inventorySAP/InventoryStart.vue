@@ -8,17 +8,17 @@
       </el-form-item>
       <el-form-item label="" prop="Batch" class="floatLeft">
         <el-select v-model="seachForm.batchNo" filterable clearable placeholder="请选择批号">
-          <el-option v-for="item in batchNoOptions" :key="item.batchNo" :label="item.batchNo" :value="item.batchNo"></el-option>
+          <el-option v-for="item in batchNoOptions" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="" prop="level" class="floatLeft">
+        <el-select v-model="seachForm.level" filterable clearable placeholder="请选择等级">
+          <el-option v-for="item in levelOption" :key="item.dictKey" :label="item.dictValue" :value="item.dictValue"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="classes" class="floatLeft">
-        <el-select v-model="seachForm.batchNo" filterable clearable placeholder="请选择等级">
-          <el-option v-for="item in batchNoOptions" :key="item.batchNo" :label="item.batchNo" :value="item.batchNo"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="" prop="classes" class="floatLeft">
-        <el-select v-model="seachForm.batchNo" filterable clearable placeholder="请选择班次">
-          <el-option v-for="item in batchNoOptions" :key="item.batchNo" :label="item.batchNo" :value="item.batchNo"></el-option>
+        <el-select v-model="seachForm.classes" filterable clearable placeholder="请选择班次">
+          <el-option v-for="item in classesOption" :key="item.dictKey" :label="item.dictValue" :value="item.dictValue"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="startDate" class="floatLeft">
@@ -139,12 +139,16 @@ export default {
       seachForm: { // 搜索列表数据
         batchNo: '', // 批次
         houseId: '', // 仓库id
+        level: '',
+        classes: '',
         username: '', // 盘点人
         startDate: '', // 开始日期
         endDate: '' // 结束日期
       },
       batchNoOptions: [], // 批号选择列表
       warehouseOptions: [], // 仓库列表
+      levelOption: [], // 等级列表
+      classesOption: [], // 班次列表
       stocktakingRecordId: '',
       tableData: [], // 列表数据
       gridData: [], // 漏扫列表数据
@@ -159,8 +163,22 @@ export default {
     }
   },
   created () {
-    this.getBatchList()
-    this.getSelectWarehouseList()
+    // this.getBatchList()
+    // this.getSelectWarehouseList()
+    this.$api.getBatchList().then(res => {
+      this.batchNoOptions = res.data.data
+    })
+    this.$api.getSelectWarehouseList().then(res => {
+      this.warehouseOptions = res.data.data
+    })
+    this.$api.getDict({key: '班次'}).then(res => {
+      console.log(this.classesOption)
+      this.classesOption = res.data.data
+    })
+    this.$api.getDict({key: '等级'}).then(res => {
+      console.log(res)
+      this.levelOption = res.data.data
+    })
   },
   methods: {
     dateFormat (row, column) {
@@ -170,16 +188,16 @@ export default {
       }
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
-    getBatchList () {
-      this.$api.getBatchList().then(res => {
-        this.batchNoOptions = res.data.data
-      })
-    },
-    getSelectWarehouseList () {
-      this.$api.getSelectWarehouseList().then(res => {
-        this.warehouseOptions = res.data.data
-      })
-    },
+    // getBatchList () {
+    //   this.$api.getBatchList().then(res => {
+    //     this.batchNoOptions = res.data.data
+    //   })
+    // },
+    // getSelectWarehouseList () {
+    //   this.$api.getSelectWarehouseList().then(res => {
+    //     this.warehouseOptions = res.data.data
+    //   })
+    // },
     seachTableData (formName) {
       console.log(this.warehouseOptions)
       // this.loading = true
