@@ -23,7 +23,9 @@
     </el-pagination>
     <el-dialog title="添加用户" :visible.sync="dialogSeach">
       <el-input v-model.trim="seacrhAll" @input="seachAllUsers()" placeholder="请输入..." style="width: 60%;"></el-input>
-      <el-table ref="singleTable" :data="tableData2" highlight-current-row @current-change="handleChange" style="width: 100%">
+      <el-table ref="singleTable" @selection-change="handleSelectionChange" :data="tableData2" highlight-current-row @current-change="handleChange" style="width: 100%" >
+        <el-table-column type="selection" width="50">
+        </el-table-column>
         <el-table-column type="index" width="50">
         </el-table-column>
         <el-table-column property="name" label="名字">
@@ -32,9 +34,14 @@
         </el-table-column>
         <el-table-column property="oaId" label="oaId">
         </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="addUser(scope.row)"></el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div style="margin-top: 20px">
-        <el-button type="primary" @click="addUser()">添 加</el-button>
+        <el-button type="primary" @click="addUsers()">添 加</el-button>
       </div>
     </el-dialog>
     <el-dialog :title="`${form.name}——权限设置`" :visible.sync="dialogSetAdmin">
@@ -160,8 +167,20 @@ export default {
         this.loading = false
       })
     },
-    addUser () {
+    addUsers () {
       this.$api.addUser(this.multipleSelection).then(res => {
+        console.log(res)
+        this.dialogSeach = false
+        this.getUsers()
+        this.$notify({
+          title: '成功',
+          message: '添加成功',
+          type: 'success'
+        })
+      })
+    },
+    addUser (row) {
+      this.$api.addUser(row).then(res => {
         console.log(res)
         this.dialogSeach = false
         this.getUsers()
@@ -276,6 +295,9 @@ export default {
       this.first = (--val) * this.pageSize
       console.log(`当前页: ${this.first}`)
       this.getUsers(this.pageSize, this.first, this.seacrhUsers)
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
     }
   }
 }

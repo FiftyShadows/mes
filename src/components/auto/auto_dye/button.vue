@@ -5,7 +5,12 @@
       width="400"
       trigger="manual"
       v-model="visible">
-      <el-form>
+      <el-form :model="form">
+        <!--<el-form-item v-for="formItem in from" :label="formItem.name" :key="formItem.id">-->
+          <!--<el-select v-model="formItem.value" placeholder="请选择">-->
+            <!--<el-option v-for="option in formItem.selectOptions" :key="option" :label="option" :value="option"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item label="灰卡级别">
           <!--<el-select></el-select>-->
         </el-form-item>
@@ -48,10 +53,11 @@
 <script>
 let time = null
 export default {
-  props: ['face', 'row', 'col', 'register', 'allFlag', 'resetFlag'],
+  props: ['face', 'row', 'col', 'register', 'allFlag', 'resetFlag', 'product'],
   name: 'Buttons',
   data () {
     return {
+      form: {},
       radio1: '1',
       radio2: '2',
       radio3: 'F',
@@ -60,6 +66,14 @@ export default {
       buttonColorFlag: false,
       checkFlag: false
     }
+  },
+  created () {
+    // this.$api.getDyeingInfo(this.product).then(res => {
+    //   this.form = res.data.config
+    //   this.form.forEach((item, i) => {
+    //     item.value = ''
+    //   })
+    // })
   },
   watch: {
     register: {

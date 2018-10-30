@@ -1,48 +1,70 @@
 <template>
-  <div class="dyeing">
-    <el-row type="flex" :gutter="20">
-      <el-col :span="1" class="checkAll">
-        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+  <div class='dyeing'>
+    <el-row type='flex' :gutter='20'>
+      <el-col :span='1' class='checkAll'>
+        <el-checkbox :indeterminate='isIndeterminate' v-model='checkAll' @change='handleCheckAllChange'>全选</el-checkbox>
       </el-col>
-      <el-col :span="3">
-        <el-input v-model="userId" placeholder="请输入织袜工号" class="userId"></el-input>
+      <el-col :span='3'>
+        <el-input v-model='userId' placeholder='请输入车间' class='userId'></el-input>
       </el-col>
-      <el-col :span="5">
+      <el-col :span='3'>
+        <el-input v-model='userId' placeholder='请输入织袜工号' class='userId'></el-input>
+      </el-col>
+      <el-col :span='5'>
         <el-date-picker
-          v-model="startTime"
-          type="datetime"
-          placeholder="请选择织袜开始时间"
-          align="right"
-          :picker-options="pickerOptions1">
+          v-model='startDate'
+          type='date'
+          placeholder='请选择织袜开始时间'
+          align='right'
+          :picker-options='pickerOptions'
+          value-format='yyyy-MM-dd'>
         </el-date-picker>
       </el-col>
-      <el-col :span="5">
+      <el-col :span='5'>
         <el-date-picker
-          v-model="endTime"
-          type="datetime"
-          placeholder="请选择织袜结束时间"
-          align="right"
-          :picker-options="pickerOptions1">
+          v-model='endDate'
+          type='date'
+          placeholder='请选择织袜结束时间'
+          align='right'
+          :picker-options='pickerOptions'
+          value-format='yyyy-MM-dd'>
         </el-date-picker>
       </el-col>
-      <el-button icon="el-icon-search" type="primary" @click="search()"></el-button>
-      <el-button @click="batchSubmit()" type="primary">提交</el-button>
+      <el-button icon='el-icon-search' type='primary' @click='search()'></el-button>
+      <el-button @click='batchSubmit()' type='primary'>提交</el-button>
     </el-row>
-    <template v-for="(silkCar, index) in silkCars">
-      <silk-car-component @changeIsIndeterminate="changeIsIndeterminate" :silkCars="silkCars" :index="index" :silkCar="silkCar" :key="index" style="margin-top: 10px"></silk-car-component>
-    </template>
+    <div v-for='(dyeingPrepare, index) in dyeingPrepares' :key='index' v-loading='loading'>
+        <dyeing-record-component
+          :checkAll='checkAll'
+          @changeIsIndeterminate='changeIsIndeterminate'
+          @changeCheckAll='changeCheckAll'
+          :dyeingPrepares='dyeingPrepares'
+          :index='index'
+          :dyeingPrepare='dyeingPrepare'
+          :key='index'
+          style='margin-top: 10px'>
+        </dyeing-record-component>
+    </div>
+    <Pagination :total='total' :page-size='pageSize' :page-num='pageNum' @changePage='changePage'></Pagination>
   </div>
 </template>
 <script>
-import silkCarComponent from './silkCar-component'
+import dyeingRecordComponent from './dyeing-record-component'
+import Pagination from '../../common/pagination.vue'
 export default {
   name: 'dyeing',
   components: {
-    'silk-car-component': silkCarComponent
+    'Pagination': Pagination,
+    'dyeing-record-component': dyeingRecordComponent
   },
+  computed: {},
   data () {
     return {
-      pickerOptions1: {
+      loading: false,
+      total: 0,
+      pageSize: 50,
+      pageNum: 0,
+      pickerOptions: {
         shortcuts: [{
           text: '今天',
           onClick (picker) {
@@ -65,101 +87,617 @@ export default {
         }]
       },
       userId: '',
-      startTime: this.util.getCurrentFormatDateSE().startTime,
-      endTime: this.util.getCurrentFormatDateSE().endTime,
+      startDate: this.util.getNowFormatDate(),
+      endDate: this.util.getNowFormatDate(),
       isIndeterminate: false,
-      silkCars: [
-        {// 1次织袜一车一位的demo
-          id: 1,
-          rows: 4, // 丝车行数
-          cols: 4, // 丝车列数
-          silkCarCode: '3000F2200',
-          StockingTime: this.util.getCurrentFormatDateSE().startTime,
-          batchNumber: 'D30111',
-          line: 'D1',
-          itemFallOrders: ['1/C1'],
-          StockingType: '单织',
-          userId: '1000',
-          doffingType: '自动落筒',
-          doffingTime: this.util.getCurrentFormatDateSE().startTime,
-          value: '车1',
-          checkFlag: false,
-          num: 1,
-          silkDetail: {
-            note: '测试'
-          }
+      checkAll: false,
+      dyeingPrepares: [
+        {
+          id: 'string',
+          type: 'FIRST',
+          silkCarRecord: {
+            id: '1',
+            silkCar: {
+              id: '5b6ed118ee3d0a0926707597',
+              createDateTime: 1533989144000,
+              modifyDateTime: 1533989144000,
+              type: 'DEFAULT',
+              number: 'C34001',
+              code: '3000C34001',
+              row: 3,
+              col: 4
+            },
+            batch: {
+              id: 'string',
+              batchNo: 'string',
+              silkWeight: 0,
+              centralValue: 0,
+              holeNum: 0,
+              spec: 'string',
+              tubeColor: 'string',
+              note: 'string',
+              workshop: {
+                id: 'string',
+                code: 'string',
+                name: 'string',
+                note: 'string',
+                corporation: {
+                  id: 'string',
+                  name: 'string'
+                }
+              },
+              product: {
+                id: '5bd1a966885d3b67042ac5f1',
+                name: 'FDY',
+                code: 'FDY'
+              }
+            },
+            grade: {
+              id: 'string',
+              name: 'string',
+              sortBy: 'string'
+            },
+            doffingDateTime: '1',
+            carpoolDateTime: '1'
+          },
+          silks: [{
+            id: 'string',
+            code: 'string',
+            doffingNum: 'string',
+            doffingOperator: {
+              roles: [
+                'string'
+              ],
+              permissions: [
+                'string'
+              ],
+              id: 'string',
+              hrId: 'string',
+              oaId: 'string',
+              name: 'string',
+              admin: true,
+              groups: [
+                {
+                  roles: [
+                    'string'
+                  ],
+                  permissions: [
+                    'string'
+                  ],
+                  id: 'string',
+                  name: 'string'
+                }
+              ]
+            }
+          }],
+          silkDyeingSample: {
+            id: 'string',
+            silk: {
+              id: 'string',
+              code: 'string',
+              doffingNum: 'string',
+              doffingOperator: {
+                roles: [
+                  'string'
+                ],
+                permissions: [
+                  'string'
+                ],
+                id: 'string',
+                hrId: 'string',
+                oaId: 'string',
+                name: 'string',
+                admin: true,
+                groups: [
+                  {
+                    roles: [
+                      'string'
+                    ],
+                    permissions: [
+                      'string'
+                    ],
+                    id: 'string',
+                    name: 'string'
+                  }
+                ]
+              }
+            }
+          },
+          silkCarRecord1: {
+            id: 'string',
+            batch: {
+              id: 'string',
+              batchNo: 'string',
+              silkWeight: 0,
+              centralValue: 0,
+              holeNum: 0,
+              spec: 'string',
+              tubeColor: 'string',
+              note: 'string',
+              workshop: {
+                id: 'string',
+                code: 'string',
+                name: 'string',
+                note: 'string',
+                corporation: {
+                  id: 'string',
+                  name: 'string'
+                }
+              },
+              product: {
+                id: '5bd1a966885d3b67042ac5f1',
+                name: 'FDY',
+                code: 'FDY'
+              }
+            },
+            silkCar: {
+              id: 'string',
+              code: 'string'
+            },
+            grade: {
+              id: 'string',
+              name: 'string',
+              sortBy: 'string'
+            },
+            doffingDateTime: '1',
+            carpoolDateTime: '1'
+          },
+          silks1: {
+            id: 'string',
+            code: 'string',
+            doffingNum: 'string',
+            doffingOperator: {
+              roles: [
+                'string'
+              ],
+              permissions: [
+                'string'
+              ],
+              id: 'string',
+              hrId: 'string',
+              oaId: 'string',
+              name: 'string',
+              admin: true,
+              groups: [
+                {
+                  roles: [
+                    'string'
+                  ],
+                  permissions: [
+                    'string'
+                  ],
+                  id: 'string',
+                  name: 'string'
+                }
+              ]
+            }
+          },
+          silkCarRecord2: {
+            id: 'string',
+            silkCar: {
+              id: 'string',
+              code: 'string'
+            },
+            batch: {
+              id: 'string',
+              batchNo: 'string',
+              silkWeight: 0,
+              centralValue: 0,
+              holeNum: 0,
+              spec: 'string',
+              tubeColor: 'string',
+              note: 'string',
+              workshop: {
+                id: 'string',
+                code: 'string',
+                name: 'string',
+                note: 'string',
+                corporation: {
+                  id: 'string',
+                  name: 'string'
+                }
+              },
+              product: {
+                id: '5bd1a966885d3b67042ac5f1',
+                name: 'FDY',
+                code: 'FDY'
+              }
+            },
+            grade: {
+              id: 'string',
+              name: 'string',
+              sortBy: 'string'
+            },
+            doffingDateTime: '1',
+            carpoolDateTime: '1'
+          },
+          silks2: [
+            {
+              id: 'string',
+              code: 'string',
+              doffingNum: 'string',
+              doffingOperator: {
+                roles: [
+                  'string'
+                ],
+                permissions: [
+                  'string'
+                ],
+                id: 'string',
+                hrId: 'string',
+                oaId: 'string',
+                name: 'string',
+                admin: true,
+                groups: [
+                  {
+                    roles: [
+                      'string'
+                    ],
+                    permissions: [
+                      'string'
+                    ],
+                    id: 'string',
+                    name: 'string'
+                  }
+                ]
+              }
+            }
+          ],
+          creator: {
+            roles: [
+              'string'
+            ],
+            permissions: [
+              'string'
+            ],
+            id: 'string',
+            hrId: 'string',
+            oaId: 'string',
+            name: 'string',
+            admin: true,
+            groups: [
+              {
+                roles: [
+                  'string'
+                ],
+                permissions: [
+                  'string'
+                ],
+                id: 'string',
+                name: 'string'
+              }
+            ]
+          },
+          cdt: 'string',
+          dyeingResults: []
         },
-        {// 1次织袜一车多位的demo
-          id: 2,
-          rows: 4, // 丝车行数
-          cols: 6, // 丝车列数
-          silkCarCode: '3000F2201',
-          StockingTime: this.util.getCurrentFormatDateSE().startTime,
-          batchNumber: 'D30112',
-          line: 'D2',
-          itemFallOrders: ['1/C1', '2/C2', '3/C3', '4/C4'],
-          StockingType: '位与位',
-          userId: '1000',
-          doffingType: '自动落筒',
-          doffingTime: this.util.getCurrentFormatDateSE().startTime,
-          value: '车1',
-          checkFlag: false,
-          num: 1,
-          silkDetail: {
-            note: '测试'
-          }
-        },
-        {// 多次织袜（拼车）
-          id: 3,
-          rows: 4, // 丝车行数
-          cols: 6, // 丝车列数
-          silkCarCode: '3000F2201',
-          StockingTime: this.util.getCurrentFormatDateSE().startTime,
-          batchNumber: 'D30112',
-          line: 'D2',
-          itemFallOrders: ['1/C1'],
-          StockingType: '单织',
-          userId: '1000',
-          doffingType: '自动落筒',
-          doffingTime: this.util.getCurrentFormatDateSE().startTime,
-          value: '车1',
-          checkFlag: false,
-          num: 3,
-          silkDetail: {
-            note: '测试'
-          }
-        }],
-      checkedSilkCars: [],
-      checkAll: false
+        {
+          id: 'string',
+          type: 'CROSS_LINEMACHINE_LINEMACHINE',
+          silkCarRecord: {
+            id: '1',
+            silkCar: {
+              id: '5b6ed118ee3d0a0926707597',
+              createDateTime: 1533989144000,
+              modifyDateTime: 1533989144000,
+              type: 'DEFAULT',
+              number: 'C34001',
+              code: '3000C34001',
+              row: 3,
+              col: 4
+            },
+            batch: {
+              id: 'string',
+              batchNo: 'string',
+              silkWeight: 0,
+              centralValue: 0,
+              holeNum: 0,
+              spec: 'string',
+              tubeColor: 'string',
+              note: 'string',
+              workshop: {
+                id: 'string',
+                code: 'string',
+                name: 'string',
+                note: 'string',
+                corporation: {
+                  id: 'string',
+                  name: 'string'
+                }
+              },
+              product: {
+                id: '5bd1a966885d3b67042ac5f1',
+                name: 'FDY',
+                code: 'FDY'
+              }
+            },
+            grade: {
+              id: 'string',
+              name: 'string',
+              sortBy: 'string'
+            },
+            doffingDateTime: 0,
+            carpoolDateTime: 0
+          },
+          silks: {
+            id: 'string',
+            code: 'string',
+            doffingNum: 'string',
+            doffingOperator: {
+              roles: [
+                'string'
+              ],
+              permissions: [
+                'string'
+              ],
+              id: 'string',
+              hrId: 'string',
+              oaId: 'string',
+              name: 'string',
+              admin: true,
+              groups: [
+                {
+                  roles: [
+                    'string'
+                  ],
+                  permissions: [
+                    'string'
+                  ],
+                  id: 'string',
+                  name: 'string'
+                }
+              ]
+            }
+          },
+          silkDyeingSample: {
+            id: 'string',
+            silk: {
+              id: 'string',
+              code: 'string',
+              doffingNum: 'string',
+              doffingOperator: {
+                roles: [
+                  'string'
+                ],
+                permissions: [
+                  'string'
+                ],
+                id: 'string',
+                hrId: 'string',
+                oaId: 'string',
+                name: 'string',
+                admin: true,
+                groups: [
+                  {
+                    roles: [
+                      'string'
+                    ],
+                    permissions: [
+                      'string'
+                    ],
+                    id: 'string',
+                    name: 'string'
+                  }
+                ]
+              }
+            }
+          },
+          silkCarRecord1: {
+            id: 'string',
+            batch: {
+              id: 'string',
+              batchNo: 'string',
+              silkWeight: 0,
+              centralValue: 0,
+              holeNum: 0,
+              spec: 'string',
+              tubeColor: 'string',
+              note: 'string',
+              workshop: {
+                id: 'string',
+                code: 'string',
+                name: 'string',
+                note: 'string',
+                corporation: {
+                  id: 'string',
+                  name: 'string'
+                }
+              },
+              product: {
+                id: '5bd1a966885d3b67042ac5f1',
+                name: 'FDY',
+                code: 'FDY'
+              }
+            },
+            silkCar: {
+              id: 'string',
+              code: 'string'
+            },
+            grade: {
+              id: 'string',
+              name: 'string',
+              sortBy: 'string'
+            },
+            doffingDateTime: 0,
+            carpoolDateTime: 0
+          },
+          silks1: {
+            id: 'string',
+            code: 'string',
+            doffingNum: 'string',
+            doffingOperator: {
+              roles: [
+                'string'
+              ],
+              permissions: [
+                'string'
+              ],
+              id: 'string',
+              hrId: 'string',
+              oaId: 'string',
+              name: 'string',
+              admin: true,
+              groups: [
+                {
+                  roles: [
+                    'string'
+                  ],
+                  permissions: [
+                    'string'
+                  ],
+                  id: 'string',
+                  name: 'string'
+                }
+              ]
+            }
+          },
+          silkCarRecord2: {
+            id: 'string',
+            silkCar: {
+              id: 'string',
+              code: 'string'
+            },
+            batch: {
+              id: 'string',
+              batchNo: 'string',
+              silkWeight: 0,
+              centralValue: 0,
+              holeNum: 0,
+              spec: 'string',
+              tubeColor: 'string',
+              note: 'string',
+              workshop: {
+                id: 'string',
+                code: 'string',
+                name: 'string',
+                note: 'string',
+                corporation: {
+                  id: 'string',
+                  name: 'string'
+                }
+              },
+              product: {
+                id: '5bd1a966885d3b67042ac5f1',
+                name: 'FDY',
+                code: 'FDY'
+              }
+            },
+            grade: {
+              id: 'string',
+              name: 'string',
+              sortBy: 'string'
+            },
+            doffingDateTime: 0,
+            carpoolDateTime: 0
+          },
+          silks2: [
+            {
+              id: 'string',
+              code: 'string',
+              doffingNum: 'string',
+              doffingOperator: {
+                roles: [
+                  'string'
+                ],
+                permissions: [
+                  'string'
+                ],
+                id: 'string',
+                hrId: 'string',
+                oaId: 'string',
+                name: 'string',
+                admin: true,
+                groups: [
+                  {
+                    roles: [
+                      'string'
+                    ],
+                    permissions: [
+                      'string'
+                    ],
+                    id: 'string',
+                    name: 'string'
+                  }
+                ]
+              }
+            }
+          ],
+          creator: {
+            roles: [
+              'string'
+            ],
+            permissions: [
+              'string'
+            ],
+            id: 'string',
+            hrId: 'string',
+            oaId: 'string',
+            name: 'string',
+            admin: true,
+            groups: [
+              {
+                roles: [
+                  'string'
+                ],
+                permissions: [
+                  'string'
+                ],
+                id: 'string',
+                name: 'string'
+              }
+            ]
+          },
+          cdt: 'string',
+          dyeingResults: []
+        }]
     }
   },
-  created () {},
+  created () {
+  },
   methods: {
     search () {
-      console.log('搜索')
+      this.loading = true
+      let params = {
+        first: this.pageNum,
+        pageSize: this.pageSize,
+        codeDate: '',
+        hrIdQ: this.userId,
+        startDate: this.startDate,
+        endDate: this.endDate
+      }
+      this.$api.getDyeingPrepares(params).then(res => {
+        console.log(res.data)
+        this.loading = false
+      })
     },
     batchSubmit () {
+      console.log()
       console.log('批次提交')
     },
     handleCheckAllChange (val) {
+      this.isIndeterminate = false
+      let arr = [...this.dyeingPrepares]
       if (val) {
-        this.silkCars.forEach((item) => {
-          item.checkFlag = true
-        })
-        this.isIndeterminate = false
+        this.$store.commit('CheckedDyeingPrepares', arr)
       } else {
-        this.silkCars.forEach((item) => {
-          item.checkFlag = false
-        })
+        this.$store.commit('CheckedDyeingPrepares', [])
       }
     },
     changeIsIndeterminate (val) {
       this.isIndeterminate = val
+    },
+    changeCheckAll (val) {
+      this.checkAll = val
+    },
+    changePage (value) {
+      this.pageNum = value.pageNum
+      this.pageSize = value.pageSize
+      this.seachTableData('seachForm')
     }
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang='scss' scoped>
   .dyeing {
     width: 105%;
     height: 95%;

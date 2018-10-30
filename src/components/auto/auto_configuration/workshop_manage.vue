@@ -7,6 +7,8 @@
       </el-table-column>
       <el-table-column prop="name" label="名称">
       </el-table-column>
+      <el-table-column prop="code" label="车间代码">
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">修 改</el-button>
@@ -21,6 +23,9 @@
         <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
           <el-input v-model="form1.name" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item label="车间编码" prop="code" :label-width="formLabelWidth" required>
+          <el-input v-model="form1.code" auto-complete="off"></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleAdd = false">取 消</el-button>
@@ -34,6 +39,9 @@
         </el-form-item>
         <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
           <el-input v-model="form2.name" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="编码" prop="code" :label-width="formLabelWidth" required>
+          <el-input v-model="form2.code" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -55,18 +63,21 @@ export default {
       formLabelWidth: '80px',
       form1: {
         company: '高新',
-        name: ''
+        name: '',
+        code: ''
       },
       form2: {
         company: '',
         name: '',
+        code: '',
         id: '',
         corporation: {}
       },
       workshop: {},
       rules: {
         name: [{ required: true, message: '必输项...', trigger: 'blur' }],
-        company: [{ required: true, message: '必输项...', trigger: 'blur' }]
+        company: [{ required: true, message: '必输项...', trigger: 'blur' }],
+        code: [{ required: true, message: '必输项...', trigger: 'blur' }]
       }
     }
   },
@@ -93,6 +104,7 @@ export default {
           this.$api.createWorkshop({
             id: null,
             name: this.form1.name,
+            code: this.form1.code,
             note: null,
             corporation: this.workshop
           }).then(res => {
@@ -115,6 +127,7 @@ export default {
       this.form2.company = row.corporation.name
       this.form2.name = row.name
       this.form2.id = row.id
+      this.form2.code = row.code
       this.form2.corporation = row.corporation
     },
     SaveWorkShop (formName) {
@@ -123,6 +136,7 @@ export default {
           this.$api.updateWorkshop({
             id: this.form2.id,
             name: this.form2.name,
+            code: this.form2.code,
             note: null,
             corporation: this.form2.corporation
           }).then(res => {

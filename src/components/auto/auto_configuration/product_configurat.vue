@@ -27,21 +27,22 @@
               <el-form-item label="" prop="exceptions">
                 <el-tag type="info" style="float: left; width: 100%;text-align: left;">
                   丝锭异常
-                  <el-button size="mini" type="danger" style="float: right;" @click="saveExceptions(index)">修改</el-button>
+                  <el-button size="mini" type="primary" style="float: right;" @click="saveExceptions(index)">修改</el-button>
                 </el-tag>
-                <el-button size="mini" type="danger" v-for="list in item.exceptions" plain round :key="list.name">{{list.name}}</el-button>
+                <el-button size="mini" type="primary" v-for="list in item.exceptions" plain round :key="list.name">{{list.name}}</el-button>
               </el-form-item>
               <el-form-item label="" prop="exceptions">
                 <el-tag type="info" style="float: left; width: 100%;text-align: left;">
                   丝锭备注
-                  <el-button size="mini" type="danger" style="float: right;" @click="openNotes(index)">修改</el-button>
+                  <el-button size="mini" type="primary" style="float: right;" @click="openNotes(index)">修改</el-button>
                 </el-tag>
                 <el-button size="mini" type="info" v-for="list in item.notes" plain round :key="list.name">{{list.name}}</el-button>
               </el-form-item>
               <el-form-item label="" prop="formConfig">
                 <el-tag type="info" style="float: left; width: 100%;text-align: left;">
                   {{item.formConfig ? item.formConfig.name : '表单模板'}}
-                  <el-button size="mini" type="danger" style="float: right;" @click="openForms(index)">修改</el-button>
+                  <el-button size="mini" type="primary" style="float: right;" @click="openForms(index)">修改</el-button>
+                  <el-button size="mini" type="danger" style="float: right;" @click="clearForms(index)">清空表单</el-button>
                 </el-tag>
                 <template v-if="item.formConfig">
                   <div class="Form" v-for="item in item.formConfig.formFieldConfigs" :key="item.id">
@@ -60,6 +61,36 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="submitForm(index, 'item')" style="width: 100%;">保存</el-button>
+              </el-form-item>
+            </el-form>
+          </el-collapse-item>
+        </el-collapse>
+        <el-tag type="success" style="width: 100%;text-align: left;height: 50px;line-height: 50px;">
+          染判配置
+          <el-button size="mini" type="primary" style="float: right; margin: 10px;" @click="openForms()">修改</el-button>
+          <el-button size="mini" type="danger" style="float: right; margin: 10px;" @click="clearForms()">清空表单</el-button>
+        </el-tag>
+        <el-collapse v-model="dyeingCollapse" accordion @change="handleChange(tab)">
+          <el-collapse-item title="染判模板">
+            <el-form :model="dyeingForm" label-width="100px">
+              <el-form-item>
+                <template v-if="dyeingForm">
+                  <div class="Form" v-for="item in dyeingForm.formFieldConfigs" :key="item.id">
+                  <el-tag type="info">{{item.name}}</el-tag>
+                  <el-input-number v-if="item.valueType === 'NUMBER' && item.inputType !== 'SELECTION'" label="请输入"></el-input-number>
+                  <el-input v-if="item.valueType === 'STRING' && item.inputType !== 'SELECTION'" placeholder="请输入内容" style="width: 60%;"></el-input>
+                  <el-select v-model="item.val" v-if="item.inputType === 'SELECTION' && item.valueType !== 'BOOLEAN'" placeholder="请选择">
+                  <el-option v-for="item in item.selectOptions" :key="item" :label="item" :value="item"></el-option>
+                  </el-select>
+                  <el-select v-model="item.val" v-if="item.valueType === 'BOOLEAN'" placeholder="请选择">
+                  <el-option label="是" value="true"></el-option>
+                  <el-option label="否" value="false"></el-option>
+                  </el-select>
+                  </div>
+                </template>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="addDyeingForm(tab)" style="width: 100%;">保存</el-button>
               </el-form-item>
             </el-form>
           </el-collapse-item>
@@ -283,6 +314,8 @@ export default {
       index: '',
       selectId: '',
       activeColapse: '',
+      dyeingCollapse: '',
+      dyeingForm: {},
       activeTabs: '',
       tabs: {},
       tabType: '',
@@ -392,6 +425,7 @@ export default {
   },
   created () {
     this.selectId = this.$route.query.name
+    // this.dyeingForm = this.$route.query.dyeingFormConfig
     this.getTabsTitles()
   },
   methods: {
@@ -409,7 +443,6 @@ export default {
           formFieldConfigs: []
         }
       }
-      // console.log(this.tabs)
       for (let i = 0; i < this.tabs.length; i++) {
         if (name === this.tabs[i].name) {
           name = this.tabs[i]
@@ -419,14 +452,12 @@ export default {
       this.dialogVisibleAddProesses = true
     },
     checkbox (index) {
-      console.log(this.totalData[index])
     },
     getTabsTitles () {
       this.fullscreenLoading = true // 添加loading
       this.$api.getProduct().then(res => {
         this.tabs = res.data
         this.activeTabs = this.selectId
-        console.log(this.activeTabs)
         let product = {
           name: this.activeTabs
         }
@@ -436,7 +467,6 @@ export default {
     },
     handleClick (tab, event) {
       this.tabType = tab.name
-      console.log(this.tabType)
       for (let i = 0; i < this.tabs.length; i++) {
         if (this.tabs[i].name === this.tabType) {
           this.tabData = this.tabs[i]
@@ -447,7 +477,6 @@ export default {
           return a.sortBy - b.sortBy
         })
         this.activeColapse = this.totalData[0].name // 默认打开第一个
-        console.log(this.totalData)
         this.oldData = res.data.sort(function (a, b) {
           return a.sortBy - b.sortBy
         })
@@ -463,7 +492,6 @@ export default {
       this.$refs[formName][index].validate((valid) => {
         if (valid) {
           this.$api.sortProesses(this.totalData[index]).then(res => {
-            console.log(res)
             this.$notify({
               title: '成功',
               message: '保存成功',
@@ -483,7 +511,6 @@ export default {
         }
       }
       this.$api.getTabData(this.tabData.id).then(res => {
-        console.log(res)
         this.totalData = res.data.sort(function (a, b) {
           return a.sortBy - b.sortBy
         })
@@ -524,7 +551,6 @@ export default {
           }
         }
       }
-      console.log(this.checkedSilks)
       this.productProesses.exceptions = this.checkedSilks
       this.dialogVisibleSilkExceptions = false
       this.isNewSilk = false
@@ -561,18 +587,15 @@ export default {
       }
       this.productProesses.formConfig = this.value
       this.dialogVisibleForm = false
-      console.log(this.value)
     },
     addNewFormcode () {
       this.createform.formFieldConfigs = this.showCode
-      console.log(this.createform.formFieldConfigs)
       if (this.createform.name === '') {
         this.$message.error('无法新建，请输入名称！')
       } else if (this.createform.formFieldConfigs.length === 0) {
         this.$message.error('无法新建，请新建表单字段！')
       } else {
         this.$api.addCode(this.createform).then(res => {
-          console.log(res)
           this.$notify({
             title: '成功',
             message: '添加成功',
@@ -580,7 +603,9 @@ export default {
           })
           this.formFieldConfigs = res.data // 赋值完成
           if (this.formFieldConfigs !== '') {
-            this.productProesses.formConfig = this.formFieldConfigs
+            if (this.productProesses) {
+              this.productProesses.formConfig = this.formFieldConfigs
+            }
           }
           this.dialogVisibleCreate = false
           this.dialogVisibleForm = false
@@ -589,14 +614,12 @@ export default {
       }
     },
     NewForm (formName) { // 新增确定按钮
-      console.log(this.productProesses.exceptions)
       if (this.productProesses.exceptions.length === 0) {
         this.$message.error('请选择丝锭异常, 否则无法新增!')
       } else {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$api.addProductProcesses(this.productProesses).then(res => {
-              console.log(res)
               this.$notify({
                 title: '成功',
                 message: '添加成功',
@@ -630,7 +653,6 @@ export default {
         arr[j].sortBy = this.sortData[j]
         this.totalData.push(arr[j])
       }
-      console.log(this.totalData)
     },
     down (i) {
       this.getOldSort()
@@ -643,12 +665,10 @@ export default {
         arr[j].sortBy = this.sortData[j]
         this.totalData.push(arr[j])
       }
-      console.log(this.totalData)
     },
     sortProesses () { // 排序确定
       for (let i = 0; i < this.totalData.length; i++) {
         this.$api.sortProesses(this.totalData[i]).then(res => {
-          console.log(res)
           this.dialogVisibleSort = false
         })
       }
@@ -670,7 +690,6 @@ export default {
       })
     },
     handleCheckAllSilkChange (val) {
-      console.log(val)
       this.checkedSilks = val ? this.silkExceptTable : []
       this.isIndeterminateSilk = false
     },
@@ -687,7 +706,6 @@ export default {
           }
         }
       }
-      console.log(this.checkedSilks)
       this.totalData[this.index].exceptions = this.checkedSilks
       this.dialogVisibleSilkExceptions = false
       this.checkedSilks = [] // 赋值结束 清空
@@ -713,7 +731,6 @@ export default {
               }
               this.checkedSilks.push(this.newSilkExceptions.name)
               this.innerVisibleSilkExceptions = false
-              console.log(this.silkExceptTable)
             })
           })
         } else {
@@ -738,7 +755,6 @@ export default {
       })
     },
     handleCheckAllNoteChange (val) {
-      console.log(val)
       this.checkedNotes = val ? this.silkNoteTable : []
       this.isIndeterminateNote = false
     },
@@ -760,7 +776,6 @@ export default {
       this.checkedNotes = [] // 清空
     },
     addSilkNotes (formName) { // 新增备注选项
-      console.log(this.index)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$api.addSilkNotes(this.newSilkNotes).then(res => {
@@ -801,7 +816,6 @@ export default {
           this.value = this.optionsForm[i]
         }
       }
-      console.log(this.value)
       this.createform = this.value
       this.showCode = this.value.formFieldConfigs
       this.dialogVisibleCreate = true
@@ -814,7 +828,6 @@ export default {
       if (query !== '') {
         this.loading = true
         this.$api.searchForms(query).then(res => {
-          console.log(res)
           this.loading = false
           this.optionsForm = res.data
         })
@@ -828,13 +841,21 @@ export default {
           this.value = this.optionsForm[i]
         }
       }
-      this.totalData[this.index].formConfig = this.value
+      if (this.totalData[this.index]) {
+        this.totalData[this.index].formConfig = this.value
+      } else {
+        this.dyeingForm = this.formFieldConfigs = this.value
+      }
       this.dialogVisibleForm = false
-      console.log(this.value)
+    },
+    clearForms (index) {
+      if (this.totalData[this.index]) {
+        this.totalData[index].formConfig = {name: '表单模板'}
+      } else {
+        this.dyeingForm = this.formFieldConfigs = {name: '表单模板'}
+      }
     },
     addNewCode (formName) { // 添加新字段
-      // console.log(this.createCode.inputType)
-      // console.log(this.showSelectOptions)
       if (this.createCode.inputType === 'SELECTION') {
         if (this.showSelectOptions.length !== 0) {
           this.$refs[formName].validate((valid) => {
@@ -850,7 +871,6 @@ export default {
                 this.dialogVisibleNewCode = false
               }
               this.showSelectOptions = []
-              console.log(this.showCode)
             } else {
               return false
             }
@@ -863,7 +883,6 @@ export default {
     addFormcode () { // 添加方法
       this.createform.formFieldConfigs = this.showCode
       this.$api.addCode(this.createform).then(res => {
-        console.log(res)
         this.$notify({
           title: '成功',
           message: '添加成功',
@@ -871,40 +890,35 @@ export default {
         })
         this.formFieldConfigs = res.data // 赋值完成
         if (this.formFieldConfigs !== '') {
-          this.totalData[this.index].formConfig = this.formFieldConfigs
+          if (this.totalData[this.index]) {
+            this.totalData[this.index].formConfig = this.formFieldConfigs
+          }
         }
         this.dialogVisibleCreate = false
         this.dialogVisibleForm = false
       })
     },
     saveCode (i, row) {
-      console.log(row)
       this.isSave = true
       this.saveIndex = i
       this.createCode = row
       for (let i of row.selectOptions) {
         this.showSelectOptions.push({name: i})
       }
-      console.log(this.showSelectOptions)
       this.dialogVisibleNewCode = true
     },
     deletedCode (i, row) {
       // this.createform.formFieldConfigs.splice(i, 1)
       this.showCode.splice(i, 1)
-      console.log(this.createform.formFieldConfigs, this.showCode)
     },
     addSelectOptions () {
-      console.log(this.selectOptions)
       if (this.selectOptions.name !== undefined) {
         if (this.isSaveOption) {
-          // console.log(this.selectIndex)
           this.showSelectOptions[this.selectIndex] = this.selectOptions
-          console.log(this.showSelectOptions)
           this.isSaveOption = false
           this.dialogVisibleSelects = false
         } else {
           this.showSelectOptions.push(this.selectOptions)
-          console.log(this.showSelectOptions)
           this.dialogVisibleSelects = false
         }
       } else {
@@ -916,10 +930,30 @@ export default {
       this.selectIndex = i
       this.selectOptions = row
       this.dialogVisibleSelects = true
-      console.log(this.selectIndex)
     },
     deletedOptions (i, row) {
       this.showSelectOptions.splice(i, 1)
+    },
+    addDyeingForm (data) {
+      let params = {
+        id: data.id,
+        dyeingFormConfig: {
+          id: this.dyeingForm.id
+        }
+      }
+      this.$api.addDyeingInfo(params).then(res => {
+        this.$notify({
+          title: '成功',
+          message: '保存成功',
+          type: 'success'
+        })
+      })
+    },
+    handleChange (data) {
+      this.$api.getDyeingInfo(data).then(res => {
+        // console.log(res)
+        this.dyeingForm = res.data.dyeingFormConfig
+      })
     }
   }
 }

@@ -75,7 +75,6 @@ let route = new Router({
         api.getAuth().then(res => {
           let userInfo = res.data
           store.commit('UserInfo', userInfo)
-          console.log(store.state)
         })
         next()
       },
@@ -186,6 +185,11 @@ let route = new Router({
               name: '丝锭打印',
               component: silkPrint,
               class: 'el-icon-location'
+            },
+            {// 包装计量--人工唛头
+              path: 'boxPrint',
+              name: '包装唛头打印',
+              component: Artificial
             }
           ]
         },

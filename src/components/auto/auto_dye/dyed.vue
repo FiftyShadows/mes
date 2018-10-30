@@ -5,6 +5,9 @@
       <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
     </el-col>
     <el-col :span="3">
+      <el-input v-model="userId" placeholder="请输入车间" class="userId"></el-input>
+    </el-col>
+    <el-col :span="3">
       <el-input v-model="userId" placeholder="请输入丝车编号" class="userId"></el-input>
     </el-col>
     <el-col :span="5">
@@ -26,7 +29,6 @@
       </el-date-picker>
     </el-col>
     <el-button icon="el-icon-search" type="primary" @click="search()"></el-button>
-    <el-button @click="batchSubmit()" type="primary">提交</el-button>
   </el-row>
   <template scope="" v-for="silkCar in silkCars">
     <el-row type="flex" :gutter="20" :key="silkCar">
@@ -207,9 +209,6 @@ export default {
   methods: {
     search () {
       console.log('搜索')
-    },
-    batchSubmit () {
-      console.log('提交')
     },
     handleCheckAllChange (val) {
       if (val) {

@@ -131,7 +131,6 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="批号" :label-width="formLabelWidth" required>
-            <!-- <el-input v-model="form.batchNo" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
             <el-select v-model="form1.batch.batchNo" filterable remote reserve-keyword placeholder="请输入位号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
               <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
             </el-select>
@@ -155,7 +154,6 @@
           <el-dialog width="50%" title="新增机台" :visible.sync="addLine" append-to-body>
             <el-form :model="Lines" :rules="rules" ref="Lines" class="demo-ruleForm">
               <el-form-item label="线别" :label-width="formLabelWidth" required>
-                <!-- <el-input v-model="Lines.name" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
                 <el-select v-model="Lines.name" clearable placeholder="请选择" style="float: left;">
                   <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name">
                   </el-option>

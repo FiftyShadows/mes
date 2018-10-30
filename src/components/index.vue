@@ -71,19 +71,19 @@
                 </el-menu-item-group>
               </el-submenu>
             </li>
-          <el-submenu index="8">
-            <template slot="title">
-              <i class="el-icon-menu"></i>
-              <span slot="title">包装计量</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/measurement/artificial"><i class="el-icon-setting"></i>包装唛头打印</el-menu-item>
-              <el-menu-item index="/measurement/shortSilk"><i class="el-icon-setting"></i>短丝唛头</el-menu-item>
-              <el-menu-item index="/measurement/smallPackage"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>
-              <el-menu-item index="/measurement/BoxManagement"><i class="el-icon-setting"></i>暂存箱管理</el-menu-item>
-              <el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
+          <!--<el-submenu index="8">-->
+            <!--<template slot="title">-->
+              <!--<i class="el-icon-menu"></i>-->
+              <!--<span slot="title">包装计量</span>-->
+            <!--</template>-->
+            <!--<el-menu-item-group>-->
+              <!--<el-menu-item index="/measurement/artificial"><i class="el-icon-setting"></i>包装唛头打印</el-menu-item>-->
+              <!--<el-menu-item index="/measurement/shortSilk"><i class="el-icon-setting"></i>短丝唛头</el-menu-item>-->
+              <!--<el-menu-item index="/measurement/smallPackage"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>-->
+              <!--<el-menu-item index="/measurement/BoxManagement"><i class="el-icon-setting"></i>暂存箱管理</el-menu-item>-->
+              <!--<el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item>-->
+            <!--</el-menu-item-group>-->
+          <!--</el-submenu>-->
           <!--<el-submenu index="9">-->
             <!--<template slot="title">-->
               <!--<i class="el-icon-menu"></i>-->

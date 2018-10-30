@@ -480,16 +480,21 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: baseline;
+  overflow:hidden;
   /* justify-content: space-between; */
 }
 .package-print li{
-  padding-left: 0.5cm;
+  flex: 1;
+  padding-left: 3cm;
   padding-top: 1.0cm;
+  /*padding-bottom: 15%;*/
   position: relative;
   font-size: 0.7cm;
+  text-align: center;
   /*display: flex;*/
 }
 .package-print .qrcode img{
-  width: 4.0cm;
-  height: 3.5cm;
+  width: 8.0cm;
+  height: 8.0cm;
+  margin: auto;
 }

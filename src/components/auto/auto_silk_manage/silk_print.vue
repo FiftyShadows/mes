@@ -7,7 +7,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.lineMachineId" placeholder="请选择机台">
+        <el-select v-model="formInline.lineMachineId" clearable placeholder="请选择机台">
           <el-option v-for="lineMachine in lineMachines" :key="lineMachine.id" :label="lineMachine.line.workshop.name + '-' + lineMachine.line.name + '-' +lineMachine.item" :value="lineMachine.id"></el-option>
         </el-select>
       </el-form-item>
@@ -16,12 +16,12 @@
       </el-form-item>
       <el-form-item>
         <el-date-picker
-          v-model="formInline.dateTime"
-          type="datetime"
+          v-model="formInline.date"
+          type="date"
           placeholder="选择日期"
           align="right"
           :picker-options="pickerOptions"
-          vue-format="yyyy-MM-dd">
+          value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -30,23 +30,34 @@
         <el-button type="primary" @click="print()">打印</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" stripe style="width: 100%" ref="multipleTable" @selection-change="handleSelectionChange">
+    <el-table :data="tableData"
+              stripe
+              style="width: 100%"
+              ref="multipleTable"
+              @selection-change="handleSelectionChange"
+              :default-sort = "{prop: 'lineMachine.line.name',prop: 'lineMachine.item',prop: 'doffingNum'}">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="batch.batchNo" label="批号" width="180"></el-table-column>
-      <el-table-column prop="batch.spec" label="规格" width="180"></el-table-column>
-      <el-table-column prop="lineMachine.item" label="机台位号" width="180"></el-table-column>
-      <el-table-column prop="lineMachine.line.name" label="线别" width="180"></el-table-column>
-      <el-table-column prop="lineMachine.line.autoDoffing" label="落筒方式" width="180"></el-table-column>
-      <el-table-column prop="doffingNum" label="落次" width="180"></el-table-column>
-      <el-table-column prop="class" label="班次" width="180"></el-table-column>
-      <el-table-column prop="lineMachine.spindleNum" label="锭数" width="180"></el-table-column>
-      <!--<el-table-column prop="totalNum" label="总锭数" width="180"></el-table-column>-->
-      <el-table-column prop="batch.silkWeight" label="锭重" width="180"></el-table-column>
-      <!--<el-table-column prop="printStatus" label="打印状态" width="180"></el-table-column>-->
-      <el-table-column prop="codeDate" :formatter="dateFormat" label="日期" width="180"></el-table-column>
+      <el-table-column type="expand" width="55" toggleRowExpansion="test">
+        <template slot-scope="scope">
+          <el-table :data="scope.row.silkInfo" border style="width: 100%" @selection-change="handleSelectionChange" class="demo-table-expand">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="code" label="丝锭编码"></el-table-column>
+            <el-table-column prop="spindle" label="丝锭号" width="180"></el-table-column>
+          </el-table>
+        </template>
+      </el-table-column>
+      <el-table-column sortable prop="codeDate" :formatter="dateFormat" label="日期" width="100"></el-table-column>
+      <el-table-column sortable prop="lineMachine.line.name" label="线别" width="100"></el-table-column>
+      <el-table-column sortable prop="lineMachine.item" label="机台位号" width="100"></el-table-column>
+      <el-table-column sortable prop="doffingNum" label="落次" width="100"></el-table-column>
+      <el-table-column prop="batch.batchNo" label="批号"></el-table-column>
+      <el-table-column prop="batch.spec" label="规格"></el-table-column>
+      <el-table-column prop="lineMachine.spindleNum" label="锭数" width="100"></el-table-column>
+      <el-table-column prop="batch.silkWeight" label="锭重" width="100"></el-table-column>
+      <el-table-column prop="codeDoffingNum" label="流水号" width="100"></el-table-column>
     </el-table>
-    <!--<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="50" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">-->
-    <!--</el-pagination>-->
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
+    </el-pagination>
       <create-barcode-dialog :dialogVisible.sync="dialogVisible"></create-barcode-dialog>
   </div>
 </template>
@@ -63,9 +74,15 @@ export default {
         lineId: '',
         lineMachineId: '',
         doffingNum: '',
-        codeTime: ''
+        date: ''
       },
+      currentPge: 1,
+      pageSize: 50,
+      total: 0,
       pickerOptions: {
+        disabledDate (time) {
+          return time.getTime() > Date.now()
+        },
         shortcuts: [{
           text: '今天',
           onClick (picker) {
@@ -90,9 +107,6 @@ export default {
       lines: [],
       lineMachines: [],
       tableData: [],
-      currentPage: 5,
-      total: 0,
-      pageSize: 50,
       multipleSelection: [],
       dialogVisible: false
     }
@@ -109,27 +123,42 @@ export default {
       })
     },
     getMachines () {
-      this.$api.getMachines(this.formInline.lineId).then(res => {
-        this.lineMachines = res.data
-        this.loading = false
-      })
+      if (this.formInline.lineId) {
+        this.$api.getMachines(this.formInline.lineId).then(res => {
+          this.lineMachines = res.data
+          this.loading = false
+        })
+      }
     },
     search () {
-      console.log(this.formInline)
       let params = {
         lineMachineId: this.formInline.lineMachineId,
         doffingNum: this.formInline.doffingNum,
-        codeTime: this.formInline.codeTime,
-        first: this.first,
+        codeDate: this.formInline.date,
+        first: (this.currentPage - 1) * this.pageSize,
         pageSize: this.pageSize
       }
       this.$api.getSilkBarCodes(params).then(res => {
-        this.tableData = res.data.silkBarcodes.sort()
-        this.total = res.data.count
+        this.tableData = res.data.silkBarcodes
+        this.tableData.forEach((item, i) => {
+          this.$api.getSilkDetail(item.id).then(res => {
+            let obj = this.tableData.find(it => it.id === item.id)
+            if (obj) {
+              obj.silkInfo = res.data
+            }
+          })
+        })
+        this.total = parseInt(res.data.count)
       })
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    handleSizeChange () {
+      this.search()
+    },
+    handleCurrentChange () {
+      this.search()
     },
     createBar () {
       this.dialogVisible = true
@@ -153,5 +182,9 @@ export default {
   }
   .el-input-number {
     width: 130px;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
   }
 </style>

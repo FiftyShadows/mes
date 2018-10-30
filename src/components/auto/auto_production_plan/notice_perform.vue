@@ -43,14 +43,11 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.query)
     this.getPerform()
   },
   methods: {
     getPerform () {
-      // console.log(this.noticeId)
       this.$api.getPerforms(this.noticeId).then(res => {
-        console.log(res)
         this.performNotices = res.data.lineMachineProductPlans // 已执行
         this.tableData = res.data.productPlanNotify.lineMachines // 未执行
         this.notice = res.data.productPlanNotify
@@ -91,7 +88,6 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$api.finishNotice(this.noticeId).then(res => {
-          console.log(res)
           this.$notify({
             title: '成功',
             message: '执行已结束',
@@ -102,7 +98,6 @@ export default {
       }).catch(() => {})
     },
     perform (row) {
-      console.log(row)
       row.extra = {
         canExe: true
       }
@@ -110,7 +105,6 @@ export default {
       form.lineMachine = row
       form.id = this.notice.id
       this.$api.exeNotices(form).then(res => {
-        console.log(res)
         if (res.errorCode !== 'E00000') {
           this.$notify({
             title: '成功',
@@ -123,7 +117,6 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
-      console.log(this.multipleSelection)
     }
   }
 }

@@ -19,6 +19,9 @@
         <el-form-item label="名 称" :label-width="formLabelWidth" prop="name" required>
           <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item label="编 码" :label-width="formLabelWidth" prop="code" required>
+          <el-input v-model="form.code" auto-complete="off"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleAdd = false">取 消</el-button>
@@ -30,6 +33,9 @@
       <el-form :model="form1" :rules="rules" ref="form1" label-width="100px" class="demo-ruleForm">
         <el-form-item label="名 称" :label-width="formLabelWidth" prop="name" required>
           <el-input v-model="form1.name" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="编 码" :label-width="formLabelWidth" prop="code" required>
+          <el-input v-model="form1.code" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -52,10 +58,12 @@ export default {
       productVisible: true,
       tableData: [],
       form: {
-        name: ''
+        name: '',
+        code: ''
       },
       form1: {
-        name: ''
+        name: '',
+        code: ''
       },
       formLabelWidth: '120px',
       dialogVisibleAdd: false,
@@ -79,6 +87,7 @@ export default {
     },
     openSave (row) {
       this.form1.name = row.name
+      this.form1.code = row.code
       this.form1.createDateTime = row.createDateTime
       this.form1.modifyDateTime = row.modifyDateTime
       this.form1.id = row.id

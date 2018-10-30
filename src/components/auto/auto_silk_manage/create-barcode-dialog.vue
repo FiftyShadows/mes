@@ -74,7 +74,7 @@
           </el-select>
         </div>
         <el-button type="primary" @click="createLines()" style="float: right;">新 增</el-button>
-        <el-table ref="multipleTable" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300">
+        <el-table ref="multipleTable" :data="data" style="width: 100%" @selection-change="handleSelectionChange" height="300" :default-sort ="{prop: 'item'}">
           <el-table-column type="selection" width="55">
           </el-table-column>
           <el-table-column prop="line.workshop.name" label="车间" width="180">

@@ -196,6 +196,13 @@ export default {
   addProductProcesses (data) {
     return axios.post(`${baseAutoUrl}/productProcesses`, data)
   },
+  // 产品管理--配置--获取染判表单
+  getDyeingInfo (data) {
+    return axios.get(`${baseAutoUrl}/products/${data.id}/dyeingInfo`)
+  },
+  addDyeingInfo (data) {
+    return axios.put(`${baseAutoUrl}/products/${data.id}/dyeingInfo`, data)
+  },
 
   // 丝车管理--获取数据
   getSilks (data) {
@@ -350,7 +357,7 @@ export default {
   },
   // 用户--搜索所有用户
   getAllUsers (data) {
-    return axios.get(`${baseAutoUrl}/suggestOperators?q=${data}`)
+    return axios.get(`${baseAutoUrl}/autoComplete/suggestOperator?q=${data}`)
   },
   // 用户--添加用户
   addUser (data) {
@@ -365,12 +372,32 @@ export default {
     return axios.get(`${baseAutoUrl}/silkCarRecords?startTime=${data.startTime}&endTime=${data.endTime}&q=${data.silkCarCode}`)
   },
   // 获取丝锭条码查询
-  getSilkBarCodes (data) {
-    return axios.get(`${baseAutoUrl}/silkBarcodes`, data)
+  getSilkBarCodes (params) {
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/silkBarcodes`,
+      params: params
+    })
+    // return axios.get(`${baseAutoUrl}/silkBarcodes`, data)
+  },
+  getSilkDetail (id) {
+    return axios.get(`${baseAutoUrl}/silkBarcodes/${id}/silkInfo`)
   },
   // 批量生成丝锭条码
   batchAddSilkBarCodes (data) {
     return axios.post(`${baseAutoUrl}/batchSilkBarcodes`, data)
+  },
+  // 待染判查询
+  getDyeingPrepares (data) {
+    return axios.get(`${baseAutoUrl}/dyeingPrepares`, data)
+  },
+  // 染判结果提交
+  submitDyeingPrepares (data) {
+    return axios.post(`${baseAutoUrl}/dyeingPrepares/${data.id}`, data)
+  },
+  // 获取染判结果
+  getDyeingPrepareResults (data) {
+    return axios.get(`${baseAutoUrl}/dyeingPrepareResults`, data)
   },
 
   // =========================================== 仓储 ===========================================

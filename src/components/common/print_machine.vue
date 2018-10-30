@@ -4,8 +4,8 @@
             <li v-for="(item,index) in printData" :key="index" style="text-align: center">
               <div class="qrcode" ref="qrcode"></div>
               <span>{{item.line.name}}-{{item.item}}</span>
-              <div class="pageBreak" v-if="(index+1)%16 === 0"><!--如果需要强制换页就在上一页的未尾出加上此代码-->
-              </div>
+              <!--<div class="pageBreak" v-if="(index+1)%16 === 0">&lt;!&ndash;如果需要强制换页就在上一页的未尾出加上此代码&ndash;&gt;-->
+              <!--</div>-->
             </li>
           </ul>
 </div>
@@ -27,6 +27,7 @@ export default {
           let qrcode = new QRCode(qrcodeDoms[i], {
             text: JSON.stringify({
               'id': this.printData[i].id,
+              'type': 'LineMachine',
               'item': this.printData[i].item,
               'name': this.printData[i].line.name + '-' + this.printData[i].item
             })

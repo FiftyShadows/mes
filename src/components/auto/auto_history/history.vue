@@ -23,6 +23,10 @@
     </div>
     <div class="history-main">
       <div class="left">
+        <!--<el-collapse v-model="activeColapse" accordion>-->
+          <!--<el-collapse-item v-for="(item,index) in silkCarRecords" :key="item.id" :title="item.name">-->
+          <!--</el-collapse-item>-->
+        <!--</el-collapse>-->
         <div class="silkCarRecord">
           <el-card v-if="silkCarRecords.length === 0">
             暂无数据
@@ -95,6 +99,7 @@ export default {
   },
   data () {
     return {
+      activeColapse: ['1'],
       initEvent: [], // 初始化事件（落筒或拼车）
       initSilks: [], // 初始化丝锭
       eventSources: [], // 事件源（每一步操作）
@@ -158,30 +163,6 @@ export default {
     },
     getSilkCarRecords (val) {
       this.silkCarRecords = []
-      let obj1 = {
-        id: '5b83a1831e1d9c6efd2933cc',
-        startDateTime: '2018-08-27 07:00:19.000Z',
-        endDateTime: '2018-08-27 07:00:19.000Z',
-        silkCar: {
-          code: '3000F1111',
-          row: '3',
-          col: '4'
-        },
-        doffingType: ''
-      }
-      let obj2 = {
-        id: '5b83a1831e1d9c6efd2933c2',
-        startDateTime: '2018-08-27 07:00:19.000Z',
-        endDateTime: '2018-08-27 07:00:19.000Z',
-        silkCar: {
-          code: '3000F1111',
-          row: '3',
-          col: '4'
-        },
-        doffingType: ''
-      }
-      this.silkCarRecords.push(obj1)
-      this.silkCarRecords.push(obj2)
       // let params = {
       //   silkCarCode: this.silkCarCode,
       //   time: this.time
