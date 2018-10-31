@@ -395,6 +395,7 @@ export default {
   getSelectWarehouseList () { // 查询仓库下拉列表
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/selectWarehouseList`)
   },
+
   getSelectWarehouse (data) { // 仓库--获取数据
     return axios.post(`${baseWareUrl}/warehouseInfo/warehouse/selectWarehouse`, data)
   },
@@ -404,6 +405,7 @@ export default {
   deleteWarehouse (data) { // 仓储--删除
     return axios.post(`${baseWareUrl}/warehouseInfo/warehouse/deleteWarehouse`, data)
   },
+
   getWarehouseStorageList (data) { // 库位维护--获取数据
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/getWarehouseStorageList`, data)
   },
@@ -416,6 +418,7 @@ export default {
   updateStorage (data) { // 库位维护--修改
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/updateStorage`, data)
   },
+
   getWarehouseStoragePlanList (data) { // 库位计划--获取数据
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/getWarehouseStoragePlanList`, data)
   },
@@ -431,6 +434,7 @@ export default {
   getSelectStorageList (data) { // 库位计划--查询关联仓库的库位
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/selectStorageList`, data)
   },
+
   getMaterialList (data) { // sap信息--物料查询
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/material/getMaterialList`, data)
   },
@@ -446,6 +450,7 @@ export default {
   deleteSapStorage (data) { // sap信息--sap库位删除
     return axios.post(`${baseWareUrl}/warehouseInfo/sapStorage/deleteSapStorage`, data)
   },
+
   getReasonList (data) { // 翻包原因--获取原因
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/getReasonList`, data)
   },
@@ -460,14 +465,18 @@ export default {
     console.log(data)
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/deleteReason`, data)
   },
+
   getStocktakingRecord (data) { // 盘点SAP--查询盘点记录
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getStocktakingRecord`, data)
   },
   getStocktakingDetail (data) { // 盘点SAP--查询盘点码单明细
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getStocktakingDetail`, data)
   },
-  selectStocktakingInfo (data) { // 盘点SAP--查询盘点信息
-    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/selectStocktakingInfo`, data)
+  selectStocktaking (data) { // 盘点SAP--查询盘点信息
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/selectStocktaking`, data)
+  },
+  addStocktaking (data) { // 盘点SAP--保存盘点信息，结束盘点
+    return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/addStocktaking`, data)
   },
   selectStocktakingDetail (data) { // 盘点SAP--查询码单
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/selectStocktakingDetail`, data)
@@ -481,6 +490,7 @@ export default {
   getLotNumberIdInboundList (data) { // 盘点SAP--漏扫码单--自动补入
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/stocktaking/getLotNumberIdInboundList`, data)
   },
+
   getHouseNameList (data) { // 待入库--查询所有“车间”
     return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getHouseNameList`, data)
   },
@@ -496,6 +506,7 @@ export default {
   getPageInroundRecordList (data) { // 查询所有“待入库记录”
     return axios.post(`${baseWareUrl}/warehouseInfo/InboundRecord/getPageInroundRecordList`, data)
   },
+
   selectLevelList (data) { // 入库记录--查询等级
     return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/selectLevelList`, data)
   },
@@ -520,16 +531,18 @@ export default {
   searchInStorageDetailList (data) { // 入库记录--码单明细--搜索
     return axios.post(`${baseWareUrl}/warehouseInfo/InStorageRecord/searchInStorageDetailList`, data)
   },
+
   addBarcode (data) { // 短丝唛头--新增唛头
     return axios.post(`${baseWareUrl}/productCodeController/addBarcode`, data)
   },
   getSelectCode (data) { // 短丝唛头--获取表格数据
     return axios.post(`${baseWareUrl}/productCodeController/selectCode`, data)
   },
+
   saynAllocationBySap (data) { // 销售调拨单--Sap调拨单同步
-    return axios.post(`${baseWareUrl}/mes/sapManagement/sap/synAllocationBySap`, data)
+    return axios.post(`${baseWareUrl}/mes/requisition/Allocation/synAllocationBySap`, data)
   },
   selectAllocation (data) { // 销售调拨单--调拨单报表
-    return axios.post(`${baseWareUrl}/mes/sapManagement/sap/selectAllocation`, data)
+    return axios.post(`${baseWareUrl}/mes/requisition/Allocation/selectAllocation`, data)
   }
 }

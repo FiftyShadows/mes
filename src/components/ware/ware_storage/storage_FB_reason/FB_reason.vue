@@ -80,8 +80,15 @@ export default {
       }).then(res => {
         console.log(res)
         this.loading = false
-        this.tableData = res.data.data.list
-        this.total = res.data.data.total
+        if (res.data.status === '200') {
+          this.tableData = res.data.data.list
+          this.total = res.data.data.total
+        } else {
+          this.$notify.error({
+            title: '错误',
+            message: res.data.msg
+          })
+        }
       })
     },
     changePage (value) {

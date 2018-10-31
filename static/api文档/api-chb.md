@@ -55,6 +55,7 @@ http://localhost:8080/warehouseInfo/workshop/selectWorkshop
     "token": null
 }
 
+
 2.增加仓库接口
 post请求
 http://localhost:8080/warehouseInfo/warehouse/addWarehouse

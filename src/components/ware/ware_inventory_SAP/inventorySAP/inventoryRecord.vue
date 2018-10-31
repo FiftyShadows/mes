@@ -33,10 +33,22 @@
       <el-table-column prop="warehouseName" label="仓库" width="100">
       </el-table-column>
       <el-table-column prop="storageCode" label="库位" width="120">
+        <template slot-scope="scope">
+          <span v-if="!scope.row.storageCode || scope.row.storageCode === ''">所有</span>
+          <span v-else>{{scope.row.storageCode}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="batchNo" label="批号" width="200">
+        <template slot-scope="scope">
+          <span v-if="!scope.row.batchNo || scope.row.batchNo === ''">所有</span>
+          <span v-else>{{scope.row.batchNo}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="level" label="等级" width="100">
+        <template slot-scope="scope">
+          <span v-if="!scope.row.level || scope.row.level === ''">所有</span>
+          <span v-else>{{scope.row.level}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="createTime" label="盘点时间" :formatter="dateFormat" min-width="200">
       </el-table-column>
@@ -112,6 +124,7 @@ export default {
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
     seachTableData () {
+      this.tableData = []
       this.loading = true
       this.$api.getStocktakingRecord({
         batchNo: this.seachForm.batchNo,

@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column prop="lgort" label="SAP仓库点" min-width="150">
         <!-- <template slot-scope="scope">
-          <span v-for="item in scope.row.lgort" :key="item">{{item}}</span>
+          <span v-for="item in scope.row.lgort">{{item}}</span>
         </template> -->
       </el-table-column>
       <el-table-column prop="houseLocation" label="车间" min-width="100">

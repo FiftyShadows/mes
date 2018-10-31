@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="调拨单明细" :visible.sync="dialogTableVisible" width="80%" @closed="gridData = []">
+  <el-dialog title="调拨单明细" :visible.sync="dialogTableVisible" width="80%">
     <el-table :data="gridData" tooltip-effect="dark" border>
       <el-table-column property="productName" label="成品名称"></el-table-column>
       <el-table-column property="productType" label="成品类型"></el-table-column>
@@ -11,8 +11,9 @@
       <el-table-column property="salesMan" label="销售员"></el-table-column>
       <el-table-column property="lgort" label="仓储点"></el-table-column>
       <el-table-column property="material" label="物料号" min-width="180"></el-table-column>
+      <el-table-column property="order_type" label="订单类型" width="120"></el-table-column>
       <el-table-column property="createTime" :formatter="dateFormat" label="同步时间" min-width="200"></el-table-column>
-      <el-table-column property="modifiedTime" label="修改时间"></el-table-column>
+      <el-table-column property="modifiedTime" :formatter="dateFormat" label="修改时间" min-width="200"></el-table-column>
     </el-table>
   </el-dialog>
 </template>
@@ -29,12 +30,12 @@ export default {
   methods: {
     show (row) {
       console.log(row)
-      this.gridData.push(row)
+      this.gridData = row
       this.dialogTableVisible = true
     },
     dateFormat (row, column) {
       var date = row[column.property]
-      if (date === undefined) {
+      if (date === null) {
         return ''
       }
       return moment(date).format('YYYY-MM-DD HH:mm:ss')

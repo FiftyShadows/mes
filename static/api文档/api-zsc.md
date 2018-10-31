@@ -31,6 +31,7 @@
             "type": null
         },
         {
+            
             "id": null,
             "houseName": "仓库B",
             "transOperator": null,

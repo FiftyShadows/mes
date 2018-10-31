@@ -63,7 +63,7 @@
       </el-table-column>
       <el-table-column prop="hyRequisition.status" label="状态">
       </el-table-column>
-      <el-table-column prop="hyRequisition.loading_spot" label="装载点/接收点" min-width="100">
+      <el-table-column prop="hyRequisition.loading_spot" label="装载点/接收点" min-width="120">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="140">
         <template slot-scope="scope">
@@ -190,7 +190,7 @@ export default {
     },
     openDetil (row) {
       console.log(row)
-      this.$refs.showDetail.show(row.hyRequisitionDetail)
+      this.$refs.showDetail.show(row.hyRequisitionDetailList)
     }
   }
 }
