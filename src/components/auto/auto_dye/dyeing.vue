@@ -5,7 +5,9 @@
         <el-checkbox :indeterminate='isIndeterminate' v-model='checkAll' @change='handleCheckAllChange'>全选</el-checkbox>
       </el-col>
       <el-col :span='3'>
-        <el-input v-model='userId' placeholder='请输入车间' class='userId'></el-input>
+        <el-select v-model="workshop" clearable placeholder="请选择车间">
+        <el-option v-for="workshop in workshops" :key="workshop.id" :label="workshop.name" :value="workshop.id"></el-option>
+      </el-select>
       </el-col>
       <el-col :span='3'>
         <el-input v-model='userId' placeholder='请输入织袜工号' class='userId'></el-input>
@@ -33,19 +35,21 @@
       <el-button icon='el-icon-search' type='primary' @click='search()'></el-button>
       <el-button @click='batchSubmit()' type='primary'>提交</el-button>
     </el-row>
-    <div v-for='(dyeingPrepare, index) in dyeingPrepares' :key='index' v-loading='loading'>
-        <dyeing-record-component
-          :checkAll='checkAll'
-          @changeIsIndeterminate='changeIsIndeterminate'
-          @changeCheckAll='changeCheckAll'
-          :dyeingPrepares='dyeingPrepares'
-          :index='index'
-          :dyeingPrepare='dyeingPrepare'
-          :key='index'
-          style='margin-top: 10px'>
-        </dyeing-record-component>
+    <div v-for="(dyeingPrepare, index) in dyeingPrepares" :key="index">
+      <dyeing-record-component
+        :checkAll="checkAll"
+        @changeIsIndeterminate="changeIsIndeterminate"
+        @changeCheckAll="changeCheckAll"
+        :dyeingPrepares="dyeingPrepares"
+        :index="index"
+        :dyeingPrepare="dyeingPrepare"
+        :key="index"
+        v-loading="loading"
+        style="margin-top: 10px"
+        @getDyeingRecords="search()">
+      </dyeing-record-component>
     </div>
-    <Pagination :total='total' :page-size='pageSize' :page-num='pageNum' @changePage='changePage'></Pagination>
+    <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
   </div>
 </template>
 <script>
@@ -57,10 +61,9 @@ export default {
     'Pagination': Pagination,
     'dyeing-record-component': dyeingRecordComponent
   },
-  computed: {},
   data () {
     return {
-      loading: false,
+      loading: true,
       total: 0,
       pageSize: 50,
       pageNum: 0,
@@ -87,572 +90,576 @@ export default {
         }]
       },
       userId: '',
+      workshop: '',
+      workshops: [],
       startDate: this.util.getNowFormatDate(),
       endDate: this.util.getNowFormatDate(),
       isIndeterminate: false,
       checkAll: false,
-      dyeingPrepares: [
-        {
-          id: 'string',
-          type: 'FIRST',
-          silkCarRecord: {
-            id: '1',
-            silkCar: {
-              id: '5b6ed118ee3d0a0926707597',
-              createDateTime: 1533989144000,
-              modifyDateTime: 1533989144000,
-              type: 'DEFAULT',
-              number: 'C34001',
-              code: '3000C34001',
-              row: 3,
-              col: 4
-            },
-            batch: {
-              id: 'string',
-              batchNo: 'string',
-              silkWeight: 0,
-              centralValue: 0,
-              holeNum: 0,
-              spec: 'string',
-              tubeColor: 'string',
-              note: 'string',
-              workshop: {
-                id: 'string',
-                code: 'string',
-                name: 'string',
-                note: 'string',
-                corporation: {
-                  id: 'string',
-                  name: 'string'
-                }
-              },
-              product: {
-                id: '5bd1a966885d3b67042ac5f1',
-                name: 'FDY',
-                code: 'FDY'
-              }
-            },
-            grade: {
-              id: 'string',
-              name: 'string',
-              sortBy: 'string'
-            },
-            doffingDateTime: '1',
-            carpoolDateTime: '1'
-          },
-          silks: [{
-            id: 'string',
-            code: 'string',
-            doffingNum: 'string',
-            doffingOperator: {
-              roles: [
-                'string'
-              ],
-              permissions: [
-                'string'
-              ],
-              id: 'string',
-              hrId: 'string',
-              oaId: 'string',
-              name: 'string',
-              admin: true,
-              groups: [
-                {
-                  roles: [
-                    'string'
-                  ],
-                  permissions: [
-                    'string'
-                  ],
-                  id: 'string',
-                  name: 'string'
-                }
-              ]
-            }
-          }],
-          silkDyeingSample: {
-            id: 'string',
-            silk: {
-              id: 'string',
-              code: 'string',
-              doffingNum: 'string',
-              doffingOperator: {
-                roles: [
-                  'string'
-                ],
-                permissions: [
-                  'string'
-                ],
-                id: 'string',
-                hrId: 'string',
-                oaId: 'string',
-                name: 'string',
-                admin: true,
-                groups: [
-                  {
-                    roles: [
-                      'string'
-                    ],
-                    permissions: [
-                      'string'
-                    ],
-                    id: 'string',
-                    name: 'string'
-                  }
-                ]
-              }
-            }
-          },
-          silkCarRecord1: {
-            id: 'string',
-            batch: {
-              id: 'string',
-              batchNo: 'string',
-              silkWeight: 0,
-              centralValue: 0,
-              holeNum: 0,
-              spec: 'string',
-              tubeColor: 'string',
-              note: 'string',
-              workshop: {
-                id: 'string',
-                code: 'string',
-                name: 'string',
-                note: 'string',
-                corporation: {
-                  id: 'string',
-                  name: 'string'
-                }
-              },
-              product: {
-                id: '5bd1a966885d3b67042ac5f1',
-                name: 'FDY',
-                code: 'FDY'
-              }
-            },
-            silkCar: {
-              id: 'string',
-              code: 'string'
-            },
-            grade: {
-              id: 'string',
-              name: 'string',
-              sortBy: 'string'
-            },
-            doffingDateTime: '1',
-            carpoolDateTime: '1'
-          },
-          silks1: {
-            id: 'string',
-            code: 'string',
-            doffingNum: 'string',
-            doffingOperator: {
-              roles: [
-                'string'
-              ],
-              permissions: [
-                'string'
-              ],
-              id: 'string',
-              hrId: 'string',
-              oaId: 'string',
-              name: 'string',
-              admin: true,
-              groups: [
-                {
-                  roles: [
-                    'string'
-                  ],
-                  permissions: [
-                    'string'
-                  ],
-                  id: 'string',
-                  name: 'string'
-                }
-              ]
-            }
-          },
-          silkCarRecord2: {
-            id: 'string',
-            silkCar: {
-              id: 'string',
-              code: 'string'
-            },
-            batch: {
-              id: 'string',
-              batchNo: 'string',
-              silkWeight: 0,
-              centralValue: 0,
-              holeNum: 0,
-              spec: 'string',
-              tubeColor: 'string',
-              note: 'string',
-              workshop: {
-                id: 'string',
-                code: 'string',
-                name: 'string',
-                note: 'string',
-                corporation: {
-                  id: 'string',
-                  name: 'string'
-                }
-              },
-              product: {
-                id: '5bd1a966885d3b67042ac5f1',
-                name: 'FDY',
-                code: 'FDY'
-              }
-            },
-            grade: {
-              id: 'string',
-              name: 'string',
-              sortBy: 'string'
-            },
-            doffingDateTime: '1',
-            carpoolDateTime: '1'
-          },
-          silks2: [
-            {
-              id: 'string',
-              code: 'string',
-              doffingNum: 'string',
-              doffingOperator: {
-                roles: [
-                  'string'
-                ],
-                permissions: [
-                  'string'
-                ],
-                id: 'string',
-                hrId: 'string',
-                oaId: 'string',
-                name: 'string',
-                admin: true,
-                groups: [
-                  {
-                    roles: [
-                      'string'
-                    ],
-                    permissions: [
-                      'string'
-                    ],
-                    id: 'string',
-                    name: 'string'
-                  }
-                ]
-              }
-            }
-          ],
-          creator: {
-            roles: [
-              'string'
-            ],
-            permissions: [
-              'string'
-            ],
-            id: 'string',
-            hrId: 'string',
-            oaId: 'string',
-            name: 'string',
-            admin: true,
-            groups: [
-              {
-                roles: [
-                  'string'
-                ],
-                permissions: [
-                  'string'
-                ],
-                id: 'string',
-                name: 'string'
-              }
-            ]
-          },
-          cdt: 'string',
-          dyeingResults: []
-        },
-        {
-          id: 'string',
-          type: 'CROSS_LINEMACHINE_LINEMACHINE',
-          silkCarRecord: {
-            id: '1',
-            silkCar: {
-              id: '5b6ed118ee3d0a0926707597',
-              createDateTime: 1533989144000,
-              modifyDateTime: 1533989144000,
-              type: 'DEFAULT',
-              number: 'C34001',
-              code: '3000C34001',
-              row: 3,
-              col: 4
-            },
-            batch: {
-              id: 'string',
-              batchNo: 'string',
-              silkWeight: 0,
-              centralValue: 0,
-              holeNum: 0,
-              spec: 'string',
-              tubeColor: 'string',
-              note: 'string',
-              workshop: {
-                id: 'string',
-                code: 'string',
-                name: 'string',
-                note: 'string',
-                corporation: {
-                  id: 'string',
-                  name: 'string'
-                }
-              },
-              product: {
-                id: '5bd1a966885d3b67042ac5f1',
-                name: 'FDY',
-                code: 'FDY'
-              }
-            },
-            grade: {
-              id: 'string',
-              name: 'string',
-              sortBy: 'string'
-            },
-            doffingDateTime: 0,
-            carpoolDateTime: 0
-          },
-          silks: {
-            id: 'string',
-            code: 'string',
-            doffingNum: 'string',
-            doffingOperator: {
-              roles: [
-                'string'
-              ],
-              permissions: [
-                'string'
-              ],
-              id: 'string',
-              hrId: 'string',
-              oaId: 'string',
-              name: 'string',
-              admin: true,
-              groups: [
-                {
-                  roles: [
-                    'string'
-                  ],
-                  permissions: [
-                    'string'
-                  ],
-                  id: 'string',
-                  name: 'string'
-                }
-              ]
-            }
-          },
-          silkDyeingSample: {
-            id: 'string',
-            silk: {
-              id: 'string',
-              code: 'string',
-              doffingNum: 'string',
-              doffingOperator: {
-                roles: [
-                  'string'
-                ],
-                permissions: [
-                  'string'
-                ],
-                id: 'string',
-                hrId: 'string',
-                oaId: 'string',
-                name: 'string',
-                admin: true,
-                groups: [
-                  {
-                    roles: [
-                      'string'
-                    ],
-                    permissions: [
-                      'string'
-                    ],
-                    id: 'string',
-                    name: 'string'
-                  }
-                ]
-              }
-            }
-          },
-          silkCarRecord1: {
-            id: 'string',
-            batch: {
-              id: 'string',
-              batchNo: 'string',
-              silkWeight: 0,
-              centralValue: 0,
-              holeNum: 0,
-              spec: 'string',
-              tubeColor: 'string',
-              note: 'string',
-              workshop: {
-                id: 'string',
-                code: 'string',
-                name: 'string',
-                note: 'string',
-                corporation: {
-                  id: 'string',
-                  name: 'string'
-                }
-              },
-              product: {
-                id: '5bd1a966885d3b67042ac5f1',
-                name: 'FDY',
-                code: 'FDY'
-              }
-            },
-            silkCar: {
-              id: 'string',
-              code: 'string'
-            },
-            grade: {
-              id: 'string',
-              name: 'string',
-              sortBy: 'string'
-            },
-            doffingDateTime: 0,
-            carpoolDateTime: 0
-          },
-          silks1: {
-            id: 'string',
-            code: 'string',
-            doffingNum: 'string',
-            doffingOperator: {
-              roles: [
-                'string'
-              ],
-              permissions: [
-                'string'
-              ],
-              id: 'string',
-              hrId: 'string',
-              oaId: 'string',
-              name: 'string',
-              admin: true,
-              groups: [
-                {
-                  roles: [
-                    'string'
-                  ],
-                  permissions: [
-                    'string'
-                  ],
-                  id: 'string',
-                  name: 'string'
-                }
-              ]
-            }
-          },
-          silkCarRecord2: {
-            id: 'string',
-            silkCar: {
-              id: 'string',
-              code: 'string'
-            },
-            batch: {
-              id: 'string',
-              batchNo: 'string',
-              silkWeight: 0,
-              centralValue: 0,
-              holeNum: 0,
-              spec: 'string',
-              tubeColor: 'string',
-              note: 'string',
-              workshop: {
-                id: 'string',
-                code: 'string',
-                name: 'string',
-                note: 'string',
-                corporation: {
-                  id: 'string',
-                  name: 'string'
-                }
-              },
-              product: {
-                id: '5bd1a966885d3b67042ac5f1',
-                name: 'FDY',
-                code: 'FDY'
-              }
-            },
-            grade: {
-              id: 'string',
-              name: 'string',
-              sortBy: 'string'
-            },
-            doffingDateTime: 0,
-            carpoolDateTime: 0
-          },
-          silks2: [
-            {
-              id: 'string',
-              code: 'string',
-              doffingNum: 'string',
-              doffingOperator: {
-                roles: [
-                  'string'
-                ],
-                permissions: [
-                  'string'
-                ],
-                id: 'string',
-                hrId: 'string',
-                oaId: 'string',
-                name: 'string',
-                admin: true,
-                groups: [
-                  {
-                    roles: [
-                      'string'
-                    ],
-                    permissions: [
-                      'string'
-                    ],
-                    id: 'string',
-                    name: 'string'
-                  }
-                ]
-              }
-            }
-          ],
-          creator: {
-            roles: [
-              'string'
-            ],
-            permissions: [
-              'string'
-            ],
-            id: 'string',
-            hrId: 'string',
-            oaId: 'string',
-            name: 'string',
-            admin: true,
-            groups: [
-              {
-                roles: [
-                  'string'
-                ],
-                permissions: [
-                  'string'
-                ],
-                id: 'string',
-                name: 'string'
-              }
-            ]
-          },
-          cdt: 'string',
-          dyeingResults: []
-        }]
+      dyeingPrepares: []
+      // dyeingPrepares: [
+      //   {
+      //     id: 'string',
+      //     type: 'FIRST',
+      //     silkCarRecord: {
+      //       id: '1',
+      //       silkCar: {
+      //         id: '5b6ed118ee3d0a0926707597',
+      //         createDateTime: 1533989144000,
+      //         modifyDateTime: 1533989144000,
+      //         type: 'DEFAULT',
+      //         number: 'C34001',
+      //         code: '3000C34001',
+      //         row: 3,
+      //         col: 4
+      //       },
+      //       batch: {
+      //         id: 'string',
+      //         batchNo: 'string',
+      //         silkWeight: 0,
+      //         centralValue: 0,
+      //         holeNum: 0,
+      //         spec: 'string',
+      //         tubeColor: 'string',
+      //         note: 'string',
+      //         workshop: {
+      //           id: 'string',
+      //           code: 'string',
+      //           name: 'string',
+      //           note: 'string',
+      //           corporation: {
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         },
+      //         product: {
+      //           id: '5b6d021dee3d0a28f417c218',
+      //           name: 'FDY',
+      //           code: 'FDY'
+      //         }
+      //       },
+      //       grade: {
+      //         id: 'string',
+      //         name: 'string',
+      //         sortBy: 'string'
+      //       },
+      //       doffingDateTime: '1',
+      //       carpoolDateTime: '1'
+      //     },
+      //     silks: [{
+      //       id: 'string',
+      //       code: 'string',
+      //       doffingNum: 'string',
+      //       doffingOperator: {
+      //         roles: [
+      //           'string'
+      //         ],
+      //         permissions: [
+      //           'string'
+      //         ],
+      //         id: 'string',
+      //         hrId: 'string',
+      //         oaId: 'string',
+      //         name: 'string',
+      //         admin: true,
+      //         groups: [
+      //           {
+      //             roles: [
+      //               'string'
+      //             ],
+      //             permissions: [
+      //               'string'
+      //             ],
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         ]
+      //       }
+      //     }],
+      //     silkDyeingSample: {
+      //       id: 'string',
+      //       silk: {
+      //         id: 'string',
+      //         code: 'string',
+      //         doffingNum: 'string',
+      //         doffingOperator: {
+      //           roles: [
+      //             'string'
+      //           ],
+      //           permissions: [
+      //             'string'
+      //           ],
+      //           id: 'string',
+      //           hrId: 'string',
+      //           oaId: 'string',
+      //           name: 'string',
+      //           admin: true,
+      //           groups: [
+      //             {
+      //               roles: [
+      //                 'string'
+      //               ],
+      //               permissions: [
+      //                 'string'
+      //               ],
+      //               id: 'string',
+      //               name: 'string'
+      //             }
+      //           ]
+      //         }
+      //       }
+      //     },
+      //     silkCarRecord1: {
+      //       id: 'string',
+      //       batch: {
+      //         id: 'string',
+      //         batchNo: 'string',
+      //         silkWeight: 0,
+      //         centralValue: 0,
+      //         holeNum: 0,
+      //         spec: 'string',
+      //         tubeColor: 'string',
+      //         note: 'string',
+      //         workshop: {
+      //           id: 'string',
+      //           code: 'string',
+      //           name: 'string',
+      //           note: 'string',
+      //           corporation: {
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         },
+      //         product: {
+      //           id: '5b6d021dee3d0a28f417c218',
+      //           name: 'FDY',
+      //           code: 'FDY'
+      //         }
+      //       },
+      //       silkCar: {
+      //         id: 'string',
+      //         code: 'string'
+      //       },
+      //       grade: {
+      //         id: 'string',
+      //         name: 'string',
+      //         sortBy: 'string'
+      //       },
+      //       doffingDateTime: '1',
+      //       carpoolDateTime: '1'
+      //     },
+      //     silks1: {
+      //       id: 'string',
+      //       code: 'string',
+      //       doffingNum: 'string',
+      //       doffingOperator: {
+      //         roles: [
+      //           'string'
+      //         ],
+      //         permissions: [
+      //           'string'
+      //         ],
+      //         id: 'string',
+      //         hrId: 'string',
+      //         oaId: 'string',
+      //         name: 'string',
+      //         admin: true,
+      //         groups: [
+      //           {
+      //             roles: [
+      //               'string'
+      //             ],
+      //             permissions: [
+      //               'string'
+      //             ],
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         ]
+      //       }
+      //     },
+      //     silkCarRecord2: {
+      //       id: 'string',
+      //       silkCar: {
+      //         id: 'string',
+      //         code: 'string'
+      //       },
+      //       batch: {
+      //         id: 'string',
+      //         batchNo: 'string',
+      //         silkWeight: 0,
+      //         centralValue: 0,
+      //         holeNum: 0,
+      //         spec: 'string',
+      //         tubeColor: 'string',
+      //         note: 'string',
+      //         workshop: {
+      //           id: 'string',
+      //           code: 'string',
+      //           name: 'string',
+      //           note: 'string',
+      //           corporation: {
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         },
+      //         product: {
+      //           id: '5b6d021dee3d0a28f417c218',
+      //           name: 'FDY',
+      //           code: 'FDY'
+      //         }
+      //       },
+      //       grade: {
+      //         id: 'string',
+      //         name: 'string',
+      //         sortBy: 'string'
+      //       },
+      //       doffingDateTime: '1',
+      //       carpoolDateTime: '1'
+      //     },
+      //     silks2: [
+      //       {
+      //         id: 'string',
+      //         code: 'string',
+      //         doffingNum: 'string',
+      //         doffingOperator: {
+      //           roles: [
+      //             'string'
+      //           ],
+      //           permissions: [
+      //             'string'
+      //           ],
+      //           id: 'string',
+      //           hrId: 'string',
+      //           oaId: 'string',
+      //           name: 'string',
+      //           admin: true,
+      //           groups: [
+      //             {
+      //               roles: [
+      //                 'string'
+      //               ],
+      //               permissions: [
+      //                 'string'
+      //               ],
+      //               id: 'string',
+      //               name: 'string'
+      //             }
+      //           ]
+      //         }
+      //       }
+      //     ],
+      //     creator: {
+      //       roles: [
+      //         'string'
+      //       ],
+      //       permissions: [
+      //         'string'
+      //       ],
+      //       id: 'string',
+      //       hrId: 'string',
+      //       oaId: 'string',
+      //       name: 'string',
+      //       admin: true,
+      //       groups: [
+      //         {
+      //           roles: [
+      //             'string'
+      //           ],
+      //           permissions: [
+      //             'string'
+      //           ],
+      //           id: 'string',
+      //           name: 'string'
+      //         }
+      //       ]
+      //     },
+      //     cdt: 'string',
+      //     dyeingResults: []
+      //   },
+      //   {
+      //     id: 'string',
+      //     type: 'CROSS_LINEMACHINE_LINEMACHINE',
+      //     silkCarRecord: {
+      //       id: '1',
+      //       silkCar: {
+      //         id: '5b6ed118ee3d0a0926707597',
+      //         createDateTime: 1533989144000,
+      //         modifyDateTime: 1533989144000,
+      //         type: 'DEFAULT',
+      //         number: 'C34001',
+      //         code: '3000C34001',
+      //         row: 3,
+      //         col: 4
+      //       },
+      //       batch: {
+      //         id: 'string',
+      //         batchNo: 'string',
+      //         silkWeight: 0,
+      //         centralValue: 0,
+      //         holeNum: 0,
+      //         spec: 'string',
+      //         tubeColor: 'string',
+      //         note: 'string',
+      //         workshop: {
+      //           id: 'string',
+      //           code: 'string',
+      //           name: 'string',
+      //           note: 'string',
+      //           corporation: {
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         },
+      //         product: {
+      //           id: '5b6d021dee3d0a28f417c218',
+      //           name: 'FDY',
+      //           code: 'FDY'
+      //         }
+      //       },
+      //       grade: {
+      //         id: 'string',
+      //         name: 'string',
+      //         sortBy: 'string'
+      //       },
+      //       doffingDateTime: 0,
+      //       carpoolDateTime: 0
+      //     },
+      //     silks: {
+      //       id: 'string',
+      //       code: 'string',
+      //       doffingNum: 'string',
+      //       doffingOperator: {
+      //         roles: [
+      //           'string'
+      //         ],
+      //         permissions: [
+      //           'string'
+      //         ],
+      //         id: 'string',
+      //         hrId: 'string',
+      //         oaId: 'string',
+      //         name: 'string',
+      //         admin: true,
+      //         groups: [
+      //           {
+      //             roles: [
+      //               'string'
+      //             ],
+      //             permissions: [
+      //               'string'
+      //             ],
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         ]
+      //       }
+      //     },
+      //     silkDyeingSample: {
+      //       id: 'string',
+      //       silk: {
+      //         id: 'string',
+      //         code: 'string',
+      //         doffingNum: 'string',
+      //         doffingOperator: {
+      //           roles: [
+      //             'string'
+      //           ],
+      //           permissions: [
+      //             'string'
+      //           ],
+      //           id: 'string',
+      //           hrId: 'string',
+      //           oaId: 'string',
+      //           name: 'string',
+      //           admin: true,
+      //           groups: [
+      //             {
+      //               roles: [
+      //                 'string'
+      //               ],
+      //               permissions: [
+      //                 'string'
+      //               ],
+      //               id: 'string',
+      //               name: 'string'
+      //             }
+      //           ]
+      //         }
+      //       }
+      //     },
+      //     silkCarRecord1: {
+      //       id: 'string',
+      //       batch: {
+      //         id: 'string',
+      //         batchNo: 'string',
+      //         silkWeight: 0,
+      //         centralValue: 0,
+      //         holeNum: 0,
+      //         spec: 'string',
+      //         tubeColor: 'string',
+      //         note: 'string',
+      //         workshop: {
+      //           id: 'string',
+      //           code: 'string',
+      //           name: 'string',
+      //           note: 'string',
+      //           corporation: {
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         },
+      //         product: {
+      //           id: '5b6d021dee3d0a28f417c218',
+      //           name: 'FDY',
+      //           code: 'FDY'
+      //         }
+      //       },
+      //       silkCar: {
+      //         id: 'string',
+      //         code: 'string'
+      //       },
+      //       grade: {
+      //         id: 'string',
+      //         name: 'string',
+      //         sortBy: 'string'
+      //       },
+      //       doffingDateTime: 0,
+      //       carpoolDateTime: 0
+      //     },
+      //     silks1: {
+      //       id: 'string',
+      //       code: 'string',
+      //       doffingNum: 'string',
+      //       doffingOperator: {
+      //         roles: [
+      //           'string'
+      //         ],
+      //         permissions: [
+      //           'string'
+      //         ],
+      //         id: 'string',
+      //         hrId: 'string',
+      //         oaId: 'string',
+      //         name: 'string',
+      //         admin: true,
+      //         groups: [
+      //           {
+      //             roles: [
+      //               'string'
+      //             ],
+      //             permissions: [
+      //               'string'
+      //             ],
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         ]
+      //       }
+      //     },
+      //     silkCarRecord2: {
+      //       id: 'string',
+      //       silkCar: {
+      //         id: 'string',
+      //         code: 'string'
+      //       },
+      //       batch: {
+      //         id: 'string',
+      //         batchNo: 'string',
+      //         silkWeight: 0,
+      //         centralValue: 0,
+      //         holeNum: 0,
+      //         spec: 'string',
+      //         tubeColor: 'string',
+      //         note: 'string',
+      //         workshop: {
+      //           id: 'string',
+      //           code: 'string',
+      //           name: 'string',
+      //           note: 'string',
+      //           corporation: {
+      //             id: 'string',
+      //             name: 'string'
+      //           }
+      //         },
+      //         product: {
+      //           id: '5b6d021dee3d0a28f417c218',
+      //           name: 'FDY',
+      //           code: 'FDY'
+      //         }
+      //       },
+      //       grade: {
+      //         id: 'string',
+      //         name: 'string',
+      //         sortBy: 'string'
+      //       },
+      //       doffingDateTime: 0,
+      //       carpoolDateTime: 0
+      //     },
+      //     silks2: [
+      //       {
+      //         id: 'string',
+      //         code: 'string',
+      //         doffingNum: 'string',
+      //         doffingOperator: {
+      //           roles: [
+      //             'string'
+      //           ],
+      //           permissions: [
+      //             'string'
+      //           ],
+      //           id: 'string',
+      //           hrId: 'string',
+      //           oaId: 'string',
+      //           name: 'string',
+      //           admin: true,
+      //           groups: [
+      //             {
+      //               roles: [
+      //                 'string'
+      //               ],
+      //               permissions: [
+      //                 'string'
+      //               ],
+      //               id: 'string',
+      //               name: 'string'
+      //             }
+      //           ]
+      //         }
+      //       }
+      //     ],
+      //     creator: {
+      //       roles: [
+      //         'string'
+      //       ],
+      //       permissions: [
+      //         'string'
+      //       ],
+      //       id: 'string',
+      //       hrId: 'string',
+      //       oaId: 'string',
+      //       name: 'string',
+      //       admin: true,
+      //       groups: [
+      //         {
+      //           roles: [
+      //             'string'
+      //           ],
+      //           permissions: [
+      //             'string'
+      //           ],
+      //           id: 'string',
+      //           name: 'string'
+      //         }
+      //       ]
+      //     },
+      //     cdt: 'string',
+      //     dyeingResults: []
+      //   }]
     }
   },
   created () {
+    this.getWorkShop()
   },
   methods: {
     search () {
@@ -666,13 +673,12 @@ export default {
         endDate: this.endDate
       }
       this.$api.getDyeingPrepares(params).then(res => {
-        console.log(res.data)
+        this.dyeingPrepares = res.data.dyeingPrepares
         this.loading = false
       })
     },
     batchSubmit () {
-      console.log()
-      console.log('批次提交')
+      console.log('批量提交')
     },
     handleCheckAllChange (val) {
       this.isIndeterminate = false
@@ -693,6 +699,13 @@ export default {
       this.pageNum = value.pageNum
       this.pageSize = value.pageSize
       this.seachTableData('seachForm')
+    },
+    // 获取车间
+    getWorkShop () {
+      this.$api.getWorkShopsLine().then(res => {
+        this.workshops = res.data
+        this.workshop = this.workshops[0].id
+      })
     }
   }
 }

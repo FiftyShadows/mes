@@ -291,11 +291,6 @@
       </div>
     </el-dialog>
     <el-dialog title="新建选项值" :visible.sync="dialogVisibleSelects">
-      <!-- <el-form :model="selectOptions">
-        <el-form-item label="活动名称" prop="name" :label-width="formLabelWidth">
-          <el-input v-model="selectOptions.name" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form> -->
       <el-input v-model="selectOptions.name"></el-input>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="addSelectOptions()">确 定</el-button>

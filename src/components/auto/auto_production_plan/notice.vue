@@ -349,7 +349,6 @@ export default {
     remoteMethod (query) {
       if (query !== '') {
         this.loading = true
-        console.log(this.form.batch)
         this.$api.getBatches({
           pageSize: 10,
           first: 0,
@@ -373,7 +372,6 @@ export default {
         this.multipleSelection = this.data
         this.$nextTick(function () { // 默认选中 在这个场景必须使用nextTick函数
           this.multipleSelection.forEach(row => {
-            console.log(row)
             this.$refs.multipleTable1.toggleRowSelection(row)
           })
         })
@@ -389,7 +387,6 @@ export default {
     },
     handleSelectionChange (val) { // 勾选的机台列表
       this.multipleSelection = val
-      console.log(this.multipleSelection)
     },
     closeAddDialog (done) { // 关闭新增按钮
       this.isNew = false
@@ -397,7 +394,6 @@ export default {
     },
     closeChoseItem (done) { // 关闭选择机台弹框
       this.data = []
-      // console.log(this.data)
       done()
     },
     selectItem () { // 选择机台并确认
@@ -416,18 +412,15 @@ export default {
       } else if (this.form.type === '样品') {
         this.form.type = 'SAMPLE'
       }
-      console.log(this.optionsItem)
       for (let i = 0; i < this.optionsItem.length; i++) {
         if (this.optionsItem[i].batchNo === this.form.batch) {
           this.form.batch = this.optionsItem[i]
         }
       }
-      console.log(this.form)
       if (this.form.lineMachines !== undefined) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$api.addNotices(this.form).then(res => {
-              console.log(res)
               this.$notify({
                 title: '成功',
                 message: '添加成功',
@@ -453,7 +446,6 @@ export default {
           q: query
         }).then(res => {
           this.linesOptions = res.data.lines
-          // console.log(this.linesOptions)
           this.lineLoading = false
         })
       } else {
@@ -461,28 +453,21 @@ export default {
       }
     },
     getLinesData () { // 搜索线别
-      // console.log(this.seachLine, this.linesOptions)
       let id
       for (let item of this.linesOptions) {
         if (item.name === this.seachLine) {
           id = item.id
         }
       }
-      // console.log(id)
       this.$api.getLinesData(id).then(res => {
-        console.log(res)
-        // console.log(res.data.length)
         if (res.data.length !== 0) {
           // this.data = this.data.concat(res.data)
           for (let i of res.data) { // 此处如果使用concat multipleSelection会变为【】
             this.data.push(i)
           }
-          // console.log(this.multipleSelection)
         } else {
-          console.log('无搜索值')
         }
       })
-      console.log(this.data)
     },
     addLines () { // 新增线别
       for (let i = 0; i < this.options.length; i++) {
@@ -490,9 +475,7 @@ export default {
           this.Lines.line = this.options[i]
         }
       }
-      console.log(this.Lines)
       this.$api.AddMachine(this.Lines).then(res => {
-        console.log(res)
         this.data.push(res.data)
         this.Lines = {}
         this.addLine = false
@@ -508,7 +491,6 @@ export default {
       for (let j = 0; j < arr.length; j++) {
         this.Lines.spindleSeq.push(arr[j])
       }
-      console.log(this.Lines.spindleSeq)
     },
     down (i) {
       let arr = this.Lines.spindleSeq
@@ -519,11 +501,9 @@ export default {
       for (let j = 0; j < arr.length; j++) {
         this.Lines.spindleSeq.push(arr[j])
       }
-      // console.log(this.form.spindleSeq)
     },
     // 打开修改弹窗
     openSaveNotice (row) {
-      console.log(row)
       this.dialogFormVisibleSave = true
       this.form1.id = row.id
       this.form1.name = row.name
@@ -531,8 +511,6 @@ export default {
       this.form1.batch = row.batch
       this.form1.startDate = row.startDate
       this.form1.lineMachines = row.lineMachines
-      console.log(this.form1)
-      // this.data = this.form1.lineMachines
     },
     perform (row) {
       this.$router.push({path: '/productPlan/Notice/Notice-perform', query: {id: row.id, startDate: row.startDate}})
@@ -559,7 +537,6 @@ export default {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$api.saveNotice(this.form1).then(res => {
-              console.log(res)
               if (res.errorCode !== 'E00000') {
                 this.$notify({
                   title: '成功',
@@ -590,7 +567,6 @@ export default {
       this.getNotice(this.pageSize, this.first, this.q)
     },
     handleChange (value, direction, movedKeys) {
-      console.log(value, direction, movedKeys)
     }
   }
 }

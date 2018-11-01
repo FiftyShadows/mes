@@ -42,7 +42,6 @@
         <el-dialog width="40%" title="新增机台" :visible.sync="addMachineVisible" append-to-body>
           <el-form :model="Lines" :rules="rules" ref="Lines" class="demo-ruleForm">
             <el-form-item label="线别" :label-width="'180px'" required>
-              <!-- <el-input v-model="Lines.name" auto-complete="off" style="width: 60%; float: left;"></el-input> -->
               <el-select v-model="Lines.name" clearable placeholder="请选择" style="float: left;">
                 <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name">
                 </el-option>

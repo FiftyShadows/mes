@@ -286,6 +286,9 @@ export default {
   exeNotices (data) {
     return axios.post(`${baseAutoUrl}/productPlanNotifies/${data.id}/exe`, data)
   },
+  batchExe (data) {
+    return axios.post(`${baseAutoUrl}/productPlanNotifies/${data.id}/batchExe`, data)
+  },
   // 通知单--修改通知单
   saveNotice (data) {
     return axios.put(`${baseAutoUrl}/productPlanNotifies/${data.id}`, data)
@@ -388,15 +391,19 @@ export default {
     return axios.post(`${baseAutoUrl}/batchSilkBarcodes`, data)
   },
   // 待染判查询
-  getDyeingPrepares (data) {
-    return axios.get(`${baseAutoUrl}/dyeingPrepares`, data)
+  getDyeingPrepares (params) {
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/dyeingPrepares`,
+      params: params
+    })
   },
   // 染判结果提交
   submitDyeingPrepares (data) {
     return axios.post(`${baseAutoUrl}/dyeingPrepares/${data.id}`, data)
   },
   // 获取染判结果
-  getDyeingPrepareResults (data) {
+  getDyeingResults (data) {
     return axios.get(`${baseAutoUrl}/dyeingPrepareResults`, data)
   },
 

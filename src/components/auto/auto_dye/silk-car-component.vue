@@ -1,4 +1,4 @@
-<!--待染判记录组件-->
+<!--丝车组件-->
 <template>
   <div>
     <div slot="header" class="clearfix">
@@ -7,41 +7,29 @@
           <span>落筒(拼车)时间</span>
         </el-col>
         <el-col :span="6" class="value">
-          <span>{{silkCarRecord.doffingDateTime}}</span>
-          <!--<span v-if="!!silkCarRecord.carpoolDateTime">{{silkCarRecord.carpoolDateTime}}</span>-->
+          <span>{{this.util.formatDate(silkCarRecord.doffingDateTime)}}</span>
+          <span v-if="!!silkCarRecord.carpoolDateTime">{{this.util.formatDate(silkCarRecord.carpoolDateTime)}}</span>
         </el-col>
         <el-col :span="6" class="span">
           <span>织袜时间</span>
         </el-col>
         <el-col :span="6" class="value">
-          <span>{{dyeingPrepare.cdt}}</span>
+          <span>{{this.util.formatDate(dyeingPrepare.createDateTime)}}</span>
         </el-col>
       </el-row>
       <el-row type="flex" :gutter="20">
-        <el-col :span="3" class="span">
+        <el-col :span="6" class="span">
           <span>批号</span>
         </el-col>
-        <el-col :span="3" class="value">
+        <el-col :span="6" class="value">
           <span>{{silkCarRecord.batch.batchNo}}</span>
         </el-col>
-        <!--<el-col :span="3" class="span">-->
-          <!--<span>线别</span>-->
-        <!--</el-col>-->
-        <!--<el-col :span="3" class="value">-->
-          <!--<span>{{silkCarRecord.line}}</span>-->
-        <!--</el-col>-->
-        <!--<el-col :span="6" class="span">-->
-          <!--<span>位号/落次</span>-->
-        <!--</el-col>-->
-        <!--<el-col :span="6" class="value">-->
-          <!--<template v-for="(itemFallOrder,index) in dyeingPrepare.itemFallOrders" v-if="dyeingPrepare.num == 1">-->
-                    <!--<span :key="index">-->
-                      <!--<span>{{itemFallOrder}}</span>-->
-                      <!--<span v-if="index != dyeingPrepare.itemFallOrders.length-1">, </span>-->
-                    <!--</span>-->
-          <!--</template>-->
-          <!--<div v-if="dyeingPrepare.num != 1">\</div>-->
-        <!--</el-col>-->
+        <el-col :span="6" class="span">
+          <span>落次</span>
+        </el-col>
+        <el-col :span="6" class="value">
+          <span>{{silks[0].doffingNum}}</span>
+        </el-col>
       </el-row>
       <el-row type="flex" :gutter="20">
         <el-col :span="3" class="span">
@@ -50,11 +38,11 @@
         <el-col :span="3" class="value">
           <span>{{dyeingPrepare.type}}</span>
         </el-col>
-        <el-col :span="3" class="span">
-          <span>织袜工号</span>
+        <el-col :span="2" class="span">
+          <span>织袜工</span>
         </el-col>
-        <el-col :span="3" class="value">
-          <span>{{dyeingPrepare.creator.oaId}}</span>
+        <el-col :span="4" class="value">
+          <span>{{dyeingPrepare.creator.name + '[' + dyeingPrepare.creator.hrId + ']'}}</span>
         </el-col>
         <el-col :span="3" class="span">
           <span>丝锭来源</span>
@@ -67,7 +55,7 @@
           <span>丝车号</span>
         </el-col>
         <el-col :span="3" class="value">
-          <span>{{silkCarRecord.code}}</span>
+          <span>{{silkCarRecord.silkCar.code}}</span>
         </el-col>
       </el-row>
     </div>
@@ -77,12 +65,19 @@
           <span>A</span>
         </el-col>
         <el-col :span="11" class="span">
-          <el-row type="flex" :gutter="20" v-for="row in dyeingPrepare.silkCarRecord.silkCar.row" :key="row">
-            <el-col :span="24/dyeingPrepare.silkCarRecord.silkCar.col" class="span" v-for="col in dyeingPrepare.silkCarRecord.silkCar.col" :key="col">
-              <div v-for="silk in silks" :key="silk.id">
-                <span style="font-size: 13px;font-weight: bolder">D3-11/22</span>
+          <el-row type="flex" :gutter="20" v-for="row in silkCarRecord.silkCar.row" :key="row" class="row">
+            <el-col :span="24/silkCarRecord.silkCar.col" class="span" v-for="col in silkCarRecord.silkCar.col" :key="col">
+              <div>
+                <span>{{row}}×{{col}}</span>
               </div>
-              <Buttons :resetFlag="resetFlag" :register="register" :allFlag="allFlag" :row="row" :col="col" :face="'A'"></Buttons>
+              <div v-for="silk in silks" :key="silk.id">
+                <div v-for="initSilk in silkCarRecord.initSilks" :key="initSilk.silk.id">
+                  <span style="font-size: 13px;font-weight: bolder" v-if="silk.id === initSilk.silk.id && initSilk.sideType === 'A' && initSilk.row === row && initSilk.col === col">
+                    <Buttons :allFlag="allFlag1" :register="register1" :dyeingPrepare="dyeingPrepare1" :silk="silk" :product="silkCarRecord.batch.product" :resetFlag="resetFlag" :row="row" :col="col" :face="'A'"></Buttons>
+                    {{initSilk.silk.lineMachine.line.name}}-{{initSilk.silk.spindle}}/{{initSilk.silk.lineMachine.item}}
+                  </span>
+                </div>
+              </div>
             </el-col>
           </el-row>
         </el-col>
@@ -90,12 +85,19 @@
           <span>B</span>
         </el-col>
         <el-col :span="11" class="span">
-          <el-row type="flex" :gutter="20" v-for="row in dyeingPrepare.silkCarRecord.silkCar.row" :key="row">
-            <el-col :span="24/dyeingPrepare.silkCarRecord.silkCar.col" class="span" v-for="col in dyeingPrepare.silkCarRecord.silkCar.col" :key="col">
-              <div v-for="silk in silks" :key="silk.id">
-                <span style="font-size: 13px;font-weight: bolder">D3-11/22</span>
+          <el-row type="flex" :gutter="20" v-for="row in silkCarRecord.silkCar.row" :key="row" class="row">
+            <el-col :span="24/silkCarRecord.silkCar.col" class="span" v-for="col in silkCarRecord.silkCar.col" :key="col">
+              <div>
+                <span>{{row}}×{{col}}</span>
               </div>
-              <Buttons :product="dyeingPrepare.silkCarRecord.batch.product" :resetFlag="resetFlag" :register="register" :allFlag="allFlag" :row="row" :col="col" :face="'B'"></Buttons>
+              <div v-for="silk in silks" :key="silk.id">
+                <div v-for="initSilk in silkCarRecord.initSilks" :key="initSilk.silk.id">
+                  <span style="font-size: 13px;font-weight: bolder" v-if="silk.id === initSilk.silk.id && initSilk.sideType === 'B' && initSilk.row === row && initSilk.col === col">
+                    <Buttons :allFlag="allFlag1" :register="register1" :dyeingPrepare="dyeingPrepare1" :silk="silk" :product="silkCarRecord.batch.product" :resetFlag="resetFlag" :row="row" :col="col" :face="'B'"></Buttons>
+                    {{initSilk.silk.lineMachine.line.name}}-{{initSilk.silk.spindle}}/{{initSilk.silk.lineMachine.item}}
+                  </span>
+                </div>
+              </div>
             </el-col>
           </el-row>
         </el-col>
@@ -105,12 +107,10 @@
 </template>
 <script>
 import Buttons from './button'
-import Form from './form'
 export default {
-  props: ['dyeingPrepares', 'dyeingPrepare', 'index', 'checkAll', 'silkCarRecord', 'silks', 'silkDyeingSample'],
+  props: ['dyeingPrepares', 'dyeingPrepare', 'index', 'checkAll', 'silkCarRecord', 'silks', 'silkDyeingSample', 'register', 'allFlag'],
   components: {
-    'Buttons': Buttons,
-    'Form': Form
+    'Buttons': Buttons
   },
   watch: {
     checkAll (data) {
@@ -119,50 +119,25 @@ export default {
       } else {
         this.checkFlag = false
       }
+    },
+    register (register) {
+      this.register1 = register
     }
   },
   data () {
     return {
+      dyeingPrepare1: this.dyeingPrepare,
       checkFlag: false,
-      register: true,
+      register1: '',
       dialogFormVisible: false,
-      allFlag: false,
+      allFlag1: this.allFlag,
       resetFlag: false,
-      form: {
-        radio1: '1',
-        radio2: '2',
-        radio3: 'F'
-      }
-      // selectFlag: false
+      form: {}
     }
   },
   created () {
   },
   methods: {
-    submit () {
-      let params = {}
-      this.$api.submitDyeingPrepares(params).then(res => {
-        console.log(res.data)
-      })
-    },
-    batchRegister () {
-      this.dialogFormVisible = true
-    },
-    allRegister () {
-      this.allFlag = true
-      this.dialogFormVisible = true
-    },
-    reset () {
-      this.allFlag = false
-      this.resetFlag = !this.resetFlag
-    },
-    ok () {
-      this.register = !this.register
-      this.dialogFormVisible = false
-    },
-    cancel () {
-      this.dialogFormVisible = false
-    },
     handleCheckedSilkCarsChange (val) {
       if (val) {
         let checkedDyeingPrepares = [...this.$store.state.checkedDyeingPrepares]
@@ -213,10 +188,8 @@ export default {
       text-align: center;
       padding: 10px;
     }
-    .register {
-      text-align: center;
-      background: #eef2f6;
-      border: 1px solid #d9dfe5;
-    }
+  }
+  .row {
+    height: 75px;
   }
 </style>

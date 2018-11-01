@@ -305,12 +305,14 @@ const store = new Vuex.Store({
     workshop: [], // 车间
     sapStorage: [], // sap库存点
     warehouseList: [], // 仓库列表
-    silks: [],
+    silks: [], // 待染判界面所有已单选的丝锭
     userInfo: {}, // 存储用户信息
     routers: [], // 存储用户角色对应的路由
     checkAll: false, // 是否全选
     checkedDyeingPrepares: [], // 已经选择的染判结果
-    checkedSilkRuntimes: []
+    checkedSilkRuntimes: [],
+    prepareSubmitSilks: [], // 已经染判完成，待提交的丝锭,一条记录一个元素
+    dyeLevel: '' // 用于控制待染判页面登记是否重置，该值发生变化就会进行重置
   },
   getters: {
     batchList: state => state.batchList,
@@ -347,6 +349,26 @@ const store = new Vuex.Store({
     },
     CheckedSilkRuntimes (state, checkedSilkRuntimes) {
       state.checkedSilkRuntimes = checkedSilkRuntimes
+    },
+    setPrepareSubmitSilks (state, prepareSubmitSilks) {
+      state.prepareSubmitSilks = prepareSubmitSilks
+    },
+    updatePrepareSubmitSilks (state, obj) {
+      let index = state.prepareSubmitSilks.findIndex(it => it.id === obj.id)
+      state.prepareSubmitSilks.splice(index, 1, obj)
+    },
+    Silks (state, silks) {
+      state.silks = silks
+    },
+    addSilk (state, silk) {
+      state.silks = [...state.silks, silk]
+    },
+    removeSilk (state, silk) {
+      let index = state.silks.findIndex(it => it.id === silk.id)
+      state.silks.splice(index, 1)
+    },
+    DyeLevel (state, dyeLevel) {
+      state.dyeLevel = dyeLevel
     }
   },
   actions: {

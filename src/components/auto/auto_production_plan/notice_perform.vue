@@ -2,14 +2,15 @@
   <div class="noticePerform">
     <h2 style="text-align: left;">{{notice.name}}</h2>
     <el-button type="danger" class="closeBth" @click="finishNotice()">结 束</el-button>
+    <el-button v-if="multipleSelection.length>0" type="primary" class="closeBth2" @click="batchExe()">批量执行</el-button>
     <!-- <el-button type="primary" class="performNotice" @click="finishNotice()">查看已执行</el-button> -->
     <el-card class="box-card">
       <div class="text item">类型: {{notice.type}}</div>
       <div class="text item">批号: {{batchNo}}</div>
       <div class="text item">开始日期: {{startDate}}</div>
     </el-card>
-    <el-table :data="tableData" border :stripe="true" @selection-change="handleSelectionChange" style="width: 100%" height="500">
-      <el-table-column type="selection" width="55">
+    <el-table :data="tableData" border :stripe="true" @selection-change="handleSelectionChange" style="width: 100%" height="450">
+      <el-table-column :selectable="judgeSelected" type="selection" width="55">
       </el-table-column>
       <el-table-column prop="line.workshop.name" label="车间">
       </el-table-column>
@@ -21,9 +22,9 @@
       </el-table-column>
       <el-table-column prop="startDate" label="开始执行时间">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="160">
+      <el-table-column label="操作" width="160">
         <template slot-scope="scope">
-          <el-button v-if="!scope.row.startDate" type="primary" @click="perform(scope.row)" size="small">执行</el-button>
+          <el-button v-if="scope.row.noticeId !== noticeId && scope.row.startDate < startDate" type="primary" @click="perform(scope.row)" size="small">执行</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -38,8 +39,8 @@ export default {
       startDate: this.$route.query.startDate,
       notice: {},
       tableData: [],
+      multipleSelection: [],
       batchNo: ''
-
     }
   },
   created () {
@@ -64,6 +65,7 @@ export default {
             if (this.performNotices[i].lineMachine.id === this.tableData[j].id) {
               this.tableData[j].startDate = this.performNotices[i].startDate
               this.tableData[j].name = this.performNotices[i].productPlanNotify.name
+              this.tableData[j].noticeId = this.performNotices[i].productPlanNotify.id
             }
           }
         }
@@ -115,8 +117,28 @@ export default {
         }
       })
     },
+    batchExe () {
+      this.multipleSelection.forEach((item, i) => {
+        item.extra = {
+          canExe: true
+        }
+      })
+      this.$api.batchExe(this.multipleSelection).then(res => {
+        if (res.errorCode !== 'E00000') {
+          this.$notify({
+            title: '成功',
+            message: '开始批量执行',
+            type: 'success'
+          })
+          this.getPerform()
+        }
+      })
+    },
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    judgeSelected (row, index) {
+      return row.noticeId !== this.noticeId && row.startDate < this.startDate
     }
   }
 }
@@ -131,6 +153,11 @@ export default {
    position: absolute;
    top: 70px;
    right: 20px;
+ }
+ .closeBth2 {
+   position: absolute;
+   top: 70px;
+   right: 120px;
  }
  .performNotice {
    position: absolute;

@@ -11,14 +11,14 @@
           <el-col :span="21">
             <!--非位于与位织袜的情况，一条记录一车-->
           <div v-if="dyeingPrepare.type !== 'CROSS_LINEMACHINE_LINEMACHINE'">
-            <silk-car-component :silkCarRecord="dyeingPrepare.silkCarRecord" :silks="dyeingPrepare.silks" :silkDyeingSample="dyeingPrepare.silkDyeingSample" :dyeingPrepares="dyeingPrepares1" :dyeingPrepare="dyeingPrepare1" :index="index1" :checkAll="checkAll1"></silk-car-component>
+            <silk-car-component :allFlag="allFlag" :register="register" :silkCarRecord="dyeingPrepare.silkCarRecord" :silks="dyeingPrepare.silks" :silkDyeingSample="dyeingPrepare.silkDyeingSample" :dyeingPrepares="dyeingPrepares1" :dyeingPrepare="dyeingPrepare1" :index="index1" :checkAll="checkAll1"></silk-car-component>
           </div>
             <!--位与位交织，一条记录两车-->
           <div v-if="dyeingPrepare.type === 'CROSS_LINEMACHINE_LINEMACHINE'">
-            <silk-car-component :silkCarRecord="dyeingPrepare.silkCarRecord1" :silks="dyeingPrepare.silks1" :silkDyeingSample="dyeingPrepare.silkDyeingSample" :dyeingPrepares="dyeingPrepares1" :dyeingPrepare="dyeingPrepare1" :index="index1" :checkAll="checkAll1"></silk-car-component>
+            <silk-car-component :allFlag="allFlag" :register="register" :silkCarRecord="dyeingPrepare.silkCarRecord1" :silks="dyeingPrepare.silks1" :silkDyeingSample="dyeingPrepare.silkDyeingSample" :dyeingPrepares="dyeingPrepares1" :dyeingPrepare="dyeingPrepare1" :index="index1" :checkAll="checkAll1"></silk-car-component>
           </div>
           <div v-if="dyeingPrepare.type === 'CROSS_LINEMACHINE_LINEMACHINE'">
-            <silk-car-component :silkCarRecord="dyeingPrepare.silkCarRecord2" :silks="dyeingPrepare.silks2" :silkDyeingSample="dyeingPrepare.silkDyeingSample" :dyeingPrepares="dyeingPrepares1" :dyeingPrepare="dyeingPrepare1" :index="index1" :checkAll="checkAll1"></silk-car-component>
+            <silk-car-component :allFlag="allFlag" :register="register" :silkCarRecord="dyeingPrepare.silkCarRecord2" :silks="dyeingPrepare.silks2" :silkDyeingSample="dyeingPrepare.silkDyeingSample" :dyeingPrepares="dyeingPrepares1" :dyeingPrepare="dyeingPrepare1" :index="index1" :checkAll="checkAll1"></silk-car-component>
           </div>
           </el-col>
           <el-col :span="2" class="register" style="margin-left: 20px;margin-top: 5%" v-if="dyeingPrepare.type !== 'CROSS_LINEMACHINE_LINEMACHINE'">
@@ -34,39 +34,20 @@
             <el-button @click="reset()" type="primary" style="margin-left: -9px;margin-top: 10%">重置</el-button>
           </el-col>
           <div class="tag">
-            <span>一次</span>
+            <span v-if="dyeingPrepare.type === 'FIRST'">一次</span>
+            <span v-if="dyeingPrepare.type === 'CROSS_LINEMACHINE_SPINDLE'">位锭</span>
+            <span v-if="dyeingPrepare.type === 'CROSS_LINEMACHINE_LINEMACHINE'">位位</span>
+            <span v-if="dyeingPrepare.type === 'SECOND'">二次</span>
+            <span v-if="dyeingPrepare.type === 'THIRD'">三次</span>
           </div>
-          <el-dialog title="批量登记" :visible.sync="dialogFormVisible" width="400">
+          <el-dialog title="批量登记" :visible.sync="dialogFormVisible" width="25%">
             <el-form :model="form">
-              <el-form-item></el-form-item>
+              <el-form-item v-for="item in form.formFieldConfigs" :key="item.id" :label="item.name">
+                <el-select v-model="item.value" placeholder="请选择">
+                  <el-option v-for="(option, index) in item.selectOptions" :key="index" :value="option" :label="option"></el-option>
+                </el-select>
+              </el-form-item>
             </el-form>
-            <!--<el-form :model="form">-->
-              <!--<el-form-item label="灰卡级别">-->
-                <!--&lt;!&ndash;<el-select></el-select>&ndash;&gt;-->
-              <!--</el-form-item>-->
-              <!--<el-form-item label="是否异常">-->
-                <!--<el-radio v-model="form.radio1" label="1">是</el-radio>-->
-                <!--<el-radio v-model="form.radio1" label="2">否</el-radio>-->
-              <!--</el-form-item>-->
-              <!--<el-form-item label="染判类型">-->
-                <!--<el-radio v-model="form.radio2" label="1">普染</el-radio>-->
-                <!--<el-radio v-model="form.radio2" label="2">敏染</el-radio>-->
-              <!--</el-form-item>-->
-              <!--<el-form-item label="判降等级">-->
-                <!--<el-radio v-model="form.radio3" label="F">F</el-radio>-->
-                <!--<el-radio v-model="form.radio3" label="D">D</el-radio>-->
-                <!--<el-radio v-model="form.radio3" label="L">L</el-radio>-->
-                <!--<el-radio v-model="form.radio3" label="OF">OF</el-radio>-->
-                <!--<el-radio v-model="form.radio3" label="OD">OD</el-radio>-->
-                <!--<el-radio v-model="form.radio3" label="OL">OL</el-radio>-->
-              <!--</el-form-item>-->
-              <!--<el-form-item label="丝锭等级">-->
-                <!--&lt;!&ndash;<el-select></el-select>&ndash;&gt;-->
-              <!--</el-form-item>-->
-              <!--<el-form-item label="降等原因">-->
-                <!--&lt;!&ndash;<el-select></el-select>&ndash;&gt;-->
-              <!--</el-form-item>-->
-            <!--</el-form>-->
             <div slot="footer" class="dialog-footer">
               <el-button type="primary" @click="ok()">确定</el-button>
               <el-button @click="cancel()">取消</el-button>
@@ -95,44 +76,78 @@ export default {
   },
   data () {
     return {
+      value: '',
       dyeingPrepares1: this.dyeingPrepares,
       dyeingPrepare1: this.dyeingPrepare,
       index1: this.index,
       checkAll1: this.checkAll,
       checkFlag: false,
-      register: true,
+      register: '',
       dialogFormVisible: false,
       allFlag: false,
-      resetFlag: false,
+      allSilks: [],
+      prepareSubmitObj: {},
+      formConfigValueData: {},
       form: {}
     }
   },
   created () {
-    this.getDyeingInfo()
+    this.setSilks()
   },
   methods: {
     submit () {
-      let params = {}
+      this.prepareSubmitObj = this.$store.state.prepareSubmitSilks.find(it => it.id === this.dyeingPrepare.id)
+      let params = {
+        items: this.prepareSubmitObj.allSilks,
+        id: this.prepareSubmitObj.id
+      }
       this.$api.submitDyeingPrepares(params).then(res => {
-        console.log(res.data)
+        this.$emit('getDyeingRecords')
       })
     },
+    // 批量登记弹出框
     batchRegister () {
+      this.getDyeingInfo()
       this.dialogFormVisible = true
     },
+    // 整车登记弹出框
     allRegister () {
+      this.getDyeingInfo()
+      this.$store.commit('Silks', this.prepareSubmitObj.allSilks)
       this.allFlag = true
-      this.dialogFormVisible = true
     },
     reset () {
-      this.allFlag = false
-      this.resetFlag = !this.resetFlag
+      this.$store.commit('updatePrepareSubmitSilks', this.prepareSubmitObj)
+      this.$store.commit('DyeLevel', '')
     },
     ok () {
-      this.register = !this.register
+      let array = this.$store.state.prepareSubmitSilks.find(it => it.id === this.dyeingPrepare.id).allSilks
+      this.form.formFieldConfigs.forEach((item, i) => {
+        this.formConfigValueData[item.id] = item.value
+      })
+      this.register = this.form.formFieldConfigs[3].value
+      this.$store.state.silks.forEach((silk, i) => {
+        let obj = {
+          silk: {
+            id: silk.id
+          },
+          hasException: true,
+          formConfig: this.form,
+          formConfigValueData: this.formConfigValueData
+        }
+        let index = array.findIndex(it => it.silk.id === silk.id)
+        array.splice(index, 1, obj)
+        let obj2 = {
+          id: this.dyeingPrepare.id,
+          allSilks: array
+        }
+        this.$store.commit('updatePrepareSubmitSilks', obj2)
+      })
+      this.allFlag = false
       this.dialogFormVisible = false
     },
     cancel () {
+      this.allFlag = false
       this.dialogFormVisible = false
     },
     handleCheckedSilkCarsChange (val) {
@@ -157,9 +172,54 @@ export default {
     },
     getDyeingInfo () {
       this.$api.getDyeingInfo(this.dyeingPrepare.silkCarRecord.batch.product).then(res => {
-        this.form = res.data
-        console.log(this.form)
+        this.form = res.data.dyeingFormConfig
+        this.form.formFieldConfigs.forEach((item, i) => {
+          item.value = item.selectOptions[0]
+        })
       })
+    },
+    // 给染判的丝锭加一个默认的染判结果，即默认染判是正常的
+    setSilks () {
+      let silks = this.dyeingPrepare.silks
+      let silks1 = this.dyeingPrepare.silks1
+      let silks2 = this.dyeingPrepare.silks2
+      if (silks) {
+        silks.forEach((item, i) => {
+          let obj = {
+            silk: {
+              id: item.id
+            }
+          }
+          this.allSilks.push(obj)
+        })
+      }
+      if (silks1) {
+        silks1.forEach((item, i) => {
+          let obj = {
+            silk: {
+              id: item.id
+            }
+          }
+          this.allSilks.push(obj)
+        })
+      }
+      if (silks2) {
+        silks2.forEach((item, i) => {
+          let obj = {
+            silk: {
+              id: item.id
+            }
+          }
+          this.allSilks.push(obj)
+        })
+      }
+      this.prepareSubmitObj = {
+        id: this.dyeingPrepare.id,
+        allSilks: this.allSilks
+      }
+      let array = this.$store.state.prepareSubmitSilks
+      array.push(this.prepareSubmitObj)
+      this.$store.commit('setPrepareSubmitSilks', array)
     }
   }
 }

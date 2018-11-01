@@ -2,7 +2,7 @@
 <template>
   <div class="batchManage">
     <div style="float: left; margin-bottom: 10px;">
-      <el-input v-model="seacrhBatch" placeholder="请输入内容..." style="width: 200px;"></el-input>
+      <el-input v-model="seacrhBatch" placeholder="请输入批号..." style="width: 200px;"></el-input>
       <el-button type="primary" icon="el-icon-search" circle @click="seach()" ></el-button>
     </div>
     <el-button type="primary" @click="openAddBatch()" style="float: right; margin-bottom: 10px;">新 增</el-button>
