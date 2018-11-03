@@ -110,7 +110,7 @@ export default {
         if (res.errorCode !== 'E00000') {
           this.$notify({
             title: '成功',
-            message: '开始执行',
+            message: '执行成功',
             type: 'success'
           })
           this.getPerform()
@@ -123,11 +123,15 @@ export default {
           canExe: true
         }
       })
-      this.$api.batchExe(this.multipleSelection).then(res => {
+      let params = {
+        lineMachines: this.multipleSelection,
+        id: this.noticeId
+      }
+      this.$api.batchExe(params).then(res => {
         if (res.errorCode !== 'E00000') {
           this.$notify({
             title: '成功',
-            message: '开始批量执行',
+            message: '批量执行成功',
             type: 'success'
           })
           this.getPerform()

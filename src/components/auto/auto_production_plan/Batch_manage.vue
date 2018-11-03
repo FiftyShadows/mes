@@ -172,8 +172,8 @@ export default {
   },
   created () {
     this.$api.getBatches({
-      pageSize: '',
-      first: '',
+      pageSize: 50,
+      first: 0,
       q: ''
     }).then(res => {
       this.total = res.data.batches.length
@@ -188,7 +188,6 @@ export default {
   methods: {
     getBatch (pageSize, first, q) {
       this.loading = true
-      console.log(pageSize, first)
       this.$api.getBatches({
         pageSize: pageSize,
         first: first,
@@ -196,7 +195,6 @@ export default {
       }).then(res => {
         this.tableData = res.data.batches
         this.loading = false
-        // console.log(this.tableData)
       })
     },
     seach () {
@@ -207,14 +205,12 @@ export default {
       }).then(res => {
         this.tableData = res.data.batches
         this.total = this.tableData.length
-        console.log(this.total)
       })
     },
     closeDialog () {
       this.getBatch(this.pageSize, this.first, this.seacrhBatch)
     },
     openSaveBatch (row) {
-      console.log(row)
       this.form2 = row
       this.form2.workshopName = row.workshop.name
       this.form2.productName = row.product.name
@@ -231,11 +227,9 @@ export default {
         id: this.productID,
         name: this.form2.productName
       }
-      console.log(this.form2)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$api.SaveBatches(this.form2).then(res => {
-            console.log(res)
             this.getBatch(this.pageSize, this.first, this.seacrhBatch)
             this.dialogVisibleSave = false
             this.$notify({
@@ -250,12 +244,10 @@ export default {
       })
     },
     openAddBatch () {
-      console.log(this.options1)
       this.dialogVisibleAdd = true
     },
     deleteBatch (row) {
       this.$api.deleteBatch(row.id).then(res => {
-        console.log(res)
         this.$notify({
           title: '成功',
           message: '删除成功',
@@ -276,11 +268,9 @@ export default {
         id: this.productID,
         name: this.form.productName
       }
-      console.log(this.form)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$api.addBatch(this.form).then(res => {
-            console.log(res)
             this.getBatch(this.pageSize, this.first, this.seacrhBatch)
             this.dialogVisibleAdd = false
             this.$notify({
@@ -302,13 +292,11 @@ export default {
       }
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
       this.pageSize = val
       this.getBatch(this.pageSize, this.first, this.seacrhBatch)
     },
     handleCurrentChange (val) {
       this.first = (--val) * this.pageSize
-      console.log(`当前页: ${this.first}`)
       this.getBatch(this.pageSize, this.first, this.seacrhBatch)
     }
   }

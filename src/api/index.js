@@ -267,8 +267,13 @@ export default {
   },
 
   // 通知单--获取数据
-  getNotices (data) {
-    return axios.get(`${baseAutoUrl}/productPlanNotifies?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)
+  getNotices (params) {
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/productPlanNotifies`,
+      params: params
+    })
+    // return axios.get(`${baseAutoUrl}/productPlanNotifies?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)
   },
   // 通知单--执行情况
   getPerforms (data) {
@@ -403,8 +408,13 @@ export default {
     return axios.post(`${baseAutoUrl}/dyeingPrepares/${data.id}`, data)
   },
   // 获取染判结果
-  getDyeingResults (data) {
-    return axios.get(`${baseAutoUrl}/dyeingPrepareResults`, data)
+  getDyeingResults (params) {
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/dyeingResults`,
+      params: params
+    })
+    // return axios.get(`${baseAutoUrl}/dyeingResults`, data)
   },
 
   // =========================================== 仓储 ===========================================

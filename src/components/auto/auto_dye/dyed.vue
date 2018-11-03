@@ -11,20 +11,22 @@
     </el-col>
     <el-col :span="5">
       <el-date-picker
-        v-model="startTime"
-        type="datetime"
-        placeholder="请选择织袜开始时间"
+        v-model="startDate"
+        type="date"
+        placeholder="请选择染判开始日期"
         align="right"
-        :picker-options="pickerOptions1">
+        :picker-options="pickerOptions1"
+        value-format="yyyy-MM-dd">
       </el-date-picker>
     </el-col>
     <el-col :span="5">
       <el-date-picker
-        v-model="endTime"
-        type="datetime"
-        placeholder="请选择织袜结束时间"
+        v-model="endDate"
+        type="date"
+        placeholder="请选择染判结束日期"
         align="right"
-        :picker-options="pickerOptions1">
+        :picker-options="pickerOptions1"
+        value-format="yyyy-MM-dd">
       </el-date-picker>
     </el-col>
     <el-button icon="el-icon-search" type="primary" @click="search()"></el-button>
@@ -34,6 +36,7 @@
       :index="index"
       :key="index"
       v-loading="loading"
+      :dyeingResult="dyeingResult"
       style="margin-top: 10px">
     </dyeing-result-component>
   </div>
@@ -73,8 +76,8 @@ export default {
       workshops: [],
       workshop: '',
       userId: '',
-      startTime: this.util.getCurrentFormatDateSE().startTime,
-      endTime: this.util.getCurrentFormatDateSE().endTime,
+      startDate: this.util.getNowFormatDate(),
+      endDate: this.util.getNowFormatDate(),
       dyeingResults: []
     }
   },
@@ -83,8 +86,15 @@ export default {
   },
   methods: {
     search () {
-      let params = {}
-      this.$api.getDyeingPrepareResults(params).then(res => {})
+      let params = {
+        startDate: this.startDate,
+        endDate: this.endDate,
+        first: 0,
+        pageSize: 50
+      }
+      this.$api.getDyeingResults(params).then(res => {
+        this.dyeingResults = res.data
+      })
     },
     // 获取车间
     getWorkShops () {

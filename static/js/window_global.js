@@ -1,4 +1,4 @@
-// const auto = 'http://192.168.129.113:9998/api'
+// const auto = '192.168.128.79:9998/api'
 const auto = 'http://localhost:9998/api'
 // 吴炯接口地址
 // const ware = 'http://192.168.126.205:8080'

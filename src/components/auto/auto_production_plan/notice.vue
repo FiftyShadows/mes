@@ -227,7 +227,7 @@ export default {
         return <span>{ option.key } - { option.label }</span>
       },
       tableData: [], // 主表格数据
-      pageSize: 20,
+      pageSize: 50,
       first: 0,
       q: '',
       total: 0,
@@ -278,14 +278,6 @@ export default {
   created () {
     this.getNotice()
   },
-  // mounted () {
-  //   if (this.multipleSelection.length !== 0) {
-  //     this.multipleSelection.forEach(row => {
-  //       console.log(row)
-  //       this.$refs.multipleTable1.toggleRowSelection(row)
-  //     })
-  //   }
-  // },
   methods: {
     // 获取列表数据
     getNotice () {
