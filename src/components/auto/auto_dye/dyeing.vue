@@ -1,3 +1,4 @@
+<!--待染判-->
 <template>
   <div class='dyeing'>
     <el-row type='flex' :gutter='20'>

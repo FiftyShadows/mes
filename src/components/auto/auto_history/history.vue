@@ -3,7 +3,7 @@
     <div style="height: 50px">
       <el-date-picker
         style="float: left;"
-        v-model="time"
+        v-model="date"
         type="daterange"
         align="right"
         unlink-panels
@@ -105,10 +105,12 @@ export default {
       eventSources: [], // 事件源（每一步操作）
       options: [],
       silkCarCode: '',
+      first: 0,
+      pageSize: 50,
       loading: false,
       order: '正序',
       silkCarRecords: [],
-      time: [this.util.getCurrentFormatDateSE().startTime, this.util.getCurrentFormatDateSE().endTime],
+      date: [this.util.getNowFormatDate(), this.util.getNowFormatDate()],
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -135,11 +137,6 @@ export default {
             picker.$emit('pick', [start, end])
           }
         }]
-      },
-      data: {
-        pageSize: null,
-        first: 1,
-        q: ''
       }
     }
   },
@@ -162,14 +159,17 @@ export default {
       }
     },
     getSilkCarRecords (val) {
-      this.silkCarRecords = []
-      // let params = {
-      //   silkCarCode: this.silkCarCode,
-      //   time: this.time
-      // }
-      // this.$api.getSilkCarRecords(params).then(res => {
-      //   this.silkCarRecords = res.data.silkCarRecords
-      // })
+      let params = {
+        first: 0,
+        pageSize: 50,
+        silkCarCode: this.silkCarCode,
+        startDate: this.date[0],
+        endDate: this.date[1]
+      }
+      this.$api.getSilkCarRecords(params).then(res => {
+        this.silkCarRecords = res.data
+        console.log(this.silkCarRecords)
+      })
     },
     getDetail () {
       console.log('测试')

@@ -31,26 +31,33 @@
     </el-col>
     <el-button icon="el-icon-search" type="primary" @click="search()"></el-button>
   </el-row>
-  <div v-for="(dyeingResult, index) in dyeingResults" :key="index">
-    <dyeing-result-component
-      :index="index"
+  <div v-for="(dyedResult, index) in dyedResults" :key="index">
+    <dyed-result-component
       :key="index"
+      :dyedResult="dyedResult"
+      :dyedResults="dyedResults"
       v-loading="loading"
-      :dyeingResult="dyeingResult"
       style="margin-top: 10px">
-    </dyeing-result-component>
+    </dyed-result-component>
   </div>
+  <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
 </div>
 </template>
 <script>
-import dyeingResult from './dyeing-result-component'
+import dyedResult from './dyed-result-component'
+import Pagination from '../../common/pagination.vue'
+
 export default {
   name: 'dyed',
   components: {
-    'dyeing-result-component': dyeingResult
+    'Pagination': Pagination,
+    'dyed-result-component': dyedResult
   },
   data () {
     return {
+      total: 0,
+      pageSize: 50,
+      pageNum: 1,
       pickerOptions1: {
         shortcuts: [{
           text: '今天',
@@ -78,7 +85,8 @@ export default {
       userId: '',
       startDate: this.util.getNowFormatDate(),
       endDate: this.util.getNowFormatDate(),
-      dyeingResults: []
+      dyedResults: [],
+      loading: false
     }
   },
   created () {
@@ -86,14 +94,17 @@ export default {
   },
   methods: {
     search () {
+      this.loading = true
       let params = {
         startDate: this.startDate,
         endDate: this.endDate,
-        first: 0,
-        pageSize: 50
+        first: (this.pageNum - 1) * this.pageSize,
+        pageSize: this.pageSize
       }
-      this.$api.getDyeingResults(params).then(res => {
-        this.dyeingResults = res.data
+      this.$api.getDyedResults(params).then(res => {
+        this.dyedResults = res.data.dyeingPrepares
+        this.total = res.data.dyeingPrepares.length
+        this.loading = false
       })
     },
     // 获取车间
@@ -102,6 +113,11 @@ export default {
         this.workshops = res.data
         this.workshop = this.workshops[0].id
       })
+    },
+    changePage (value) {
+      this.pageNum = value.pageNum
+      this.pageSize = value.pageSize
+      this.seachTableData('seachForm')
     }
   }
 }

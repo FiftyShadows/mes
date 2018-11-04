@@ -1,28 +1,28 @@
-<!--待染判记录组件-->
+<!--已染判记录组件-->
 <template>
   <div>
-    <el-row type="flex" :gutter="10" :key="index1">
+    <el-row type="flex" :gutter="10">
       <el-col :span="22" style="margin-left: -10px">
         <el-card  class="card">
-          <el-col :span="21">
+          <el-col :span="24">
             <!--非位于与位织袜的情况，一条记录一车-->
-          <div v-if="dyeingPrepare.type !== 'CROSS_LINEMACHINE_LINEMACHINE'">
-            <silk-car-component></silk-car-component>
+          <div v-if="dyedResult.type !== 'CROSS_LINEMACHINE_LINEMACHINE'">
+            <dyed-silk-car-component :dyedResults="dyedResults1" :dyedResult="dyedResult1" :silks="dyedResult.silks" :silkCarRecord="dyedResult.silkCarRecord"></dyed-silk-car-component>
           </div>
             <!--位与位交织，一条记录两车-->
-          <div v-if="dyeingPrepare.type === 'CROSS_LINEMACHINE_LINEMACHINE'">
-            <silk-car-component></silk-car-component>
+          <div v-if="dyedResult.type === 'CROSS_LINEMACHINE_LINEMACHINE'">
+            <dyed-silk-car-component :dyedResults="dyedResults1" :dyedResult="dyedResult1" :silks="dyedResult.silks1" :silkCarRecord="dyedResult.silkCarRecord1"></dyed-silk-car-component>
           </div>
-          <div v-if="dyeingPrepare.type === 'CROSS_LINEMACHINE_LINEMACHINE'">
-            <silk-car-component></silk-car-component>
+          <div v-if="dyedResult.type === 'CROSS_LINEMACHINE_LINEMACHINE'">
+            <dyed-silk-car-component :dyedResults="dyedResults1" :dyedResult="dyedResult1" :silks="dyedResult.silks2" :silkCarRecord="dyedResult.silkCarRecord2"></dyed-silk-car-component>
           </div>
           </el-col>
           <div class="tag">
-            <span v-if="dyeingPrepare.type === 'FIRST'">一次</span>
-            <span v-if="dyeingPrepare.type === 'CROSS_LINEMACHINE_SPINDLE'">位锭</span>
-            <span v-if="dyeingPrepare.type === 'CROSS_LINEMACHINE_LINEMACHINE'">位位</span>
-            <span v-if="dyeingPrepare.type === 'SECOND'">二次</span>
-            <span v-if="dyeingPrepare.type === 'THIRD'">三次</span>
+            <span v-if="dyedResult.type === 'FIRST'">一次</span>
+            <span v-if="dyedResult.type === 'CROSS_LINEMACHINE_SPINDLE'">位锭</span>
+            <span v-if="dyedResult.type === 'CROSS_LINEMACHINE_LINEMACHINE'">位位</span>
+            <span v-if="dyedResult.type === 'SECOND'">二次</span>
+            <span v-if="dyedResult.type === 'THIRD'">三次</span>
           </div>
         </el-card>
       </el-col>
@@ -30,13 +30,16 @@
   </div>
 </template>
 <script>
-import silkCarComponent from './silk-car-component'
+import dyedSilkCarComponent from './dyed-silk-car-component'
 export default {
+  props: ['dyedResult', 'dyedResults'],
   components: {
-    'silk-car-component': silkCarComponent
+    'dyed-silk-car-component': dyedSilkCarComponent
   },
   data () {
     return {
+      dyedResult1: this.dyedResult,
+      dyedResults1: this.dyedResults
     }
   },
   created () {

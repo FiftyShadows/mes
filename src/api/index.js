@@ -376,8 +376,13 @@ export default {
     return axios.put(`${baseAutoUrl}/operators/${data.id}`, data)
   },
   // 获取丝车历史信息
-  getSilkCarRecords (data) {
-    return axios.get(`${baseAutoUrl}/silkCarRecords?startTime=${data.startTime}&endTime=${data.endTime}&q=${data.silkCarCode}`)
+  getSilkCarRecords (params) {
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/silkCarRecords`,
+      params: params
+    })
+    // return axios.get(`${baseAutoUrl}/silkCarRecords?startTime=${data.startTime}&endTime=${data.endTime}&q=${data.silkCarCode}`)
   },
   // 获取丝锭条码查询
   getSilkBarCodes (params) {
@@ -408,7 +413,7 @@ export default {
     return axios.post(`${baseAutoUrl}/dyeingPrepares/${data.id}`, data)
   },
   // 获取染判结果
-  getDyeingResults (params) {
+  getDyedResults (params) {
     return axios({
       method: 'get',
       url: `${baseAutoUrl}/dyeingResults`,
