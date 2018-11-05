@@ -9,6 +9,7 @@
         <Localtion></Localtion>
       </el-tab-pane>
       <el-tab-pane label="SAP状态">
+        <Status></Status>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -16,11 +17,13 @@
 <script>
 import Material from './sapMaterial.vue'
 import Localtion from './sapLocation.vue'
+import Status from './sapStatus.vue'
 export default {
   name: 'autoPackage',
   components: {
     Material,
-    Localtion
+    Localtion,
+    Status
   },
   data () {
     return {

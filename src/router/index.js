@@ -5,6 +5,7 @@ import Help from '@/components/help'
 import mainLayout from '../../src/components/main_layout'
 // import Login from '@/components/login' // 仓储登陆
 // ================================自动化===============================
+import DefaultView from '@/components/defaultView'
 // 当前
 import Current from '@/components/auto/auto_current/index'
 // 历史
@@ -81,7 +82,13 @@ let route = new Router({
       },
       children: [
         // ================================自动化===============================
-
+        {// 当前
+          path: '/index',
+          name: '默认页面',
+          component: DefaultView,
+          class: 'el-icon-search',
+          permissions: ''
+        },
         {// 当前
           path: '/current/index',
           name: '当前',

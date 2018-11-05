@@ -13,14 +13,14 @@
       </el-table-column>
       <el-table-column prop="storageStatus" label="当前状态">
       </el-table-column>
-      <el-table-column prop="planBatchNoList" label="批号" min-width="400">
+      <el-table-column prop="planBatchNoList" label="批号" min-width="200">
         <template slot-scope="scope">
           <span v-for="item in scope.row.planBatchNoList" :key="item" class="planBatchNoList">{{item}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="productType" label="成品类型">
       </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" fixed="right" width="120">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="openSave(scope.row)">修改</el-button>
         </template>
@@ -278,5 +278,6 @@ export default {
   margin-left: 2px;
   color: rgb(219, 216, 216);
   border-radius: 10px;
+  text-align: center;
 }
 </style>

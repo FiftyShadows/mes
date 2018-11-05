@@ -450,6 +450,9 @@ export default {
   deleteSapStorage (data) { // sap信息--sap库位删除
     return axios.post(`${baseWareUrl}/warehouseInfo/sapStorage/deleteSapStorage`, data)
   },
+  selectSapAllocationStatus (data) { // sap信息--sap状态获取数据
+    return axios.post(`${baseWareUrl}/mes/requisition/Allocation/selectSapAllocationStatus`, data)
+  },
 
   getReasonList (data) { // 翻包原因--获取原因
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/turnoverPackage/getReasonList`, data)
@@ -544,5 +547,11 @@ export default {
   },
   selectAllocation (data) { // 销售调拨单--调拨单报表
     return axios.post(`${baseWareUrl}/mes/requisition/Allocation/selectAllocation`, data)
+  },
+  stampAllocation (data) { // 销售调拨单--修改调拨单状态
+    return axios.post(`${baseWareUrl}/mes/requisition/Allocation/stampAllocation`, data)
+  },
+  deliveryOrderPost (data) { // 销售调拨单--取消过账 / 过账
+    return axios.post(`${baseWareUrl}/mes/requisition/Allocation/deliveryOrderPost`, data)
   }
 }

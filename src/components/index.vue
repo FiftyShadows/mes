@@ -2,7 +2,10 @@
   <div class="main">
     <el-container>
       <el-header height="50px">
-        <router-link to="/"><img class="logo" src="../assets/logo.png" alt="hengyi"></router-link>
+        <router-link to="/index">
+          <img class="logo" v-if="!isCollapse"  src="../assets/logo.png" alt="hengyi">
+          <img class="logo" v-else src="../assets/logo_mini.png" alt="hengyi">
+        </router-link>
         <!-- <el-tooltip class="item" effect="dark" content="退出" placement="bottom">
           <i class="head_out el-icon-circle-close" @click="outLogin()"></i>
         </el-tooltip> -->
@@ -45,8 +48,8 @@
         <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" @open="handleOpen" @close="handleClose" :unique-opened="true" :collapse="isCollapse" style="overflow-y: auto;">
           <div class="radio" @click="radio()">
             <el-tooltip class="item" effect="dark" content="缩放" placement="right-start">
-              <img class="radio_img" v-if="!isCollapse" src="../assets/radio2.png" alt="">
-              <img class="radio_img radio_img_pickup" v-else src="../assets/radio2.png" alt="">
+              <img :class="{'radio_img': true, 'radio_open': radio_open, 'radio_close': radio_close}" src="../assets/radio2.png" alt="">
+              <!-- <img class="radio_img radio_img_pickup" v-else src="../assets/radio2.png" alt=""> -->
             </el-tooltip>
           </div>
           <!-- <el-menu-item index="1" disabled>
@@ -134,10 +137,10 @@
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
-        <el-container>
+        <el-container class="mainRouter">
           <el-main>
             <!-- main路由出口 -->
-              <router-view ></router-view>
+              <router-view></router-view>
           </el-main>
         </el-container>
       </el-container>
@@ -166,12 +169,21 @@ export default {
   },
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      radio_open: false,
+      radio_close: false
     }
   },
   methods: {
     radio () {
       this.isCollapse = !this.isCollapse
+      if (this.isCollapse) {
+        this.radio_open = false
+        this.radio_close = true
+      } else {
+        this.radio_open = true
+        this.radio_close = false
+      }
     },
     outLogin () {
       this.$confirm('是否确定退出登陆?', '提示', {
@@ -201,7 +213,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-
 .logo {
   position: absolute;
   top: 10px;
@@ -243,6 +254,7 @@ export default {
 .el-container {
   width: 100%;
   height: 100%;
+  // background: #909399;
 }
 .el-header, .el-footer {
   background-color: #3B9DD8;
@@ -257,7 +269,7 @@ export default {
 }
 
 .el-main {
-  background-color: #eff2f7;
+  background-color: #e8eef8;
   color: #333;
   text-align: center;
 }
@@ -288,6 +300,22 @@ body > .el-container {
   display: inline-block;
   text-align: center;
   vertical-align: middle;
+}
+.radio_close {
+  animation: close .2s;
+  animation-fill-mode : forwards;
+}
+@keyframes close {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(-90deg);}
+}
+.radio_open {
+  animation: open .2s;
+  animation-fill-mode : forwards;
+}
+@keyframes open {
+  from {transform: rotate(-90deg);}
+  to {transform: rotate(0deg);}
 }
 .radio_img_pickup {
   transform: rotate(-90deg);

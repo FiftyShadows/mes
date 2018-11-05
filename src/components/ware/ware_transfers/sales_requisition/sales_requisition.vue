@@ -22,7 +22,7 @@
       </el-form>
     </el-card>
     <!-- 表单获取 -->
-    <el-form :inline="true" :rules="rules" ref="salesForm" :model="salesForm" label-width="10px" class="demo-form-inline demo-ruleForm form" style="float: left;">
+    <el-form :inline="true" :rules="rules" ref="salesForm" :model="salesForm" label-width="10px" class="demo-form-inline demo-ruleForm form">
       <el-form-item label="" class="iptfloat">
         <el-input v-model="salesForm.plateNumber" clearable placeholder="车牌号"></el-input>
       </el-form-item>
@@ -65,14 +65,17 @@
       </el-table-column>
       <el-table-column prop="hyRequisition.loading_spot" label="装载点/接收点" min-width="120">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="140">
+      <el-table-column fixed="right" label="操作" min-width="150">
         <template slot-scope="scope">
-          <el-button type="primary" @click="openDetil(scope.row)" size="small">调拨单明细</el-button>
+          <el-button type="text" v-if="scope.row.hyRequisition.status === '已过账'" @click="cancelPosting(scope.row)" size="small">取消过账</el-button>
+          <el-button type="text" v-if="scope.row.hyRequisition.status === '已拣配'" @click="posting(scope.row)" size="small">过账</el-button>
+          <el-button type="text" v-if="scope.row.hyRequisition.status === '已调拨'" @click="openDetil(scope.row)" size="small">调拨单明细</el-button>
+          <el-button type="text" v-if="scope.row.hyRequisition.status === '未处理'" @click="openDetil(scope.row)" size="small">出货安排</el-button>
         </template>
       </el-table-column>
     </el-table>
     <DialogDetials ref="showDetail"></DialogDetials>
-    <!-- <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination> -->
+    <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
   </div>
 </template>
 <script>
@@ -121,7 +124,6 @@ export default {
   },
   methods: {
     dateFormat (row, column) {
-      // console.log(row.hyRequisition.outboundDate)
       var date = row.hyRequisition.outboundDate
       if (date === null) {
         return ''
@@ -155,8 +157,8 @@ export default {
       this.loading = true
       this.$api.selectAllocation(this.salesForm).then(res => {
         console.log(res)
+        this.loading = false
         if (res.data.status === '200') {
-          this.loading = false
           this.tableData = res.data.data.list
           this.total = res.data.data.total
         } else {
@@ -186,11 +188,57 @@ export default {
     changePage (value) {
       this.pageNum = value.pageNum
       this.pageSize = value.pageSize
-      this.seachTableData('seachForm')
+      this.seachTableData()
     },
     openDetil (row) {
       console.log(row)
-      this.$refs.showDetail.show(row.hyRequisitionDetailList)
+      this.$refs.showDetail.show(row)
+    },
+    posting (row) {
+      console.log(row)
+      this.$confirm('此操作将过账, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.deliveryOrderPost({
+          id: row.hyRequisition.id,
+          type: 'POST' // 过账
+        }).then(res => {
+          console.log(res)
+          if (res.data.status === '200') {
+            this.$notify({
+              type: 'success',
+              title: '成功',
+              msg: res.data.msg
+            })
+            this.seachTableData()
+          }
+        })
+      }).catch(_ => {})
+    },
+    cancelPosting (row) {
+      console.log(row)
+      this.$confirm('此操作将取消过账, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.deliveryOrderPost({
+          id: row.hyRequisition.id,
+          type: 'CANCELPOST' // 取消过账
+        }).then(res => {
+          console.log(res)
+          if (res.data.status === '200') {
+            this.$notify({
+              type: 'success',
+              title: '成功',
+              msg: res.data.msg
+            })
+            this.seachTableData()
+          }
+        })
+      }).catch(_ => {})
     }
   }
 }
