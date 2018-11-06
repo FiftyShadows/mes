@@ -221,7 +221,10 @@ const store = new Vuex.Store({
     // 仓储
     workShops: [],
     Lines: [],
-    isWareLogin: false, // ware系统登陆
+    token: '',
+    waremenu: [], // 仓储目录列表
+    userId: '',
+    isWareLogin: window.localStorage.token, // ware系统登陆
     dict: [], // 班次
     batchList: [], // 批次
     warehouseType: ['固定库', '临时库', '立体库', '车丝库'], // 仓库类型

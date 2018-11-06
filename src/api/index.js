@@ -1,6 +1,7 @@
 import axios from 'axios'
 import vue from '../main.js'
 import global from '../../static/js/window_global'
+import store from '../store/store.js'
 // import promiseFinally from 'promise.prototype.finally'
 
 // promiseFinally.shim()
@@ -12,10 +13,13 @@ import global from '../../static/js/window_global'
 // 这个token只能测试用，正式代码里不要用，后台密钥不同，会验证不成功
 // const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
 // 仓储token
-const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZW5neWkiLCJhZG1pbiI6InBhc3N3b3JkIiwiaWF0IjoxNTM3MzI0NDY0fQ.QGMzQXX09igK9gaKAq5jfniTpioa12st7h9FCZ-D7AY'
+console.log(store.state.token)
+// const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZW5neWkiLCJhZG1pbiI6InBhc3N3b3JkIiwiaWF0IjoxNTM3MzI0NDY0fQ.QGMzQXX09igK9gaKAq5jfniTpioa12st7h9FCZ-D7AY'
+// let Token = store.state.token
 
 // 自动化Token
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
+// axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
+axios.defaults.headers.common['Authorization'] = window.localStorage.token ? window.localStorage.token : '' // 直接从localStorage获取token
 // 仓储Token
 // axios.defaults.headers.common['Authorization'] = Token
 axios.defaults.timeout = 3000
@@ -553,5 +557,18 @@ export default {
   },
   deliveryOrderPost (data) { // 销售调拨单--取消过账 / 过账
     return axios.post(`${baseWareUrl}/mes/requisition/Allocation/deliveryOrderPost`, data)
+  },
+
+  selectDelivery (data) { // 拣配调拨单--查询数据
+    return axios.post(`${baseWareUrl}/mes/trans/outbound/selectDelivery`, data)
+  },
+  selectDeliveryDetail (data) { // 拣配调拨单--查询数据明细
+    return axios.post(`${baseWareUrl}/mes/trans/outbound/selectDeliveryDetail`, data)
+  },
+  addOutbound (data) { // 拣配调拨单--扫码拣配
+    return axios.post(`${baseWareUrl}/mes/trans/outbound/addOutbound`, data)
+  },
+  pickFinish (data) { // 拣配调拨单--完成拣配
+    return axios.post(`${baseWareUrl}/mes/trans/outbound/pickFinish`, data)
   }
 }

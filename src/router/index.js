@@ -35,6 +35,7 @@ import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage
 import PackageClass from '@/components/auto/auto_configuration/package_class'
 import TemporaryBox from '@/components/auto/auto_configuration/temporary_box'
 // ================================仓储=================================
+import login from '@/components/ware_login/login.vue'
 // 包装计量
 import ShortSilk from '@/components/ware/ware_measurement/shortSilk/shortSilkPrint'
 import Artificial from '@/components/ware/ware_measurement/artificial/artificial'
@@ -60,13 +61,14 @@ import OnceAgain from '@/components/ware/ware_record/onceAgain_record/onceAgain_
 import SilkCarShipped from '@/components/ware/ware_transfers/silkCarShipped/silkCarShipped'
 import SalesRequisition from '@/components/ware/ware_transfers/sales_requisition/sales_requisition'
 import ReturngoodsRequisition from '@/components/ware/ware_transfers/returngoods_requisition/returngoods_requisition'
+import PickMatch from '@/components/ware/ware_transfers/pickMatch_requisition/pickMatch_requisition'
 // 盘点SAP
 import InventorySAP from '@/components/ware/ware_inventory_SAP/inventorySAP/index'
 import api from '../api'
 import store from '../store/store'
 
 Vue.use(Router)
-let route = new Router({
+let router = new Router({
   routes: [
     {
       path: '/',
@@ -82,8 +84,8 @@ let route = new Router({
       },
       children: [
         // ================================自动化===============================
-        {// 当前
-          path: '/index',
+        {// 默认页面
+          path: '/',
           name: '默认页面',
           component: DefaultView,
           class: 'el-icon-search',
@@ -332,6 +334,10 @@ let route = new Router({
           path: '/record/SilkCarShipped',
           name: 'SilkCarShipped',
           component: SilkCarShipped
+        }, { // 调拨处理--拣配调拨单
+          path: '/record/pickMatch',
+          name: 'pickMatch',
+          component: PickMatch
         }, { // 盘点SAP
           path: '/inventory/InventorySAP',
           name: 'InventorySAP',
@@ -339,22 +345,32 @@ let route = new Router({
         }
       ]
     },
+    {// login
+      path: '/login',
+      name: 'login',
+      component: login,
+      class: 'el-icon-search',
+      permissions: ''
+    },
     {// 帮助页面
       path: '/help',
       name: 'help',
       component: Help
     }
-    // {// login
-    //   path: '/ware/login',
-    //   name: 'login',
-    //   component: Login
-    // }
   ]
 })
-route.beforeEach((to, from, next) => {
-  next()
+router.beforeEach((to, from, next) => { // 全局路由钩子  如果localStorage.token不存在  则进入login页面
+  if (to.name === 'login') {
+    next()
+  } else {
+    if (window.localStorage.token) {
+      next()
+    } else {
+      next('login')
+    }
+  }
 })
-export default route
+export default router
 
 // 路由从定向
 // ...

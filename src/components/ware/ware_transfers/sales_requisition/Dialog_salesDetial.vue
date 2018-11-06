@@ -57,7 +57,7 @@
       <el-table-column property="special" label="规格" width="120"></el-table-column>
       <el-table-column property="level" label="等级"></el-table-column>
       <el-table-column property="netWeight" label="净重"></el-table-column>
-      <el-table-column property="count" label="数量"></el-table-column>
+      <el-table-column property="netWeight" label="数量"></el-table-column>
       <el-table-column property="salesMan" label="销售员"></el-table-column>
       <el-table-column property="lgort" label="仓储点"></el-table-column>
       <el-table-column property="material" label="物料号" min-width="180"></el-table-column>

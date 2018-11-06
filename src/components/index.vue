@@ -2,7 +2,7 @@
   <div class="main">
     <el-container>
       <el-header height="50px">
-        <router-link to="/index">
+        <router-link to="/">
           <img class="logo" v-if="!isCollapse"  src="../assets/logo.png" alt="hengyi">
           <img class="logo" v-else src="../assets/logo_mini.png" alt="hengyi">
         </router-link>
@@ -34,7 +34,12 @@
             <el-dropdown-item command="flowChart">流程图</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-dropdown class="login" v-if="$store.state.isWareLogin">
+        <router-link to="/login">
+          <el-tooltip class="item" effect="dark" content="退出登录" placement="bottom-end">
+            <img class="outLogin" src="../assets/outLogin.png" alt="退出登录">
+          </el-tooltip>
+        </router-link>
+        <!-- <el-dropdown class="login" v-if="$store.state.isWareLogin">
           <el-button type="primary">
             已登陆
           </el-button>
@@ -42,7 +47,7 @@
             <el-dropdown-item>黄金糕</el-dropdown-item>
             <el-dropdown-item>狮子头</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown>
+        </el-dropdown> -->
       </el-header>
       <el-container>
         <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" @open="handleOpen" @close="handleClose" :unique-opened="true" :collapse="isCollapse" style="overflow-y: auto;">
@@ -123,6 +128,7 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="/record/SalesRequisition"><i class="el-icon-setting"></i>销售调拨单</el-menu-item>
+              <el-menu-item index="/record/pickMatch"><i class="el-icon-setting"></i>拣配调拨单</el-menu-item>
               <el-menu-item index="/record/ReturngoodsRequisition"><i class="el-icon-setting"></i>退货调拨单</el-menu-item>
               <el-menu-item index="/record/SilkCarShipped"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item>
             </el-menu-item-group>
@@ -145,21 +151,12 @@
         </el-container>
       </el-container>
     </el-container>
-    <dialog-login ref="login"></dialog-login>
-    <dialog-registered ref="registered"></dialog-registered>
   </div>
 </template>
-
 <script>
 import { mapGetters } from 'vuex'
-import Login from './ware_login/login.vue'
-import Registered from './ware_login/registered.vue'
 export default {
   name: 'index',
-  components: {
-    'dialog-login': Login,
-    'dialog-registered': Registered
-  },
   computed: {
     ...mapGetters({
       routers: 'routers'
@@ -194,9 +191,10 @@ export default {
     },
     handleCommand (command) {
       if (command === 'login') {
-        this.$refs.login.show()
+        // this.$refs.login.show()
+        this.$router.replace('/login')
       } else if (command === 'registered') {
-        this.$refs.registered.show()
+        // this.$refs.registered.show()
       }
     },
     download (command) {
@@ -218,6 +216,13 @@ export default {
   top: 10px;
   left: 12px;
   z-index: 999;
+}
+.outLogin {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 999;
+  width: 30px;
 }
 
 /* 整体框架 */
@@ -243,7 +248,7 @@ export default {
  }
 .others{
   position: absolute;
-  right: 10px;
+  right: 50px;
   top: 4px;
   color: #fff;
 }

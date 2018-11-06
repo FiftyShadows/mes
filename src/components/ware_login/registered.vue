@@ -46,7 +46,6 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('成功')
         } else {
           return false
         }

@@ -56,6 +56,7 @@ export default {
                 type: 'success',
                 message: res.data.msg
               })
+              this.$emit('seachTableData')
               this.dialogFormVisible = false
             } else {
               this.$notify.error({
