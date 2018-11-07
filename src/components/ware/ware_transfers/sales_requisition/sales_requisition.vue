@@ -38,7 +38,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="" class="iptfloat">
-        <el-date-picker v-model="salesForm.createTime" clearable type="date" placeholder="同步日期"></el-date-picker>
+        <el-date-picker v-model="salesForm.createTime" clearable type="date" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" placeholder="同步日期"></el-date-picker>
       </el-form-item>
       <el-form-item class="iptfloat">
         <el-button type="primary" icon="el-icon-search" @click="seachTableData()" circle></el-button>

@@ -16,7 +16,7 @@
           <el-button class="login" type="text" v-if="!$store.state.isWareLogin">未登录</el-button>
         </router-link> -->
         <!-- <el-button class="login" icon="el-icon-success" type="success" plain size="mini">已登陆</el-button> -->
-        <el-dropdown class="login" @command="handleCommand" v-if="!$store.state.isWareLogin">
+        <!-- <el-dropdown class="login" @command="handleCommand" v-if="!$store.state.isWareLogin">
           <el-button type="primary">
             未登录
           </el-button>
@@ -24,8 +24,8 @@
             <el-dropdown-item command="login">登陆</el-dropdown-item>
             <el-dropdown-item command="registered">注册</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown class="others" @command="download">
+        </el-dropdown> -->
+        <el-dropdown class="others" @command="download" v-if="!$store.state.isWareLogin">
           <el-button type="primary">
             文档介绍
           </el-button>
@@ -61,7 +61,7 @@
             <i class="el-icon-d-caret"></i>
             <span slot="title">自动化</span>
           </el-menu-item> -->
-            <li v-for="(router, index) in routers" :key="index">
+            <!-- <li v-for="(router, index) in routers" :key="index">
               <el-menu-item :index="router.path" v-if="index === 0 || index === 1">
               <i :class="router.class"></i>
               <span slot="title">{{router.name}}</span>
@@ -78,7 +78,7 @@
                   </el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-            </li>
+            </li> -->
           <el-submenu index="8">
             <template slot="title">
               <i class="el-icon-menu"></i>
@@ -87,9 +87,9 @@
             <el-menu-item-group>
               <el-menu-item index="/measurement/artificial"><i class="el-icon-setting"></i>包装唛头打印</el-menu-item>
               <el-menu-item index="/measurement/shortSilk"><i class="el-icon-setting"></i>短丝唛头</el-menu-item>
-              <el-menu-item index="/measurement/smallPackage"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>
+              <!-- <el-menu-item index="/measurement/smallPackage"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>
               <el-menu-item index="/measurement/BoxManagement"><i class="el-icon-setting"></i>暂存箱管理</el-menu-item>
-              <el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item>
+              <el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item> -->
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="9">
@@ -100,10 +100,10 @@
             <el-menu-item-group>
               <el-menu-item index="/storage/warehouse"><i class="el-icon-setting"></i>仓库</el-menu-item>
               <el-menu-item index="/storage/edit"><i class="el-icon-setting"></i>库位维护</el-menu-item>
-              <el-menu-item index="/storage/view"><i class="el-icon-setting"></i>库位视图</el-menu-item>
+              <!-- <el-menu-item index="/storage/view"><i class="el-icon-setting"></i>库位视图</el-menu-item> -->
               <el-menu-item index="/storage/plan"><i class="el-icon-setting"></i>库位计划</el-menu-item>
-              <el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>
-              <el-menu-item index="/storage/trace"><i class="el-icon-setting"></i>箱包追溯</el-menu-item>
+              <!-- <el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>
+              <el-menu-item index="/storage/trace"><i class="el-icon-setting"></i>箱包追溯</el-menu-item> -->
               <el-menu-item index="/storage/SAPMessage"><i class="el-icon-setting"></i>SAP信息</el-menu-item>
               <el-menu-item index="/storage/FBreason"><i class="el-icon-setting"></i>翻包原因</el-menu-item>
             </el-menu-item-group>
@@ -116,9 +116,9 @@
             <el-menu-item-group>
               <el-menu-item index="/record/PrepareInStorage"><i class="el-icon-setting"></i>待入库</el-menu-item>
               <el-menu-item index="/record/instorage"><i class="el-icon-setting"></i>入库记录</el-menu-item>
-              <el-menu-item index="/record/OutStorage"><i class="el-icon-setting"></i>出库记录</el-menu-item>
+              <!-- <el-menu-item index="/record/OutStorage"><i class="el-icon-setting"></i>出库记录</el-menu-item>
               <el-menu-item index="/record/Returngoods"><i class="el-icon-setting"></i>退货记录</el-menu-item>
-              <el-menu-item index="/record/OnceAgainPackage"><i class="el-icon-setting"></i>翻包记录</el-menu-item>
+              <el-menu-item index="/record/OnceAgainPackage"><i class="el-icon-setting"></i>翻包记录</el-menu-item> -->
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="11">
@@ -129,8 +129,8 @@
             <el-menu-item-group>
               <el-menu-item index="/record/SalesRequisition"><i class="el-icon-setting"></i>销售调拨单</el-menu-item>
               <el-menu-item index="/record/pickMatch"><i class="el-icon-setting"></i>拣配调拨单</el-menu-item>
-              <el-menu-item index="/record/ReturngoodsRequisition"><i class="el-icon-setting"></i>退货调拨单</el-menu-item>
-              <el-menu-item index="/record/SilkCarShipped"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item>
+              <!-- <el-menu-item index="/record/ReturngoodsRequisition"><i class="el-icon-setting"></i>退货调拨单</el-menu-item>
+              <el-menu-item index="/record/SilkCarShipped"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item> -->
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="12">

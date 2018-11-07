@@ -21,12 +21,12 @@
       </el-form-item>
       <el-form-item label="" class="floatLeft">
         <el-form-item prop="startTime">
-          <el-date-picker type="date" placeholder="开始日期" v-model="seachForm.startTime" style="width: 190px;"></el-date-picker>
+          <el-date-picker type="date" placeholder="开始日期" v-model="seachForm.startTime" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;"></el-date-picker>
         </el-form-item>
       </el-form-item>
       <el-form-item label="" class="floatLeft">
         <el-form-item prop="endTime">
-          <el-date-picker type="date" placeholder="结束日期" v-model="seachForm.endTime" style="width: 190px;"></el-date-picker>
+          <el-date-picker type="date" placeholder="结束日期" v-model="seachForm.endTime" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;"></el-date-picker>
         </el-form-item>
       </el-form-item>
       <el-form-item style="float: left;">
@@ -59,7 +59,7 @@
       <el-table-column prop="username" label="操作员" width="100">
       </el-table-column>
     </el-table>
-    <DialogStorage ref="dialog_storage"></DialogStorage>
+    <DialogStorage ref="dialog_storage" @seachtabledata="seachTableData()"></DialogStorage>
     <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
   </div>
 </template>
@@ -98,8 +98,6 @@ export default {
     this.getSelectOublotNumberList()
     this.getSelectProductNameList()
     this.seachTableData()
-  },
-  mounted () {
   },
   methods: {
     dateFormat (row, column) {

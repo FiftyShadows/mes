@@ -65,7 +65,7 @@ import PickMatch from '@/components/ware/ware_transfers/pickMatch_requisition/pi
 // 盘点SAP
 import InventorySAP from '@/components/ware/ware_inventory_SAP/inventorySAP/index'
 import api from '../api'
-import store from '../store/store'
+// import store from '../store/store'
 
 Vue.use(Router)
 let router = new Router({
@@ -74,14 +74,14 @@ let router = new Router({
       path: '/',
       name: 'index',
       component: Index,
-      beforeEnter: (to, from, next) => {
-        api.getAuth().then(res => {
-          let userInfo = res.data
-          store.commit('UserInfo', userInfo)
-          console.log(store.state)
-        })
-        next()
-      },
+      // beforeEnter: (to, from, next) => {
+      //   api.getAuth().then(res => {
+      //     let userInfo = res.data
+      //     store.commit('UserInfo', userInfo)
+      //     console.log(store.state)
+      //   })
+      //   next()
+      // },
       children: [
         // ================================自动化===============================
         {// 默认页面

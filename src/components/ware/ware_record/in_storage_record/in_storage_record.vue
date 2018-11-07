@@ -34,11 +34,11 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="" prop="startTime" class="floatLeft">
-        <el-date-picker v-model="seachForm.startTime" type="datetime" placeholder="选择开始入库时间" default-time="12:00:00" style="width: 190px;">
+        <el-date-picker v-model="seachForm.startTime" type="date" placeholder="选择开始入库时间" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="" prop="endTime" class="floatLeft">
-        <el-date-picker v-model="seachForm.endTime" type="datetime" placeholder="选择结束入库时间" default-time="12:00:00" style="width: 190px;">
+        <el-date-picker v-model="seachForm.endTime" type="date" placeholder="选择结束入库时间" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;">
         </el-date-picker>
       </el-form-item>
       <el-form-item style="float: left;">
@@ -68,7 +68,7 @@
       </el-table-column>
       <el-table-column prop="yoke" label="托盘类型" width="150">
       </el-table-column>
-      <el-table-column prop="package_type" label="包装类型" width="150">
+      <el-table-column prop="packageType" label="包装类型" width="150">
       </el-table-column>
       <!-- <el-table-column prop="spec" label="打包时间" width="150">
       </el-table-column> -->
@@ -199,7 +199,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$api.getPageInStorageRecordList({
+          this.$api.getPageInroundRecordList({
             classes: this.seachForm.classes,
             houseName: this.seachForm.houseName,
             sublotNumber: this.seachForm.batchNo,

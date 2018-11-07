@@ -29,12 +29,12 @@
       <el-form-item label="" required style="float: left; width: 300px;">
         <el-col :span="12">
           <el-form-item prop="startDate">
-            <el-date-picker type="date" placeholder="开始日期" v-model="seachForm.startDate" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="开始日期" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" v-model="seachForm.startDate" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item prop="endDate">
-            <el-date-picker type="date" placeholder="结束日期" v-model="seachForm.endDate" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="结束日期" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" v-model="seachForm.endDate" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-form-item>

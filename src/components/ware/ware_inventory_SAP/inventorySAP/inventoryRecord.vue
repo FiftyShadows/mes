@@ -16,12 +16,12 @@
       </el-form-item>
       <el-form-item label="" prop="startDate" class="floatLeft">
         <el-form-item prop="startDate">
-          <el-date-picker type="date" placeholder="选择日期" v-model="seachForm.startDate" style="width: 190px;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="seachForm.startDate" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;"></el-date-picker>
         </el-form-item>
       </el-form-item>
       <el-form-item label="" prop="endDate" class="floatLeft">
         <el-form-item prop="endDate">
-          <el-date-picker type="date" placeholder="结束日期" v-model="seachForm.endDate" style="width: 190px;"></el-date-picker>
+          <el-date-picker type="date" placeholder="结束日期" v-model="seachForm.endDate" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;"></el-date-picker>
         </el-form-item>
       </el-form-item>
       <el-form-item style="float: left;">

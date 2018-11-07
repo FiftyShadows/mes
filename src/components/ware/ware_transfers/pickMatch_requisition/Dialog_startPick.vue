@@ -1,9 +1,6 @@
 <template>
   <el-dialog title="扫码拣配" :visible.sync="dialogFormVisible">
     <el-form :model="submitForm" :rules="rules" ref="form" class="demo-form-inline demo-ruleForm form">
-      <!-- <el-form-item label="调拨单号" prop="requisitionId" :label-width="formLabelWidth">
-        <el-input v-model="submitForm.requisitionId" autocomplete="off"></el-input>
-      </el-form-item> -->
       <el-form-item label="码单号" prop="lotNumber" :label-width="formLabelWidth">
         <el-input v-model="submitForm.lotNumber" clearable></el-input>
       </el-form-item>
@@ -34,6 +31,7 @@ export default {
     start (value) {
       this.submitForm.deliveryBill = value
       this.dialogFormVisible = true
+      console.log(this.submitForm.deliveryBill)
     },
     pickMatch (formName) {
       this.$refs[formName].validate((valid) => {
@@ -46,7 +44,7 @@ export default {
                 title: '成功',
                 message: res.data.msg
               })
-              this.$emit('seachTableData')
+              this.$emit('seachtabledata', this.submitForm.deliveryBill)
               this.dialogFormVisible = false
             } else {
               this.$notify.error({
