@@ -213,6 +213,11 @@ export default {
               msg: res.data.msg
             })
             this.seachTableData()
+          } else {
+            this.$notify.error({
+              title: '错误',
+              message: res.data.msg
+            })
           }
         })
       }).catch(_ => {})
@@ -236,6 +241,11 @@ export default {
               msg: res.data.msg
             })
             this.seachTableData()
+          } else {
+            this.$notify.error({
+              title: '错误',
+              message: res.data.msg
+            })
           }
         })
       }).catch(_ => {})
