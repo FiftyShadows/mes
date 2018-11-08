@@ -6,25 +6,10 @@
           <img class="logo" v-if="!isCollapse"  src="../assets/logo.png" alt="hengyi">
           <img class="logo" v-else src="../assets/logo_mini.png" alt="hengyi">
         </router-link>
-        <!-- <el-tooltip class="item" effect="dark" content="退出" placement="bottom">
-          <i class="head_out el-icon-circle-close" @click="outLogin()"></i>
-        </el-tooltip> -->
+        <!-- <span class="Verison">高新 Verison0.0.1</span> -->
         <!-- <router-link to="/help">
           <i class="head_help el-icon-question"></i>
         </router-link> -->
-        <!-- <router-link to="/ware/login">
-          <el-button class="login" type="text" v-if="!$store.state.isWareLogin">未登录</el-button>
-        </router-link> -->
-        <!-- <el-button class="login" icon="el-icon-success" type="success" plain size="mini">已登陆</el-button> -->
-        <!-- <el-dropdown class="login" @command="handleCommand" v-if="!$store.state.isWareLogin">
-          <el-button type="primary">
-            未登录
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="login">登陆</el-dropdown-item>
-            <el-dropdown-item command="registered">注册</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown> -->
         <el-dropdown class="others" @command="download" v-if="!$store.state.isWareLogin">
           <el-button type="primary">
             文档介绍
@@ -34,19 +19,17 @@
             <el-dropdown-item command="flowChart">流程图</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <!-- <el-button @click="registered()">注册</el-button> -->
         <el-tooltip class="item" effect="dark" content="退出登录" placement="bottom-end">
           <img class="outLogin" src="../assets/outLogin.png" @click="clear()" alt="退出登录">
         </el-tooltip>
-        <!-- <el-dropdown class="login">
+        <el-dropdown class="login" v-if="loginname">
           <el-button type="primary">
-            已登陆
+            {{loginname}}
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
+            <el-dropdown-item >修改密码</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown> -->
+        </el-dropdown>
       </el-header>
       <el-container>
         <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" @open="handleOpen" @close="handleClose" :unique-opened="true" :collapse="isCollapse" style="overflow-y: auto;">
@@ -83,17 +66,6 @@
             <i class="el-icon-edit"></i>
             <span slot="title">用户维护</span>
           </el-menu-item>
-          <!-- <el-submenu index="7">
-            <template slot="title">
-              <i class="el-icon-menu"></i>
-              <span slot="title">用户维护</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/permissions/newUser"><i class="el-icon-setting"></i>新增用户</el-menu-item>
-              <el-menu-item index="/permissions/manageUser"><i class="el-icon-setting"></i>用户管理</el-menu-item>
-              <el-menu-item index="/permissions/setUser"><i class="el-icon-setting"></i>用户设置</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu> -->
           <el-submenu index="8">
             <template slot="title">
               <i class="el-icon-menu"></i>
@@ -178,12 +150,15 @@ export default {
     })
   },
   created () {
+    this.loginname = window.localStorage.loginname
+    // console.log(window.localStorage.loginname)
   },
   data () {
     return {
       isCollapse: false,
       radio_open: false,
-      radio_close: false
+      radio_close: false,
+      loginname: null
     }
   },
   methods: {
@@ -274,7 +249,7 @@ export default {
 }
 .login {
    position: absolute;
-   right: 130px;
+   right: 50px;
    top: 4px;
    color: #fff;
  }
@@ -378,6 +353,12 @@ body > .el-container {
   height: 40px;
   line-height: 40px;
 }
+// .Verison {
+//   position: absolute;
+//   top: 30px;
+//   left: 130px;
+//   height: 20px;
+// }
 /* 路由出口 */
 .child_router {
   color: #303133;

@@ -12,8 +12,8 @@
         </el-form-item>
       </el-form>
       <div class="footer">
-        <el-button @click="registered()">注 册</el-button>
-        <el-button type="primary" @click="submitForm('loginForm')">确 定</el-button>
+        <!-- <el-button @click="registered()">注 册</el-button> -->
+        <el-button type="primary" style="width: 100px;border-radius: 30px;" @click="submitForm('loginForm')">登 陆</el-button>
       </div>
     </div>
   </div>
@@ -50,6 +50,7 @@ export default {
                 title: '欢迎',
                 message: '已登录'
               })
+              window.localStorage.loginname = this.loginForm.username
               this.$store.state.isWareLogin = true
               this.$store.state.userId = res.data.data.userId
               this.$router.replace('/') // 跳home页

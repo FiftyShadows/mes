@@ -17,7 +17,7 @@
         <el-button type="primary" icon="el-icon-plus" @click="addUser()" circle></el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" style="width: 100%" border height="500">
+    <el-table :data="tableData" v-loading="loading" style="width: 100%" border height="500">
       <el-table-column prop="" label="编号" width="55">
         <template slot-scope="scope">
           <span>{{scope.$index+1}}</span>
@@ -69,6 +69,7 @@ export default {
         loginname: '',
         type: ''
       },
+      loading: false,
       // formLabelWidth: '120px',
       typeOptions: [],
       tableData: []
@@ -90,8 +91,10 @@ export default {
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
     seachTableData () {
+      this.loading = true
       this.$api.selectUser(this.seachForm).then(res => {
         console.log(res)
+        this.loading = false
         if (res.data.status === '200') {
           this.tableData = res.data.data
         } else {

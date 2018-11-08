@@ -42,7 +42,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item style="float: left;">
-        <el-button type="primary" icon="el-icon-search" @click="seachTableData('seachForm')" circle></el-button>
+        <el-button type="primary" icon="el-icon-search" @click="seachTableData()" circle></el-button>
         <!-- <el-button type="primary">入库</el-button>
         <el-button type="warning">修改</el-button> -->
       </el-form-item>
@@ -121,12 +121,12 @@ export default {
     }
   },
   created () {
+    this.seachTableData()
     this.getHouseNameList()
     this.getSelectBatchNoList()
     this.getSelectProductList()
     this.getSelectClassesList()
     this.getSelectLevelList()
-    this.seachTableData('seachForm')
   },
   mounted () {
   },
@@ -194,54 +194,47 @@ export default {
         }
       })
     },
-    seachTableData (formName) {
-      console.log(formName)
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.loading = true
-          this.$api.getPageInroundRecordList({
-            classes: this.seachForm.classes,
-            houseName: this.seachForm.houseName,
-            sublotNumber: this.seachForm.batchNo,
-            productName: this.seachForm.productName,
-            startTime: this.seachForm.startTime,
-            endTime: this.seachForm.endTime,
-            productTime: this.seachForm.productTime,
-            level: this.seachForm.level,
-            pageNum: this.pageNum,
-            pageSize: this.pageSize,
-            synSap: 'Y' // 待入库为N，已入库为Y
-          }).then(res => {
-            console.log(res)
-            this.loading = false
-            if (res.data.status === '200') {
-              // console.log(res.data.data.data)
-              if (!res.data.data.data) {
-                this.$notify({
-                  type: 'warning',
-                  title: '提示',
-                  message: res.data.data.message
-                })
-              } else {
-                this.tableData = res.data.data.data.list
-                this.total = res.data.data.data.total
-              }
-            } else {
-              this.$notify.error({
-                title: '失败',
-                message: res.data.msg
-              })
-            }
-          })
+    seachTableData () {
+      this.loading = true
+      this.$api.getPageInroundRecordList({
+        classes: this.seachForm.classes,
+        houseName: this.seachForm.houseName,
+        sublotNumber: this.seachForm.batchNo,
+        productName: this.seachForm.productName,
+        startTime: this.seachForm.startTime,
+        endTime: this.seachForm.endTime,
+        productTime: this.seachForm.productTime,
+        level: this.seachForm.level,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+        synSap: 'Y' // 待入库为N，已入库为Y
+      }).then(res => {
+        console.log(res)
+        this.loading = false
+        if (res.data.status === '200') {
+          // console.log(res.data.data.data)
+          if (!res.data.data.data) {
+            this.$notify({
+              type: 'warning',
+              title: '提示',
+              message: res.data.data.message
+            })
+          } else {
+            this.tableData = res.data.data.data.list
+            this.total = res.data.data.data.total
+          }
         } else {
-          return false
+          this.$notify.error({
+            title: '失败',
+            message: res.data.msg
+          })
         }
       })
     },
     changePage (value) {
       this.pageNum = value.pageNum
       this.pageSize = value.pageSize
-      this.seachTableData('seachForm')
+      this.seachTableData()
     },
     openDetil (row) { // 打开码单明细
       this.$refs.detail.show(row.sublotNumber)
