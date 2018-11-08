@@ -81,37 +81,6 @@
     <!-- <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination> -->
     <el-button type="success" style="float: right; margin-top: 20px;" @click="finishPD()">盘点结束</el-button>
 
-    <!-- <el-button type="danger" disabled style="float: left;margin-bottom: 20px;">>>漏扫码单</el-button>
-    <el-button type="success" style="float: left;margin-bottom: 20px;" @click="addLotNumber()">补入码单</el-button>
-    <el-table v-loading="loading1" ref="multipleTable" :data="gridData" border tooltip-effect="dark" @selection-change="handleSelectionChange" style="width: 100%" height="500">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
-      <el-table-column prop="lotNumber" label="码单号" min-width="200">
-      </el-table-column>
-      <el-table-column prop="batchNo" label="批号" min-width="120">
-      </el-table-column>
-      <el-table-column prop="spec" label="规格" min-width="120">
-      </el-table-column>
-      <el-table-column prop="warehouseName" label="仓库" width="100">
-      </el-table-column>
-      <el-table-column prop="storageCode" label="库位" width="120">
-      </el-table-column>
-      <el-table-column prop="level" label="等级" width="80">
-      </el-table-column>
-      <el-table-column prop="packageType" label="包装类型" width="120">
-      </el-table-column>
-      <el-table-column prop="yoke" label="托盘类型" width="100">
-      </el-table-column>
-      <el-table-column prop="totalWeight" label="总净重" width="100">
-      </el-table-column>
-      <el-table-column prop="autoSingleCount" label="箱数" width="100">
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" width="120">
-        <template slot-scope="scope">
-          <el-button @click="readingWaitStocktak(scope.row)" type="primary" size="small">查看码单</el-button>
-        </template>
-      </el-table-column>
-    </el-table> -->
     <LotNumber ref="lotnum"></LotNumber>
     <WaitStocktak ref="WaitStocktak"></WaitStocktak>
   </div>
@@ -162,8 +131,6 @@ export default {
     }
   },
   created () {
-    // this.getBatchList()
-    // this.getSelectWarehouseList()
     this.$api.getBatchList().then(res => {
       this.batchNoOptions = res.data.data
     })
@@ -187,16 +154,6 @@ export default {
       }
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
-    // getBatchList () {
-    //   this.$api.getBatchList().then(res => {
-    //     this.batchNoOptions = res.data.data
-    //   })
-    // },
-    // getSelectWarehouseList () {
-    //   this.$api.getSelectWarehouseList().then(res => {
-    //     this.warehouseOptions = res.data.data
-    //   })
-    // },
     seachTableData (formName) {
       // console.log(this.warehouseOptions)
       // this.loading = true
@@ -226,10 +183,10 @@ export default {
             console.log(res)
             if (res.data.status === '200') {
               this.tableData = res.data.data
-              if (res.data.data === []) {
+              if (res.data.data.length === 0) {
                 this.$notify({
                   type: 'warning',
-                  title: '失败',
+                  title: '异常',
                   message: '查询为空'
                 })
               }
@@ -241,27 +198,42 @@ export default {
               })
             }
           })
-          // 漏扫数据
-          // this.loading1 = true
-          // this.$api.getWaitStocktakingRecord({
-          //   batchNo: this.seachForm.batchNo,
-          //   houseId: houseId,
-          //   level: this.seachForm.level,
-          //   classes: this.seachForm.classes,
-          //   startDate: this.seachForm.startDate,
-          //   endDate: this.seachForm.endDate,
-          //   pageNum: this.pageNum,
-          //   pageSize: this.pageSize
-          // }).then(res => {
-          //   console.log(res)
-          //   this.loading1 = false
-          //   this.gridData = res.data.data
-          // })
         } else {
           return false
         }
       })
     },
+    // ifFinishPD () {
+    //   this.loading = true
+    //   this.$api.selectStocktaking({
+    //     batchNo: this.seachForm.batchNo,
+    //     houseId: this.seachForm.houseId,
+    //     level: this.seachForm.level,
+    //     classes: this.seachForm.classes,
+    //     startDate: this.seachForm.startDate,
+    //     endDate: this.seachForm.endDate
+    //     // pageNum: this.pageNum,
+    //     // pageSize: this.pageSize
+    //   }).then(res => {
+    //     console.log(res)
+    //     if (res.data.status === '200') {
+    //       this.tableData = res.data.data
+    //       if (res.data.data.length === 0) {
+    //         this.$notify({
+    //           type: 'success',
+    //           title: '成功',
+    //           message: '拣配完成'
+    //         })
+    //       }
+    //       // this.total = res.data.data.total
+    //     } else {
+    //       this.$notify.error({
+    //         title: '失败',
+    //         message: res.data.msg
+    //       })
+    //     }
+    //   })
+    // },
     finishPD () {
       console.log(this.tableData)
       let houseId
@@ -304,6 +276,7 @@ export default {
             message: res.data.msg
           })
           this.seachTableData('seachForm')
+          // this.ifFinishPD()
         } else {
           this.$notify.error({
             title: '失败',

@@ -7,7 +7,7 @@
           <el-input v-model="form.username" class="input" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password" :label-width="formLabelWidth">
-          <el-input type="password" v-model="form.password" class="input" placeholder="请输入密码"></el-input>
+          <el-input type="password" v-model="form.password" class="input" placeholder="请输入密码" @keyup.enter.native="submitForm('form')"></el-input>
         </el-form-item>
       </el-form>
       <div class="footer">

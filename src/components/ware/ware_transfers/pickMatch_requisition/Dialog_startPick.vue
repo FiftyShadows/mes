@@ -1,8 +1,8 @@
 <template>
   <el-dialog title="扫码拣配" :visible.sync="dialogFormVisible">
-    <el-form :model="submitForm" :rules="rules" ref="form" class="demo-form-inline demo-ruleForm form">
+    <el-form :model="submitForm"  @submit.native.prevent :rules="rules" ref="form" class="demo-form-inline demo-ruleForm form">
       <el-form-item label="码单号" prop="lotNumber" :label-width="formLabelWidth">
-        <el-input v-model="submitForm.lotNumber" clearable></el-input>
+        <el-input v-model="submitForm.lotNumber" clearable style="width: 80%;float: left;"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
