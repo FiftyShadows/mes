@@ -27,13 +27,13 @@
       <el-form-item label="" required style="float: left; width: 300px;">
         <el-col :span="11">
           <el-form-item prop="startDate">
-            <el-date-picker type="date" placeholder="开始日期" v-model="searchForm.startDate" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="开始日期" value-format="yyyy-MM-dd" v-model="searchForm.startDate" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col class="line" :span="2">-</el-col>
         <el-col :span="11">
           <el-form-item prop="endDate">
-            <el-date-picker type="date" placeholder="结束日期" v-model="searchForm.endDate" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="结束日期" value-format="yyyy-MM-dd" v-model="searchForm.endDate" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-form-item>
@@ -107,8 +107,8 @@ export default {
   data () {
     return {
       searchForm: { // 搜索列表数据
-        first: (this.pageNum - 1) * this.pageSize,
-        pageSize: this.pageSize,
+        first: 0,
+        pageSize: 50,
         packageClassId: '', // 班次
         packageBoxType: 'AUTO', // 箱包类型
         startDate: this.util.getNowFormatDate(), // 开始日期
@@ -148,6 +148,8 @@ export default {
     },
     searchTableData () {
       this.loading = true
+      this.searchForm.first = (this.pageNum - 1) * this.pageSize
+      this.searchForm.pageSize = this.pageSize
       let params = this.searchForm
       this.$api.getPackageBoxes(params).then(res => {
         this.tableData = res.data.packageBoxes

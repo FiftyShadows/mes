@@ -348,7 +348,6 @@ let route = new Router({
   ]
 })
 route.beforeEach((to, from, next) => {
-  // console.log(store.state.routers)
   if (store.state.routers.length === 0) {
     api.getAuth().then(res => {
       let userInfo = res.data

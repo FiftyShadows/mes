@@ -3,9 +3,9 @@
   <div>
     <el-form :inline="true">
       <el-form-item style="float:left;">
-        <!--<el-select v-model="batchNo" filterable clearable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" @change="getSearchData">-->
-          <!--<el-option v-for="item in batches" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>-->
-        <!--</el-select>-->
+        <el-select v-model="searchForm.batchId" filterable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
+          <el-option v-for="batch in batches" :key="batch.id" :label="batch.batchNo" :value="batch.batchNo"></el-option>
+        </el-select>
         <el-input v-model="batchNo" placeholder="请输入批号"></el-input>
       </el-form-item>
     </el-form>
@@ -36,7 +36,7 @@ export default {
       pageSize: 50,
       pageNum: 1,
       batchNo: '',
-      // batches: [],
+      batches: [],
       loading: false
     }
   },
@@ -49,12 +49,25 @@ export default {
         this.tableData = res.data.dyeingSamples
       })
     },
-    // remoteMethod () {
-    //   let params = {}
-    //   this.$api.getBatches(params).then(res => {
-    //     this.batches = res.data
-    //   })
-    // },
+    remoteMethod (query) {
+      if (query !== '') {
+        this.loading = true
+        this.$api.getBatches({
+          pageSize: 10,
+          first: 0,
+          q: query
+        }).then(res => {
+          if (res.errorCode === 'E00000') {
+            this.$message.error(res.errorMessage)
+          } else {
+            this.loading = false
+            this.batches = res.data.batches
+          }
+        })
+      } else {
+        this.batches = []
+      }
+    },
     changePage (value) {
       this.pageNum = value.pageNum
       this.pageSize = value.pageSize

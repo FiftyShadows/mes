@@ -69,6 +69,9 @@ export default {
   getSearchData (data) {
     return axios.get(`${baseAutoUrl}/silkCarRuntimes/${data}`)
   },
+  deleteSilkCarRuntime () {
+    return axios
+  },
   // 当前--操作员
   getOperators (data) {
     return axios.get(`${baseAutoUrl}/operators/${data}`)

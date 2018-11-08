@@ -92,8 +92,8 @@ export default {
       tableData: [],
       tableData2: [],
       totalData: {},
-      pageSize: '20',
-      first: '0',
+      pageSize: 50,
+      first: 0,
       total: 0,
       currentPage2: 5,
       dialogSeach: false,
@@ -137,13 +137,13 @@ export default {
   methods: {
     getUsers () {
       this.loading = true
-      this.$api.getUser({
-        pageSize: '',
-        first: '',
-        q: ''
-      }).then(res => {
-        this.total = res.data.operators.length
-      })
+      // this.$api.getUser({
+      //   pageSize: '',
+      //   first: '',
+      //   q: ''
+      // }).then(res => {
+      //   this.total = res.data.operators.length
+      // })
       this.$api.getUser({
         pageSize: this.pageSize,
         first: this.first,
@@ -152,6 +152,7 @@ export default {
         console.log(res)
         this.totalData = res.data
         this.tableData = res.data.operators
+        this.total = res.data.operators.length
         this.loading = false
       })
     },

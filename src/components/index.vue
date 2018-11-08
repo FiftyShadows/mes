@@ -13,15 +13,16 @@
           <el-button class="login" type="text" v-if="!$store.state.isWareLogin">未登录</el-button>
         </router-link> -->
         <!-- <el-button class="login" icon="el-icon-success" type="success" plain size="mini">已登陆</el-button> -->
-        <el-dropdown class="login" @command="handleCommand" v-if="!$store.state.isWareLogin">
-          <el-button type="primary">
-            未登录
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="login">登陆</el-dropdown-item>
-            <el-dropdown-item command="registered">注册</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <!--<el-dropdown class="login" @command="handleCommand" v-if="!$store.state.isWareLogin">-->
+          <!--<el-button type="primary">-->
+            <!--未登录-->
+          <!--</el-button>-->
+          <!--<el-dropdown-menu slot="dropdown">-->
+            <!--<el-dropdown-item command="login">登陆</el-dropdown-item>-->
+            <!--<el-dropdown-item command="registered">注册</el-dropdown-item>-->
+          <!--</el-dropdown-menu>-->
+        <!--</el-dropdown>-->
+        <span class="login" >欢迎 {{userInfo.name}} 登陆！</span>
         <el-dropdown class="others" @command="download">
           <el-button type="primary">
             文档介绍
@@ -31,15 +32,15 @@
             <el-dropdown-item command="flowChart">流程图</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-dropdown class="login" v-if="$store.state.isWareLogin">
-          <el-button type="primary">
-            已登陆
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <!--<el-dropdown class="login" v-if="$store.state.isWareLogin">-->
+          <!--<el-button type="primary">-->
+            <!--已登陆-->
+          <!--</el-button>-->
+          <!--<el-dropdown-menu slot="dropdown">-->
+            <!--<el-dropdown-item>黄金糕</el-dropdown-item>-->
+            <!--<el-dropdown-item>狮子头</el-dropdown-item>-->
+          <!--</el-dropdown-menu>-->
+        <!--</el-dropdown>-->
       </el-header>
       <el-container>
         <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" @open="handleOpen" @close="handleClose" :unique-opened="true" :collapse="isCollapse" style="overflow-y: auto;">
@@ -162,6 +163,9 @@ export default {
   computed: {
     ...mapGetters({
       routers: 'routers'
+    }),
+    ...mapGetters({
+      userInfo: 'userInfo'
     })
   },
   created () {
@@ -192,6 +196,8 @@ export default {
     download (command) {
       if (command === 'userBook') {
         window.open('static/introduction/自动化操作手册.html')
+      } else if (command === 'flowChart') {
+        window.open('static/introduction/auto.svg')
       }
     },
     handleOpen (key, keyPath) {
@@ -229,7 +235,7 @@ export default {
 .login {
    position: absolute;
    right: 130px;
-   top: 4px;
+   top: 9px;
    color: #fff;
  }
 .others{

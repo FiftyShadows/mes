@@ -19,7 +19,7 @@
         </el-table-column>
         <el-table-column label="丝锭条码">
           <template slot-scope="scope">
-            <span>{{scope.row.silk.id}}</span>
+            <span>{{scope.row.code}}</span>
           </template>
         </el-table-column>
       </el-table>

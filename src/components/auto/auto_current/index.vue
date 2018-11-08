@@ -182,7 +182,8 @@ export default {
           // 对事件源进行排序
           this.eventSources.forEach(item => {
             item.silkRuntimes.forEach(silkRuntime => {
-              silkRuntime.code = this.silkCarRecord
+              let index = this.silkCarRecord.initSilks.findIndex(it => it.silk.id === silkRuntime.silk.id)
+              silkRuntime.code = this.silkCarRecord.initSilks[index].silk.code
             })
             item.silkRuntimes
               .sort((a, b) => {
