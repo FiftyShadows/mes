@@ -10,6 +10,7 @@ export default {
 }
 </script>
 <style>
+  @import "global.scss";
 html,body,#app{
   margin: 0;
   padding: 0;

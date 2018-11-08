@@ -2,12 +2,12 @@
 <template>
   <div>
     <el-button type="primary" icon="el-icon-plus" circle @click="dialogVisible = true;addPackageClass()" style="float: left"></el-button>
-    <el-table v-loading="loading" :data="tableData" height="250" border style="width: 100%">
+    <el-table v-loading="loading" :default-sort = "{prop: 'riambCode'}" :data="tableData" height="250" border style="width: 100%">
       <el-table-column prop="id" label="id">
       </el-table-column>
-      <el-table-column prop="name" label="打包班次" width="180">
+      <el-table-column prop="name" label="打包班组" width="180">
       </el-table-column>
-      <el-table-column prop="packageCode" label="箱包唛头" width="180">
+      <el-table-column prop="riambCode" label="代码" width="180">
       </el-table-column>
       <el-table-column prop="sortBy" label="权重" width="180">
       </el-table-column>
@@ -17,13 +17,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogVisible" :title="operate + '打包班次'" width="25%">
+    <el-dialog :visible.sync="dialogVisible" :title="operate + '打包班组'" width="25%">
       <el-form :model="dialogForm" label-width="110px" :lable-posision="'left'">
-        <el-form-item label="打包班次">
+        <el-form-item label="打包班组">
           <el-input v-model="dialogForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="箱包唛头">
-          <el-input v-model="dialogForm.packageCode"></el-input>
+        <el-form-item label="代码">
+          <el-input v-model="dialogForm.riambCode"></el-input>
         </el-form-item>
         <el-form-item label="权重">
           <el-input v-model="dialogForm.sortBy"></el-input>
@@ -77,6 +77,7 @@ export default {
     getPackageClasses () {
       this.$api.getPackageClasses().then(res => {
         this.tableData = res.data
+        // this.tableData
         this.loading = false
       })
     },
@@ -87,7 +88,7 @@ export default {
     updatePackageClass (row) {
       this.operate = '修改'
       this.dialogForm.name = row.name
-      this.dialogForm.packageCode = row.packageCode
+      this.dialogForm.riambCode = row.riambCode
       this.dialogForm.sortBy = row.sortBy
       this.dialogForm.id = row.id
     },
@@ -95,7 +96,7 @@ export default {
       let params = {
         id: this.dialogForm.id,
         name: this.dialogForm.name,
-        packageCode: this.dialogForm.packageCode,
+        riambCode: this.dialogForm.riambCode,
         sortBy: this.dialogForm.sortBy
       }
       if (!params.id) {

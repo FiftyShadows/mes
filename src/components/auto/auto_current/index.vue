@@ -9,9 +9,9 @@
         <el-radio-button label="逆序"></el-radio-button>
       </el-radio-group>
     </div>
-    <div class="current-main" v-if="ifShow">
+    <div class="current-main" v-if="ifShow" v-loading="fullscreenLoading">
       <div class="left">
-        <div class="silkCarRecord">
+        <div class="silkCarRecord" v-if="silkCarRecord">
             <h3>丝车条码：{{silkCarRecord.silkCar.code}} — {{silkCarRecord.silkCar.number}} — {{silkCarRecord.batch.spec}}</h3>
             <h4>丝车车次：{{silkCarRecord.id}} <el-tag size="mini">{{doffingType}}</el-tag></h4>
           <el-select v-model="process" placeholder="请选择" clearable class="selected" @change="productProcess">
@@ -80,8 +80,7 @@
         </el-form-item>
         <el-form-item label="丝锭" v-if="isDyeing" :label-width="formLabelWidth">
           <ul class="item">
-            <li v-for="item in DyeingSample.silkRuntimes" :key="item.id">{{item}}</li>
-            <!-- <li v-for="item in DyeingSample.silkRuntimes" :key="item.id">{{item.sideType + '面—' + item.row + '—' + item.col + ' — — ' + item.silk.lineMachine.line.name + '/' + item.silk.lineMachine.item}}</li> -->
+             <li v-for="item in DyeingSample.silkRuntimes" :key="item.id">{{item.sideType + '面—' + item.row + '—' + item.col + '—' + item.silk.code + '——' + item.silk.lineMachine.line.name + '/' + item.silk.lineMachine.item}}</li>
           </ul>
         </el-form-item>
       </el-form>
@@ -147,7 +146,6 @@ export default {
       dialogName: ''
     }
   },
-  created () {},
   methods: {
     changeOrder (val) {
       if (val === '正序') {
@@ -179,17 +177,43 @@ export default {
         this.searchData = res.data
         this.ifShow = true
         this.silkCarRecord = this.searchData.silkCarRecord // 丝车信息
-        this.eventSources = this.searchData.eventSources // 操作员操作
-        if (this.silkCarRecord.doffingType === 'MANUAL') {
-          this.doffingType = '手动落桶'
-        } else {
-          this.doffingType = '自动落桶'
+        this.eventSources = this.searchData.eventSources // 获取该车所有时间源
+        if (this.eventSources) {
+          // 对事件源进行排序
+          this.eventSources.forEach(item => {
+            item.silkRuntimes.forEach(silkRuntime => {
+              silkRuntime.code = this.silkCarRecord
+            })
+            item.silkRuntimes
+              .sort((a, b) => {
+                if (a.sideType === b.sideType) {
+                  if (a.row === b.row) {
+                    return a.col - b.col
+                  }
+                  return a.row - b.row
+                }
+                return a.sideType - b.sideType
+              }
+              )
+          })
         }
-        // 获取丝车的行列规格
-        this.rows = this.searchData.silkCarRecord.silkCar.row
-        this.cols = this.searchData.silkCarRecord.silkCar.col
-        this.silkRuntimes = this.searchData.silkRuntimes
-        this.getProcesses()
+        // 操作员操作
+        if (this.silkCarRecord) {
+          if (this.silkCarRecord.doffingType === 'MANUAL') {
+            this.doffingType = '手动落桶'
+          } else {
+            this.doffingType = '自动落桶'
+          }
+          // 获取丝车的行列规格
+          this.rows = this.searchData.silkCarRecord.silkCar.row
+          this.cols = this.searchData.silkCarRecord.silkCar.col
+          this.silkRuntimes = this.searchData.silkRuntimes
+          this.getProcesses()
+        } else {
+          this.rows = []
+          this.cols = []
+        }
+        this.fullscreenLoading = false
       })
     },
     productProcess (val) { // 打开event弹框
@@ -265,7 +289,6 @@ export default {
           }
         }
       }
-      console.log(this.$store.state.checkedSilkRuntimes)
       this.$api.ProductProcessSubmitEvents(this.EventsForm).then(res => {
         this.$notify({
           title: '成功',
@@ -357,7 +380,7 @@ export default {
     }
     .silk {
       width:84px;
-      height:80px;
+      height:35px;
       border:1px solid #dcdfe6;
       font-size: 1px;
       margin-top: -6px;
@@ -396,7 +419,7 @@ export default {
 .item {
   float: left;
   list-style: none;
-  width: 200px;
+  width: 400px;
   max-height: 150px;
   overflow-y: auto;
   padding: 0;

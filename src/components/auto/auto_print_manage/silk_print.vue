@@ -33,6 +33,7 @@
     <el-table :data="tableData"
               stripe
               style="width: 100%"
+              height="500"
               ref="multipleTable"
               @selection-change="handleSelectionChange"
               :default-sort = "{prop: 'lineMachine.line.name',prop: 'lineMachine.item',prop: 'doffingNum'}">
@@ -76,7 +77,7 @@ export default {
         doffingNum: '',
         date: ''
       },
-      currentPge: 1,
+      currentPage: 1,
       pageSize: 50,
       total: 0,
       pickerOptions: {

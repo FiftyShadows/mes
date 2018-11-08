@@ -2,26 +2,34 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
       <span style="float: left;">
-      <span style="font-weight: bold; font-size: 17px; color: #409EFF;">{{eventSource.operator.name}}</span>
-      <span style="font-weight: bold;">{{eventSource.operator.hrId}}</span>
+      <span class="operator">{{operator.name}}</span>
+      <span class="operator">{{operator.hrId}}</span>
       <br>
-      <i>{{eventSource.firstTime}}</i>
+      <i>{{this.util.formatDate(eventSource.fireDateTime, 'yyyy-MM-dd hh:mm:ss')}}</i>
       </span>
-      <el-button style="float: right;" type="warning" size="mini">{{eventSource.productProcess.name}}</el-button>
+      <el-button style="float: right;" type="warning" size="mini">{{productProcess.name}}</el-button>
       </div>
       <div class="silkRuntimes" v-if="eventSource.silkRuntimes&&eventSource.silkRuntimes.length>0">
-      <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭</el-tag>
-      <el-button size="mini" class="btn silkbtn" v-for="runtimes in eventSource.silkRuntimes" plain :key="runtimes.id">
-      {{runtimes.sideType}}面 —— {{runtimes.row}} —— {{runtimes.col}}
-      </el-button>
+        <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭信息</el-tag>
+        <el-table :data="eventSource.silkRuntimes" style="width: 100%" border>
+          <el-table-column label="位置" width="180">
+            <template slot-scope="scope">
+              <span>{{scope.row.sideType}}-{{scope.row.row}}-{{scope.row.col}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="code"
+            label="丝锭条码">
+          </el-table-column>
+        </el-table>
       </div>
       <div class="silkExceptions" v-if="eventSource.silkExceptions&&eventSource.silkExceptions.length>0">
       <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭异常</el-tag>
-      <el-button size="mini" class="btn" type="danger" v-for="exception in eventSource.silkExceptions" round :key="exception.id">{{exception.name}}</el-button>
+      <el-button size="mini" class="btn" type="danger" v-for="exception in silkExceptions" round :key="exception.id">{{exception.name}}</el-button>
       </div>
       <div class="notes" style="margin-top: 10px;" v-if="eventSource.silkNotes&&eventSource.silkNotes.length>0">
       <el-tag type="info" style="float: left; width: 100%;text-align: left;">丝锭备注</el-tag>
-      <el-button size="mini" class="btn" type="info" v-for="notes in eventSource.silkNotes" plain round :key="notes.id">{{notes.name}}</el-button>
+      <el-button size="mini" class="btn" type="info" v-for="notes in silkNotes" plain round :key="notes.id">{{notes.name}}</el-button>
       </div>
       <div class="silkform" style="margin-top: 10px;" v-if="eventSource.formConfig">
       <el-tag type="info" style="float: left; width: 100%;text-align: left;">{{eventSource.formConfig.name}}</el-tag>
@@ -39,18 +47,25 @@ export default {
   props: ['eventSource'],
   data () {
     return {
+      silkExceptions: [],
+      operator: {},
+      productProcess: {},
+      silkNotes: []
     }
   },
   watch: {
+    eventSource (value) {
+      this.getData()
+    }
   },
-  created () {
-    this.getProcess()
+  mounted () {
+    this.getData()
   },
   methods: {
-    getProcess () {
+    getData () {
       // 操作员信息
       this.$api.getOperators(this.eventSource.operator.id).then(res => {
-        this.eventSource.operator = res.data
+        this.operator = res.data
       })
       // 时间
       let date = new Date(this.eventSource.fireDateTime) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -64,14 +79,16 @@ export default {
       // 工序信息
       if (this.eventSource.productProcess) { // productProcess中存在空的 所以需要判断之后在进行 要不然会报错
         this.$api.productProcesses(this.eventSource.productProcess.id).then(res => {
-          this.eventSource.productProcess = res.data
+          this.productProcess = res.data
         })
       }
       // 丝锭异常
       if (this.eventSource.silkExceptions) {
         for (let j = 0; j < this.eventSource.silkExceptions.length; j++) {
-          this.$api.getSilkExceptions(this.eventSource.silkExceptions[j].id).then(res => {
-            this.eventSource.silkExceptions[j] = res.data
+          this.$nextTick(() => {
+            this.$api.getSilkExceptions(this.eventSource.silkExceptions[j].id).then(res => {
+              this.silkExceptions.push(res.data)
+            })
           })
         }
       }
@@ -79,7 +96,7 @@ export default {
       if (this.eventSource.silkNotes) {
         for (let j = 0; j < this.eventSource.silkNotes.length; j++) {
           this.$api.getSilkNotes(this.eventSource.silkNotes[j].id).then(res => {
-            this.eventSource.silkNotes[j] = res.data
+            this.silkNotes.push(res.data)
           })
         }
       }
@@ -109,12 +126,6 @@ export default {
 }
 </script>
 <style>
-  .text {
-    font-size: 14px;
-  }
-  .eventSource {
-    margin-bottom: 18px;
-  }
   .clearfix:before,
   .clearfix:after {
     display: table;
@@ -122,20 +133,5 @@ export default {
   }
   .clearfix:after {
     clear: both
-  }
-  .box-card {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  .btn {
-    margin-top: 10px;
-  }
-  .silkbtn {
-    display: block;
-    margin-left: 10px;
-  }
-  .Form {
-    float: left;
-    margin-top: 10px;
   }
 </style>

@@ -18,7 +18,7 @@ const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUi
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
 // 仓储Token
 // axios.defaults.headers.common['Authorization'] = Token
-axios.defaults.timeout = 3000
+axios.defaults.timeout = 300000
 const baseAutoUrl = global.auto
 const baseWareUrl = global.ware
 
@@ -97,7 +97,10 @@ export default {
   DyeingSampleSubmitEvents (data) {
     return axios.post(`${baseAutoUrl}/DyeingSampleSubmitEvents`, data)
   },
-
+  // 获取标样丝列表
+  getDyeingSample (params) {
+    return axios.get(`${baseAutoUrl}/dyeingSamples`, params)
+  },
   // 车间管理--获取数据
   getWorkShopsLine () {
     return axios.get(`${baseAutoUrl}/workshops`)
@@ -238,8 +241,8 @@ export default {
   },
 
   // 班次管理--获取班次
-  getPackageClasses (data) {
-    return axios.get(`${baseAutoUrl}/packageClasses`, data)
+  getPackageClasses () {
+    return axios.get(`${baseAutoUrl}/packageClasses`)
   },
   // 班次管理--增加班次
   addPackageClass (data) {
@@ -400,6 +403,22 @@ export default {
   batchAddSilkBarCodes (data) {
     return axios.post(`${baseAutoUrl}/batchSilkBarcodes`, data)
   },
+  // 获取箱包条码
+  getPackageBoxes (params) {
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/packageBoxes`,
+      params: params
+    })
+  },
+  // 计量
+  updatePackageBoxes (data) {
+    return axios.put(`${baseAutoUrl}/packageBoxes/${data.id}/measureInfo`, data)
+  },
+  // 批量修改
+  batchUpdatePackageBoxes (data) {
+    return axios.post(`${baseAutoUrl}/packageBoxes/measureInfoBatch`, data)
+  },
   // 待染判查询
   getDyeingPrepares (params) {
     return axios({
@@ -419,7 +438,6 @@ export default {
       url: `${baseAutoUrl}/dyeingResults`,
       params: params
     })
-    // return axios.get(`${baseAutoUrl}/dyeingResults`, data)
   },
 
   // =========================================== 仓储 ===========================================

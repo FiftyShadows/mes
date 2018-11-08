@@ -53,7 +53,8 @@
             <i class="el-icon-d-caret"></i>
             <span slot="title">自动化</span>
           </el-menu-item> -->
-            <li v-for="(router, index) in routers" :key="index">
+          <div v-if="routers[0]">
+            <li v-for="(router, index) in routers[0].children" :key="index">
               <el-menu-item :index="router.path" v-if="index === 0 || index === 1">
               <i :class="router.class"></i>
               <span slot="title">{{router.name}}</span>
@@ -71,6 +72,7 @@
                 </el-menu-item-group>
               </el-submenu>
             </li>
+          </div>
           <!--<el-submenu index="8">-->
             <!--<template slot="title">-->
               <!--<i class="el-icon-menu"></i>-->

@@ -7,7 +7,7 @@
     <br>
     <i>{{this.util.formatDate(eventSource.fireDateTime, 'yyyy-MM-dd hh:mm:ss')}}</i>
     </span>
-      <el-button style="float: right;" type="warning" size="mini">暂存箱删除</el-button>
+      <el-button style="float: right;" type="warning" size="mini">暂存箱增加</el-button>
     </div>
   </el-card>
 </template>

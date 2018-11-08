@@ -1,55 +1,41 @@
 <template>
-    <el-card class="box-card">
+  <el-card class="box-card event-source">
     <div slot="header" class="clearfix">
-      <span>卡片名称</span>
-      <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+    <span style="float: left;">
+    <span class="operator">{{eventSource.operator.name}}</span>
+    <span class="operator">{{eventSource.operator.hrId}}</span>
+    <br>
+    <i>{{this.util.formatDate(eventSource.fireDateTime, 'yyyy-MM-dd hh:mm:ss')}}</i>
+    </span>
+      <el-button style="float: right;" type="warning" size="mini">位与位交叉织袜</el-button>
     </div>
-    <div v-for="o in 4" :key="o" class="text item">
-      {{'列表内容 ' + o }}
-    </div>
-    </el-card>
+  </el-card>
 </template>
 
 <script>
 export default {
-  name: 'DyeingPrepareCrossLineMachineSubmitEvent',
-  props: ['row', 'col', 'batchOptions', 'sideType', 'checkAll'],
+  props: ['eventSource'],
   data () {
     return {
-      checked: false
     }
   },
   watch: {
-    checkAll (data) {
-      if (data) {
-        this.checked = true
-      } else {
-        this.checked = false
-      }
+    eventSource (value) {
+      this.getData()
     }
   },
+  mounted () {
+    this.getData()
+  },
   methods: {
+    getData () {
+      // 操作员信息
+      this.$api.getOperators(this.eventSource.operator.id).then(res => {
+        this.eventSource.operator = res.data
+      })
+    }
   }
 }
 </script>
 <style>
-  .silk {
-    width:84px;
-    height:80px;
-    border:1px solid #dcdfe6;
-    font-size: 1px;
-    margin-top: -6px;
-    margin-bottom: 10px;
-    margin-left: 10px;
-  }
-  .el-checkbox.is-bordered.el-checkbox--small {
-    background: white;
-    width: auto;
-  }
-  .el-checkbox.is-bordered {
-    height: 30px;
-    width: 86px;
-    background-color: white;
-    margin-left: 10px;
-  }
 </style>

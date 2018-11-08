@@ -1,13 +1,16 @@
 <template>
   <div>
-    <el-checkbox style="overflow: hidden" border :label="row + '×' + col" v-model="checked"></el-checkbox>
+    <template v-for="(silkRuntime,index) in silkRuntimes">
+      <el-checkbox :key="index" v-if="silkRuntime.sideType === sideType && silkRuntime.row === row && silkRuntime.col === col" style="overflow: hidden" border :label="row + '×' + col" v-model="checked"></el-checkbox>
+      <!--<el-checkbox style="overflow: hidden" border :label="row + '×' + col" v-model="checked"></el-checkbox>-->
+    </template>
     <div class="silk">
-      <template v-for="(silkRuntime,index) in silkRuntimes">
-                  <span style="color: #F56C6C; font-weight: bolder;" :key="index" v-if="silkRuntime.sideType === sideType && silkRuntime.row === row && silkRuntime.col === col">
-                  {{silkRuntime.silk.lineMachine.line.name}}-{{silkRuntime.silk.spindle}}/{{silkRuntime.silk.lineMachine.item}}
-                  {{silkRuntime.silk.id}}
-                    <span v-if="!!silkRuntime.silk.code">{{silkRuntime.silk.code}}</span>
-                  </span>
+      <template v-for="(silkRuntime,index) in silkRuntimes" style="text-align: center">
+        <span :key="index" style="color: #F56C6C; font-weight: bolder;" v-if="silkRuntime && silkRuntime.sideType === sideType && silkRuntime.row === row && silkRuntime.col === col">
+        {{silkRuntime.silk.lineMachine.line.name}}-{{silkRuntime.silk.spindle}}/{{silkRuntime.silk.lineMachine.item}}
+        <!--{{silkRuntime.silk.id}}-->
+          <span v-if="!!silkRuntime.silk.code">{{silkRuntime.silk.code}}</span>
+        </span>
       </template>
     </div>
   </div>
@@ -34,7 +37,7 @@ export default {
       let array = this.$store.state.checkedSilkRuntimes
       if (data) {
         let obj = this.silkRuntimes.find((silkRuntime) => {
-          if (silkRuntime.row === this.row && silkRuntime.col === this.col && silkRuntime.sideType === this.sideType) {
+          if (silkRuntime && silkRuntime.row === this.row && silkRuntime.col === this.col && silkRuntime.sideType === this.sideType) {
             return true
           } else {
             return false
@@ -44,7 +47,7 @@ export default {
         this.$store.commit('CheckedSilkRuntimes', array)
       } else {
         let index = array.findIndex((silkRuntime) => {
-          if (silkRuntime.row === this.row && silkRuntime.col === this.col && silkRuntime.sideType === this.sideType) {
+          if (silkRuntime && silkRuntime.row === this.row && silkRuntime.col === this.col && silkRuntime.sideType === this.sideType) {
             return true
           } else {
             return false
@@ -62,13 +65,16 @@ export default {
 <style>
   .silk {
     width:84px;
-    height:80px;
+    height:35px;
     border:1px solid #dcdfe6;
-    font-size: 1px;
+    font-size: 12px;
     margin-top: -6px;
     margin-bottom: 10px;
     margin-left: 10px;
   }
+  .silk *{
+    vertical-align: middle;
+  }s
   .el-checkbox.is-bordered.el-checkbox--small {
     background: white;
     width: auto;
