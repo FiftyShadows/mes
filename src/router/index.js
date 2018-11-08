@@ -35,7 +35,10 @@ import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage
 import PackageClass from '@/components/auto/auto_configuration/package_class'
 import TemporaryBox from '@/components/auto/auto_configuration/temporary_box'
 // ================================仓储=================================
-import login from '@/components/ware_login/login.vue'
+import Login from '@/components/ware_login/login.vue'
+import Registered from '@/components/ware_login/registered.vue'
+// 权限
+import warePermissions from '@/components/ware/ware_permissions/permissions'
 // 包装计量
 import ShortSilk from '@/components/ware/ware_measurement/shortSilk/shortSilkPrint'
 import Artificial from '@/components/ware/ware_measurement/artificial/artificial'
@@ -72,7 +75,7 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      name: 'index',
+      // name: 'index',
       component: Index,
       // beforeEnter: (to, from, next) => {
       //   api.getAuth().then(res => {
@@ -250,11 +253,17 @@ let router = new Router({
           ]
         },
         // ================================仓储===============================
+        { // 权限
+          path: '/permissions',
+          name: 'warePermissions',
+          component: warePermissions
+        },
         {// 包装计量--自动打唛头
           path: '/measurement/ShortSilk',
           name: 'ShortSilk',
           component: ShortSilk
-        }, {// 包装计量--人工唛头
+        },
+        {// 包装计量--人工唛头
           path: '/measurement/artificial',
           name: 'Artificial',
           component: Artificial
@@ -348,8 +357,13 @@ let router = new Router({
     {// login
       path: '/login',
       name: 'login',
-      component: login,
-      class: 'el-icon-search',
+      component: Login,
+      permissions: ''
+    },
+    {// 注册
+      path: '/registered',
+      name: 'registered',
+      component: Registered,
       permissions: ''
     },
     {// 帮助页面
@@ -360,10 +374,11 @@ let router = new Router({
   ]
 })
 router.beforeEach((to, from, next) => { // 全局路由钩子  如果localStorage.token不存在  则进入login页面
+  // console.log(to.name)
   if (to.name === 'login') {
     next()
   } else {
-    if (window.localStorage.token) {
+    if (window.localStorage.token || to.name === 'registered') {
       next()
     } else {
       next('login')

@@ -72,14 +72,14 @@
       </el-table-column>
       <!-- <el-table-column prop="spec" label="打包时间" width="150">
       </el-table-column> -->
-      <el-table-column fixed="right" label="操作" width="140">
+      <!-- <el-table-column fixed="right" label="操作" width="140">
         <template slot-scope="scope">
           <el-button type="primary" @click="openDetil(scope.row)" size="small">码单明细</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
-    <DialogMX ref="detail"></DialogMX>
+    <!-- <DialogMX ref="detail"></DialogMX> -->
   </div>
 </template>
 <script>
@@ -120,14 +120,13 @@ export default {
       }
     }
   },
-  computed: {
-  },
   created () {
     this.getHouseNameList()
     this.getSelectBatchNoList()
     this.getSelectProductList()
     this.getSelectClassesList()
     this.getSelectLevelList()
+    this.seachTableData('seachForm')
   },
   mounted () {
   },
@@ -196,6 +195,7 @@ export default {
       })
     },
     seachTableData (formName) {
+      console.log(formName)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true

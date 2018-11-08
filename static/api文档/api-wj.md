@@ -1,5 +1,277 @@
 盘点接口
 
+1.登录接口
+post请求
+http://localhost:8080/system/login
+传入参数：
+{
+  "loginname":"fhy",
+  "password":"123456"
+}
+返回值：
+{
+    "status": "200",
+    "msg": "登录成功",
+    "data":{
+    "menu":[
+        {"id": 10, "menuName": "调拨出库", "url": null, "remark": null, "isDeleted": null,…},
+        {"id": 11, "menuName": "翻包", "url": null, "remark": null, "isDeleted": null,…},
+        {"id": 12, "menuName": "库存明细", "url": null, "remark": null, "isDeleted": null,…}
+    ],
+    "userId": 25
+    },
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZW5neWkiLCJmaHkiOiJwYXNzd29yZCIsImlhdCI6MTUzNjgyOTM4Nn0.ZyAzVRsOilZxc-gQ__jZmv6Mn0rOrfuDYBvbcG_9TVs"
+}
+
+
+
+2.角色下拉接口
+post请求
+http://localhost:8080/mes/system/role/selectRole
+传入参数：无需参数
+返回值：
+{
+    "status": "200",
+    "msg": "查询成功",
+    "data":[
+        {
+        "roleId": 1,
+        "roleName": "管理员"
+        },
+        {
+        "roleId": 2,
+        "roleName": "包装工"
+        },
+        {
+        "roleId": 3,
+        "roleName": "开票员"
+        },
+        {
+        "roleId": 4,
+        "roleName": "计量员"
+        },
+        {
+        "roleId": 5,
+        "roleName": "发货员"
+        }
+    ],
+    "token": null
+}
+
+
+
+3.新增用户接口
+post请求
+http://localhost:8080/mes/system/user/addUser
+传入参数：
+{
+  "loginname":"jlya",
+  "password":"123456",
+  "name":"计量员A",
+  "roleId":4,
+  "remark":"我是备注",
+  "class":"白班",
+  "status":"我是状态",
+  "type":"我是类型",
+  "userId":"1"
+}
+
+返回参数：
+{
+"status": "200",
+"msg": "用户新增成功！",
+"data": null,
+"token": null
+}
+
+4.删除用户接口
+post请求
+http://localhost:8080/mes/system/user/deleteUser
+传入参数：
+{
+  "id":20,
+  "userId":1
+}
+
+返回参数：
+{
+"status": "200",
+"msg": "删除成功",
+"data": null,
+"token": null
+}
+
+5.更新用户接口
+post请求
+http://localhost:8080/mes/system/user/updateUser
+传入参数：
+{
+  "id":"16",
+  "loginname":"jlya11",
+  "password":"12345116",
+  "name":"计量员A11",
+  "roleId":4,
+  "remark":"我11是备注11",
+  "class":"白班1",
+  "status":"我是状11态",
+  "type":"我是11类型",
+  "userId":1
+}
+
+返回参数：
+{
+"status": "200",
+"msg": "更新成功",
+"data": null,
+"token": null
+}
+
+6.查询用户接口
+post请求
+http://localhost:8080/mes/system/user/selectUser
+传入参数：
+都是查询条件，都是可添可不填
+{
+    "name":"A",
+    "loginname":"",
+    "type":"2"
+}
+
+返回参数：
+{
+"status": "200",
+"msg": "查询成功",
+"data":[
+    {
+        "id": 2,
+        "loginname": "bzg",
+        "password": "123456",
+        "name": "包装工A",
+        "status": null,
+        "type": "2",
+        "classes": null,
+        "roleId": 2,
+        "remark": null,
+        "isDeleted": "N",
+        "createTime": null,
+        "modifiedTime": "2018-09-13T08:49:34.000+0000",
+        "creatorId": null,
+        "modifierId": 24
+    },
+    {
+        "id": 12,
+        "loginname": "kpy",
+        "password": "123456",
+        "name": "开票员A",
+        "status": null,
+        "type": "2",
+        "classes": "白班",
+        "roleId": 3,
+        "remark": "呵呵哒",
+        "isDeleted": "N",
+        "createTime": null,
+        "modifiedTime": "2018-09-13T08:49:36.000+0000",
+        "creatorId": null,
+        "modifierId": 1
+    }
+    ],
+    "token": null
+}
+
+7.重置用户密码接口
+post请求
+http://localhost:8080/mes/system/user/resetPassword
+传入参数：
+{
+    "id":24,
+    "userId":2
+}
+
+返回参数：
+{
+    "status": "200",
+    "msg": "密码重置成功",
+    "data": null,
+    "token": null
+}
+
+8.更新密码接口
+post请求
+http://localhost:8080/mes/system/user/updatePassword
+传入参数：
+{
+    "oldPassword":"123456",
+    "newPassword":"234567w",
+    "userId":24
+}
+
+返回参数：
+{
+    "status": "200",
+    "msg": "密码更新成功",
+    "data": null,
+    "token": null
+}
+
+9.通用下拉接口
+
+post请求
+http://localhost:8080/mes/system/dict/getDict
+传入参数：
+{
+"key":"班次"
+}
+
+返回参数：
+{
+    "status": "200",
+    "msg": "查询成功",
+    "data":[
+        {
+        "dictValue": "白班",
+        "dictKey": "bb"
+        },
+        {
+        "dictValue": "晚班",
+        "dictKey": "wb"
+        },
+        {
+        "dictValue": "中班",
+        "dictKey": "zb"
+        }
+    ],
+    "token": null
+}
+
+
+10.扫码入库接口
+post请求
+http://localhost:8080/mes/trans/inbound/addInbound
+传入参数：
+{
+  "pre_storage":"AM101",
+  "lot_number1":"020220181009GD71217SD330007",
+  "lot_number2":"020220181009GD71217SD330008",
+  "userId":1,
+  "classes":"早班"
+}
+
+注：1.码单号2的选填项，可以为空
+    2.码单号必须是excel种的数据
+	3.码单号对应的批次的预设库位必须和参数中的库位一直才允许入库
+
+返回值：
+{
+"status": "200",
+"msg": "入库成功",
+"data": null,
+"token": null
+}
+
+
+
+
+
 1.查询待盘点数据
 http://localhost:8080/mes/warehouseInfo/stocktaking/selectStocktaking
 POST请求

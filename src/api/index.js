@@ -1,7 +1,7 @@
 import axios from 'axios'
 import vue from '../main.js'
 import global from '../../static/js/window_global'
-import store from '../store/store.js'
+// import store from '../store/store.js'
 // import promiseFinally from 'promise.prototype.finally'
 
 // promiseFinally.shim()
@@ -13,7 +13,7 @@ import store from '../store/store.js'
 // 这个token只能测试用，正式代码里不要用，后台密钥不同，会验证不成功
 // const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJ1aWQiOiI1YjM4NGIyY2Q4NzEyMDY0ZjEwMWUzMWUiLCJpc3MiOiJqYXBwLW1lcy1hdXRvIn0.h-CPVnDFw0YyCfm7MIAgXIqTlecAhT5VQe43i5aIUeE'
 // 仓储token
-console.log(store.state.token)
+// console.log(store.state.token)
 // const Token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZW5neWkiLCJhZG1pbiI6InBhc3N3b3JkIiwiaWF0IjoxNTM3MzI0NDY0fQ.QGMzQXX09igK9gaKAq5jfniTpioa12st7h9FCZ-D7AY'
 // let Token = store.state.token
 
@@ -378,8 +378,21 @@ export default {
   },
 
   // =========================================== 仓储 ===========================================
+
   wareLogin (data) { // 登陆
     return axios.post(`${baseWareUrl}/system/login`, data)
+  },
+  selectUser (data) { // 查询用户
+    return axios.post(`${baseWareUrl}/mes/system/user/selectUser`, data)
+  },
+  addwareUser (data) { // 新增用户
+    return axios.post(`${baseWareUrl}/mes/system/user/addUser`, data)
+  },
+  deleteUser (data) { // 删除用户
+    return axios.post(`${baseWareUrl}/mes/system/user/deleteUser`, data)
+  },
+  updateUser (data) { // 修改用户
+    return axios.post(`${baseWareUrl}/mes/system/user/updateUser`, data)
   },
   getDict (data) { // 通用下拉菜单
     return axios.post(`${baseWareUrl}/mes/system/dict/getDict`, data)

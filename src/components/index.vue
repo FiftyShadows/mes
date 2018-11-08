@@ -34,10 +34,11 @@
             <el-dropdown-item command="flowChart">流程图</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
+        <!-- <el-button @click="registered()">注册</el-button> -->
         <el-tooltip class="item" effect="dark" content="退出登录" placement="bottom-end">
           <img class="outLogin" src="../assets/outLogin.png" @click="clear()" alt="退出登录">
         </el-tooltip>
-        <!-- <el-dropdown class="login" v-if="$store.state.isWareLogin">
+        <!-- <el-dropdown class="login">
           <el-button type="primary">
             已登陆
           </el-button>
@@ -77,6 +78,22 @@
                 </el-menu-item-group>
               </el-submenu>
             </li> -->
+          <!-- <el-menu-item index="7"><i class="el-icon-setting">用户维护</el-menu-item> -->
+          <el-menu-item index="/permissions">
+            <i class="el-icon-edit"></i>
+            <span slot="title">用户维护</span>
+          </el-menu-item>
+          <!-- <el-submenu index="7">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span slot="title">用户维护</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/permissions/newUser"><i class="el-icon-setting"></i>新增用户</el-menu-item>
+              <el-menu-item index="/permissions/manageUser"><i class="el-icon-setting"></i>用户管理</el-menu-item>
+              <el-menu-item index="/permissions/setUser"><i class="el-icon-setting"></i>用户设置</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu> -->
           <el-submenu index="8">
             <template slot="title">
               <i class="el-icon-menu"></i>
@@ -85,9 +102,9 @@
             <el-menu-item-group>
               <el-menu-item index="/measurement/artificial"><i class="el-icon-setting"></i>包装唛头打印</el-menu-item>
               <el-menu-item index="/measurement/shortSilk"><i class="el-icon-setting"></i>短丝唛头</el-menu-item>
-              <!-- <el-menu-item index="/measurement/smallPackage"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>
+              <el-menu-item index="/measurement/smallPackage"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>
               <el-menu-item index="/measurement/BoxManagement"><i class="el-icon-setting"></i>暂存箱管理</el-menu-item>
-              <el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item> -->
+              <el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="9">
@@ -98,10 +115,10 @@
             <el-menu-item-group>
               <el-menu-item index="/storage/warehouse"><i class="el-icon-setting"></i>仓库</el-menu-item>
               <el-menu-item index="/storage/edit"><i class="el-icon-setting"></i>库位维护</el-menu-item>
-              <!-- <el-menu-item index="/storage/view"><i class="el-icon-setting"></i>库位视图</el-menu-item> -->
+              <el-menu-item index="/storage/view"><i class="el-icon-setting"></i>库位视图</el-menu-item>
               <el-menu-item index="/storage/plan"><i class="el-icon-setting"></i>库位计划</el-menu-item>
-              <!-- <el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>
-              <el-menu-item index="/storage/trace"><i class="el-icon-setting"></i>箱包追溯</el-menu-item> -->
+              <el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>
+              <el-menu-item index="/storage/trace"><i class="el-icon-setting"></i>箱包追溯</el-menu-item>
               <el-menu-item index="/storage/SAPMessage"><i class="el-icon-setting"></i>SAP信息</el-menu-item>
               <el-menu-item index="/storage/FBreason"><i class="el-icon-setting"></i>翻包原因</el-menu-item>
             </el-menu-item-group>
@@ -114,9 +131,9 @@
             <el-menu-item-group>
               <el-menu-item index="/record/PrepareInStorage"><i class="el-icon-setting"></i>待入库</el-menu-item>
               <el-menu-item index="/record/instorage"><i class="el-icon-setting"></i>入库记录</el-menu-item>
-              <!-- <el-menu-item index="/record/OutStorage"><i class="el-icon-setting"></i>出库记录</el-menu-item>
+              <el-menu-item index="/record/OutStorage"><i class="el-icon-setting"></i>出库记录</el-menu-item>
               <el-menu-item index="/record/Returngoods"><i class="el-icon-setting"></i>退货记录</el-menu-item>
-              <el-menu-item index="/record/OnceAgainPackage"><i class="el-icon-setting"></i>翻包记录</el-menu-item> -->
+              <el-menu-item index="/record/OnceAgainPackage"><i class="el-icon-setting"></i>翻包记录</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="11">
@@ -127,8 +144,8 @@
             <el-menu-item-group>
               <el-menu-item index="/record/SalesRequisition"><i class="el-icon-setting"></i>销售调拨单</el-menu-item>
               <el-menu-item index="/record/pickMatch"><i class="el-icon-setting"></i>拣配调拨单</el-menu-item>
-              <!-- <el-menu-item index="/record/ReturngoodsRequisition"><i class="el-icon-setting"></i>退货调拨单</el-menu-item>
-              <el-menu-item index="/record/SilkCarShipped"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item> -->
+              <el-menu-item index="/record/ReturngoodsRequisition"><i class="el-icon-setting"></i>退货调拨单</el-menu-item>
+              <el-menu-item index="/record/SilkCarShipped"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="12">
@@ -217,6 +234,9 @@ export default {
         })
         this.$router.replace('/login')
       }).catch(() => {})
+    },
+    registered () {
+      this.$router.replace('/registered')
     }
   }
 }
@@ -310,6 +330,9 @@ body > .el-container {
   height: 40px;
   text-align: right;
 }
+.item:hover {
+  cursor: pointer;
+}
 .radio_img {
   width: 20px;
   margin-top: 10px;
@@ -348,8 +371,8 @@ body > .el-container {
   }
 }
 .el-menu-item, .el-submenu__title {
-  height: 40px;
-  line-height: 40px;
+  // height: 40px;
+  // line-height: 40px;
 }
 .el-submenu__title {
   height: 40px;
