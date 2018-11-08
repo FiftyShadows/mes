@@ -71,17 +71,19 @@ export default {
 .login{
   width: 100%;
   height: 100%;
-  // background: white;
+  background: rgb(32, 135, 196);
   position: relative;
-  background-image: url('../../assets/login_bg.jpg');
-  background-size: cover;
+  background-image: url('../../assets/banner.png');
+  // background-position-y: 50px;
+  background-size: 120% 100%;
   .main {
     width: 500px;
     height: 300px;
     position: absolute;
     top: 0;right: 0;bottom: 0;left: 0;
     margin: auto;
-    background: rgba(252, 252, 252, .9);
+    margin-left: 12%;
+    background: rgba(252, 252, 252, .7);
     border-radius: 20px;
     // border: 1px solid black;
     .loginLogo {

@@ -11,7 +11,7 @@
           <el-input v-model="sametimeForm.deliveryBill" clearable placeholder="调拨单号"></el-input>
         </el-form-item>
         <el-form-item label="">
-          <el-date-picker v-model="sametimeForm.date" clearable type="date" placeholder="选择日期"></el-date-picker>
+          <el-date-picker v-model="sametimeForm.date" clearable type="date" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="">
           <el-input v-model="sametimeForm.loadingSpot" clearable placeholder="装运点/接收点"></el-input>

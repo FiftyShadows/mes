@@ -34,11 +34,9 @@
             <el-dropdown-item command="flowChart">流程图</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <router-link to="/login">
-          <el-tooltip class="item" effect="dark" content="退出登录" placement="bottom-end">
-            <img class="outLogin" src="../assets/outLogin.png" alt="退出登录">
-          </el-tooltip>
-        </router-link>
+        <el-tooltip class="item" effect="dark" content="退出登录" placement="bottom-end">
+          <img class="outLogin" src="../assets/outLogin.png" @click="clear()" alt="退出登录">
+        </el-tooltip>
         <!-- <el-dropdown class="login" v-if="$store.state.isWareLogin">
           <el-button type="primary">
             已登陆
@@ -205,6 +203,20 @@ export default {
     handleOpen (key, keyPath) {
     },
     handleClose (key, keyPath) {
+    },
+    clear () {
+      this.$confirm('此操作将退出系统, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        localStorage.removeItem('token')
+        this.$message({
+          type: 'success',
+          message: '已退出仓储系统'
+        })
+        this.$router.replace('/login')
+      }).catch(() => {})
     }
   }
 }

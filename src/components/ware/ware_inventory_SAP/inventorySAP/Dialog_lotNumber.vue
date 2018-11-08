@@ -25,6 +25,9 @@ export default {
       loading: false,
       lotNum: '',
       houseName: '',
+      seachData: {
+
+      },
       gridData: [],
       dialogTableVisible: false,
       pageNum: 1, // 当前页数
@@ -42,25 +45,31 @@ export default {
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
     changePage (value) {
-      this.pageNum = value.pageNum
-      this.pageSize = value.pageSize
-      this.seachTableData()
+      // this.pageNum = value.pageNum
+      // this.pageSize = value.pageSize
+      this.seachData.pageNum = value.pageNum
+      this.seachData.pageSize = value.pageSize
+      this.seachTableData(this.seachData)
     },
-    show (lotNum, houseName) {
+    show (row, value) {
+      console.log(row, value)
       this.dialogTableVisible = true
-      this.lotNum = lotNum
-      this.houseName = houseName
-      this.seachTableData()
-      // console.log(lotNum, houseName)
+      this.seachData.batchNo = row.sublotNumber
+      this.seachData.houseName = row.houseName
+      this.seachData.level = row.level
+      this.seachData.class = value.classes
+      this.seachData.storageCode = row.storageCode
+      this.seachData.packageType = row.packageType
+      this.seachData.yoke = row.yoke
+      this.seachData.startDate = value.startDate
+      this.seachData.endDate = value.endDate
+      this.seachData.pageNum = this.pageNum
+      this.seachData.pageSize = this.pageSize
+      this.seachTableData(this.seachData)
     },
-    seachTableData () {
+    seachTableData (value) {
       this.loading = true
-      this.$api.selectStocktakingDetail({
-        sublotNumber: this.lotNum,
-        houseName: this.houseName,
-        pageNum: this.pageNum,
-        pageSize: this.pageSize
-      }).then(res => {
+      this.$api.selectStocktakingDetail(value).then(res => {
         console.log(res)
         if (res.data.status === '200') {
           this.loading = false

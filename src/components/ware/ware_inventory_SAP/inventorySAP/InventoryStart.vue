@@ -323,7 +323,7 @@ export default {
     },
     reading (row) {
       console.log(row)
-      this.$refs.lotnum.show(row.batchNo, row.warehouseName)
+      this.$refs.lotnum.show(row, this.seachForm)
     },
     readingWaitStocktak (row) {
       console.log(row)
