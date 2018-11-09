@@ -46,6 +46,7 @@ axios.interceptors.response.use(function (response) {
       })
       // store.state.pageLoading = false;
       break
+    case 302:
     default:
       vue.$notify.error({
         title: '错误',
@@ -148,6 +149,13 @@ export default {
   // 机台管理--修改
   saveMachine (data) {
     return axios.put(`${baseAutoUrl}/lineMachines/${data.id}`, data)
+  },
+  getCompleteLine (params) {
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/autoComplete/line`,
+      params: params
+    })
   },
 
   // 产品管理--获取数据
@@ -370,8 +378,12 @@ export default {
     return axios.get(`${baseAutoUrl}/operators?pageSize=${data.pageSize}&first=${data.first}&q=${data.q}`)
   },
   // 用户--搜索所有用户
-  getAllUsers (data) {
-    return axios.get(`${baseAutoUrl}/autoComplete/suggestOperator?q=${data}`)
+  getAllUsers (params) {
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/autoComplete/suggestOperator`,
+      params: params
+    })
   },
   // 用户--添加用户
   addUser (data) {

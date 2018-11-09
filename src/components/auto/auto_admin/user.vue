@@ -2,8 +2,7 @@
 <template>
   <div class="users">
     <div style="float: left; margin-bottom: 10px;">
-      <el-input v-model.trim="seacrhUsers" placeholder="请输入内容..." style="width: 200px;"></el-input>
-      <el-button type="primary" icon="el-icon-search" circle @click="seach()" ></el-button>
+      <el-input v-model.trim="seacrhUsers" @input="getUsers(seacrhUsers)" placeholder="请输入..."></el-input>
     </div>
     <el-button type="primary" @click="opendialog()" style="float: right; margin-bottom: 10px;">新 增</el-button>
     <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
@@ -19,13 +18,15 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage2" :page-sizes="[20, 50, 100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
-    </el-pagination>
+    <pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></pagination>
     <el-dialog title="添加用户" :visible.sync="dialogSeach">
-      <el-input v-model.trim="seacrhAll" @input="seachAllUsers()" placeholder="请输入..." style="width: 60%;"></el-input>
-      <el-table ref="singleTable" @selection-change="handleSelectionChange" :data="tableData2" highlight-current-row @current-change="handleChange" style="width: 100%" >
-        <el-table-column type="selection" width="50">
-        </el-table-column>
+      <!--<el-select v-model="operatorName" placeholder="请输入批号" remote filterable :remote-method="seachAllUsers" style="float:left;">-->
+        <!--<el-option v-for="operator in operators" :key="operator.id" :label="operator.name" :value="operator.name"></el-option>-->
+      <!--</el-select>-->
+      <el-input v-model.trim="operatorName" @input="seachAllUsers(operatorName)" placeholder="请输入..." style="width: 60%;"></el-input>
+      <el-table ref="singleTable" @selection-change="handleSelectionChange" :data="tableData2" highlight-current-row @current-change="handleChange" style="width: 100%" v-loading="loading2">
+        <!--<el-table-column type="selection" width="50">-->
+        <!--</el-table-column>-->
         <el-table-column type="index" width="50">
         </el-table-column>
         <el-table-column property="name" label="名字">
@@ -36,13 +37,13 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button @click="addUser(scope.row)"></el-button>
+            <el-button @click="addUser(scope.row)">添加</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin-top: 20px">
-        <el-button type="primary" @click="addUsers()">添 加</el-button>
-      </div>
+      <!--<div style="margin-top: 20px">-->
+        <!--<el-button type="primary" @click="addUsers()">批量添加</el-button>-->
+      <!--</div>-->
     </el-dialog>
     <el-dialog :title="`${form.name}——权限设置`" :visible.sync="dialogSetAdmin">
       <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
@@ -83,21 +84,27 @@
   </div>
 </template>
 <script>
+import Pagination from '../../common/pagination'
+let time = null
 export default {
   name: 'users',
+  components: {
+    'pagination': Pagination
+  },
   data () {
     return {
       loading: false,
+      loading2: false,
       seacrhUsers: '',
       tableData: [],
       tableData2: [],
       totalData: {},
       pageSize: 50,
-      first: 0,
+      pageNum: 1,
       total: 0,
-      currentPage2: 5,
       dialogSeach: false,
-      seacrhAll: '',
+      // seacrhAll: '',
+      operatorName: '',
       multipleSelection: {},
       form: {},
       formLabelWidth: '120px',
@@ -132,39 +139,20 @@ export default {
     }
   },
   created () {
-    this.getUsers()
+    this.getUsers('')
   },
   methods: {
-    getUsers () {
+    getUsers (q) {
       this.loading = true
-      // this.$api.getUser({
-      //   pageSize: '',
-      //   first: '',
-      //   q: ''
-      // }).then(res => {
-      //   this.total = res.data.operators.length
-      // })
       this.$api.getUser({
         pageSize: this.pageSize,
-        first: this.first,
-        q: ''
+        first: (this.pageNum - 1) * this.pageSize,
+        q: q
       }).then(res => {
         console.log(res)
         this.totalData = res.data
         this.tableData = res.data.operators
-        this.total = res.data.operators.length
-        this.loading = false
-      })
-    },
-    seach () {
-      this.loading = true
-      this.$api.getUser({
-        pageSize: this.pageSize,
-        first: this.first,
-        q: this.seacrhUsers
-      }).then(res => {
-        this.totalData = res.data
-        this.tableData = res.data.operators
+        this.total = res.data.count
         this.loading = false
       })
     },
@@ -172,7 +160,7 @@ export default {
       this.$api.addUser(this.multipleSelection).then(res => {
         console.log(res)
         this.dialogSeach = false
-        this.getUsers()
+        this.getUsers('')
         this.$notify({
           title: '成功',
           message: '添加成功',
@@ -184,7 +172,7 @@ export default {
       this.$api.addUser(row).then(res => {
         console.log(res)
         this.dialogSeach = false
-        this.getUsers()
+        this.getUsers('')
         this.$notify({
           title: '成功',
           message: '添加成功',
@@ -195,14 +183,22 @@ export default {
     opendialog () {
       this.dialogSeach = true
     },
-    seachAllUsers () {
-      this.$api.getAllUsers(this.seacrhAll).then(res => {
-        console.log(res)
-        this.tableData2 = res.data
-      })
+    seachAllUsers (q) {
+      clearTimeout(time)
+      time = setTimeout(() => {
+        this.loading2 = true
+        let parmas = {
+          q
+        }
+        this.$api.getAllUsers(parmas).then(res => {
+          // this.$nextTick(
+          this.tableData2 = res.data
+          // )
+          this.loading2 = false
+        })
+      }, 1000)
     },
     handleChange (val) {
-      console.log(val)
       this.multipleSelection = val
     },
     openSavegroups (val) {
@@ -243,7 +239,7 @@ export default {
       console.log(this.form)
       this.$api.saveUserpermissions(this.form).then(res => {
         console.log(res)
-        this.getUsers()
+        this.getUsers('')
         this.$notify({
           title: '成功',
           message: '权限设置成功',
@@ -286,16 +282,10 @@ export default {
       this.permissionsCheckAll = checkedCount === this.permissions.length
       this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.permissions.length
     },
-    // 分页
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-      this.pageSize = val
-      this.getUsers(this.pageSize, this.first, this.seacrhUsers)
-    },
-    handleCurrentChange (val) {
-      this.first = (--val) * this.pageSize
-      console.log(`当前页: ${this.first}`)
-      this.getUsers(this.pageSize, this.first, this.seacrhUsers)
+    changePage (value) {
+      this.pageNum = value.pageNum
+      this.pageSize = value.pageSize
+      this.getUsers('')
     },
     handleSelectionChange (val) {
       this.multipleSelection = val

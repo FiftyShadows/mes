@@ -1,7 +1,7 @@
 <!-- 车间管理 -->
 <template>
   <div>
-    <el-button class="createLine" type="primary" @click="dialogVisibleAdd = true" style="float: right; margin-bottom: 10px;">新 增</el-button>
+    <el-button class="createLine" type="primary" @click="getCorporation();dialogVisibleAdd = true" style="float: right; margin-bottom: 10px;">新 增</el-button>
     <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
       <el-table-column fixed prop="corporation.name" label="公司">
       </el-table-column>
@@ -15,10 +15,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="新 增" :visible.sync="dialogVisibleAdd" width="30%">
-      <el-form :model="form1" :rules="rules" ref="form1" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="公司" prop="company" :label-width="formLabelWidth" required>
-          <el-input v-model="form1.company" auto-complete="off" disabled></el-input>
+    <el-dialog title="新 增" :rules="rules" :visible.sync="dialogVisibleAdd" width="30%">
+      <el-form :model="form1"  ref="form1" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="公司" :label-width="formLabelWidth" required>
+          <el-input v-model="form1.corporation.name" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
           <el-input v-model="form1.name" auto-complete="off"></el-input>
@@ -32,10 +32,10 @@
         <el-button type="primary" @click="addWorkshop('form1')">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="修 改" :visible.sync="dialogVisibleSave" width="30%">
-      <el-form :model="form2" :rules="rules" ref="form2" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="公司" prop="company" :label-width="formLabelWidth" required>
-          <el-input v-model="form2.company" auto-complete="off" disabled></el-input>
+    <el-dialog title="修 改" :rules="rules" :visible.sync="dialogVisibleSave" width="30%">
+      <el-form :model="form2" ref="form2" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="公司" :label-width="formLabelWidth" required>
+          <el-input v-model="form2.corporation.name" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="名称" prop="name" :label-width="formLabelWidth" required>
           <el-input v-model="form2.name" auto-complete="off"></el-input>
@@ -62,13 +62,11 @@ export default {
       dialogVisibleSave: false,
       formLabelWidth: '80px',
       form1: {
-        company: '高新',
+        corporation: {},
         name: '',
         code: ''
       },
       form2: {
-        company: '',
-        name: '',
         code: '',
         id: '',
         corporation: {}
@@ -76,7 +74,6 @@ export default {
       workshop: {},
       rules: {
         name: [{ required: true, message: '必输项...', trigger: 'blur' }],
-        company: [{ required: true, message: '必输项...', trigger: 'blur' }],
         code: [{ required: true, message: '必输项...', trigger: 'blur' }]
       }
     }
@@ -95,18 +92,22 @@ export default {
         this.loading = false
       })
     },
+    getCorporation () {
+      this.$api.getCorporations().then(res => {
+        console.log(res.data)
+        if (res.data.length > 0) {
+          this.form1.corporation = res.data[0]
+        }
+      })
+    },
     addWorkshop (formName) {
-      this.workshop = this.tableData[1].corporation
-      this.workshop.createTime = new Date().getTime() // 创建时间戳
-      this.workshop.modifyDateTime = this.workshop.createTime
+      // this.workshop = this.tableData[1].corporation
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$api.createWorkshop({
-            id: null,
             name: this.form1.name,
             code: this.form1.code,
-            note: null,
-            corporation: this.workshop
+            corporation: this.form1.corporation
           }).then(res => {
             this.$notify({
               title: '成功',
@@ -124,7 +125,6 @@ export default {
     handleClick (row) {
       console.log(row)
       this.dialogVisibleSave = true
-      this.form2.company = row.corporation.name
       this.form2.name = row.name
       this.form2.id = row.id
       this.form2.code = row.code

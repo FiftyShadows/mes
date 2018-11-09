@@ -1,9 +1,12 @@
 <!-- 机台管理 -->
 <template>
   <div class="machine">
-    <el-select v-model="name" clearable placeholder="请选择" style="float: left;margin-bottom: 10px;" @change="getMachine()">
+    <el-select v-model="name" filterable remote reserve-keyword placeholder="请输入车间" :remote-method="remoteMethod" @change="getMachine()" :loading="loading" style="float:left;">
       <el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>
     </el-select>
+    <!--<el-select v-model="name" clearable placeholder="请选择" style="float: left;margin-bottom: 10px;" @change="getMachine()">-->
+      <!--<el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>-->
+    <!--</el-select>-->
     <el-button type="primary" icon="el-icon-plus" style="float:right;margin-bottom: 10px;" @click="dialogVisibleAdd = true">批量</el-button>
     <el-button type="primary" icon="el-icon-plus" @click="dialogVisibleSingleAdd = true" style="float: right; margin-right: 10px;margin-bottom: 10px;"></el-button>
     <el-button type="success" icon="el-icon-printer" style="float: right; margin-right: 10px;margin-bottom: 10px;" @click="batchPrint()" circle></el-button>
@@ -134,7 +137,7 @@ export default {
   data () {
     return {
       loading: false,
-      name: 'A3',
+      name: '',
       arrLineName: [],
       tableData: [],
       dialogVisibleAdd: false,
@@ -169,23 +172,25 @@ export default {
     }
   },
   created () {
-    this.getSelected()
+    // this.getSelected()
   },
   methods: {
-    getSelected () { // 获取selet
-      this.$api.getSelected().then(res => {
-        // this.tableData = res.data
-        // console.log(this.tableData.lines)
-        // this.arrLineName = this.tableData.lines.map(line => {
-        //   return line.name
-        // })
-        // this.arrLineName = Array.from(new Set(this.arrLineName))
-        // console.log(this.arrLineName)
-        this.arrLineName = res.data.lines
-        this.startGetMachine()
-        // console.log(this.arrLineName)
-      })
-    },
+    // getSelected () { // 获取selet
+    //   this.$api.getSelected().then(res => {
+    //     // this.tableData = res.data
+    //     // console.log(this.tableData.lines)
+    //     // this.arrLineName = this.tableData.lines.map(line => {
+    //     //   return line.name
+    //     // })
+    //     // this.arrLineName = Array.from(new Set(this.arrLineName))
+    //     // console.log(this.arrLineName)
+    //     this.arrLineName = res.data.lines
+    //     if (this.arrLineName.length > 0) {
+    //       this.name = this.arrLineName[0].name
+    //     }
+    //     this.startGetMachine()
+    //   })
+    // },
     startGetMachine () {
       this.loading = true
       this.name = this.arrLineName[0].name
@@ -354,6 +359,22 @@ export default {
       this.$nextTick(() => {
         this.printData = selection
       })
+    },
+    remoteMethod (query) {
+      if (query !== '') {
+        this.loading = true
+        let params = {
+          q: query
+        }
+        this.$api.getCompleteLine(params).then(res => {
+          if (res.errorCode === 'E00000') {
+            this.$message.error(res.errorMessage)
+          } else {
+            this.loading = false
+            this.arrLineName = res.data
+          }
+        })
+      }
     }
   }
 }

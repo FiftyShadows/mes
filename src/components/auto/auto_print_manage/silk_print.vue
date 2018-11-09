@@ -75,7 +75,7 @@ export default {
         lineId: '',
         lineMachineId: '',
         doffingNum: '',
-        date: ''
+        date: this.util.getNowFormatDate()
       },
       currentPage: 1,
       pageSize: 50,

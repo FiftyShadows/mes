@@ -242,7 +242,8 @@ export default {
       let reg2 = /^[a-zA-Z]+/g
       let startword = this.form.items.startItem.match(reg2)
       let startnum = this.form.items.startItem.match(reg1)
-      console.log(startword, this.form.items.startItem.match(reg1))
+      console.log(startword[0])
+      console.log(this.form.items.startItem.match(reg1))
 
       let endword = this.form.items.endItem.match(reg2)
       let endnum = this.form.items.endItem.match(reg1)
@@ -272,7 +273,11 @@ export default {
       let arr = []
       for (let i = 0; i <= Number(endnum[0]) - Number(startnum[0]); i++) {
         let num = Number(startnum[0]) + i
-        this.form.item = startword[0] + num.toString()
+        let zero = ''
+        for (let j = 0; j < startnum[0].length - Number(num).toString().length; j++) {
+          zero = zero + '0'
+        }
+        this.form.item = startword[0] + zero + num.toString()
         if (this.form.item === '') {
           this.form.code = ''
         } else {
@@ -294,7 +299,10 @@ export default {
       console.log(arr)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$api.addBatchSilks(arr).then(res => {
+          let obj = {
+            commands: arr
+          }
+          this.$api.addBatchSilks(obj).then(res => {
             this.getSilks()
             this.dialogVisibleBatchAdd = false
           })
