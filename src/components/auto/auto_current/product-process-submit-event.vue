@@ -86,9 +86,11 @@ export default {
       if (this.eventSource.silkExceptions) {
         for (let j = 0; j < this.eventSource.silkExceptions.length; j++) {
           this.$nextTick(() => {
-            this.$api.getSilkExceptions(this.eventSource.silkExceptions[j].id).then(res => {
-              this.silkExceptions.push(res.data)
-            })
+            if (this.silkExceptions.length === 0) {
+              this.$api.getSilkExceptions(this.eventSource.silkExceptions[j].id).then(res => {
+                this.silkExceptions.push(res.data)
+              })
+            }
           })
         }
       }

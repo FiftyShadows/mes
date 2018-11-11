@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import Help from '@/components/help'
+// import global from '../../static/js/window_global'
 // import mainLayout from '../../src/components/main_layout'
 // import Login from '@/components/login' // 仓储登陆
 // ================================自动化===============================
@@ -63,7 +64,7 @@ import ReturngoodsRequisition from '@/components/ware/ware_transfers/returngoods
 import InventorySAP from '@/components/ware/ware_inventory_SAP/inventorySAP/index'
 import api from '../api'
 import store from '../store/store'
-
+// const baseAutoUrl = global.auto
 Vue.use(Router)
 let route = new Router({
   routes: [
@@ -348,9 +349,21 @@ let route = new Router({
   ]
 })
 route.beforeEach((to, from, next) => {
-  if (store.state.routers.length === 0) {
+  console.log('test1')
+  if (!store.state.userInfo.id) {
+    console.log('test2')
+    // fetch(`${baseAutoUrl}/auth`, {
+    //   method: 'GET'
+    // }).then(res => {
+    //   let userInfo = res.data
+    //   console.log(userInfo)
+    //   store.commit('UserInfo', userInfo)
+    //   route.addRoutes(store.state.routers)
+    //   next()
+    // })
     api.getAuth().then(res => {
       let userInfo = res.data
+      console.log(userInfo)
       store.commit('UserInfo', userInfo)
       route.addRoutes(store.state.routers)
       next()

@@ -28,7 +28,7 @@
             文档介绍
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="userBook">用户手册</el-dropdown-item>
+            <el-dropdown-item command="userBook">用户手册v1.0</el-dropdown-item>
             <el-dropdown-item command="flowChart">流程图</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -195,7 +195,7 @@ export default {
     },
     download (command) {
       if (command === 'userBook') {
-        window.open('static/introduction/自动化操作手册.html')
+        window.open('static/introduction/自动化操作手册.pdf')
       } else if (command === 'flowChart') {
         window.open('static/introduction/auto.svg')
       }

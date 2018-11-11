@@ -75,6 +75,7 @@ export default {
         code: ''
       },
       form2: {
+        id: '',
         name: '',
         code: ''
       },
@@ -102,6 +103,7 @@ export default {
     },
     openSave (row) {
       console.log(row)
+      this.form2.id = row.id
       this.form2.name = row.name
       this.form2.code = row.code
       this.dialogFormVisibleSave = true

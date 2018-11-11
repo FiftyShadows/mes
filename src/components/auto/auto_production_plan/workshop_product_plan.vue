@@ -1,8 +1,8 @@
 <!-- 车间生产计划 -->
 <template>
   <div class="workshopPlan">
-    <el-select v-model="seachName" clearable placeholder="请选择" @change="getLinePlans()" style="float: left;margin-bottom: 10px;">
-      <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.name"></el-option>
+    <el-select v-model="workshopId" clearable placeholder="请选择" @change="getLinePlans()" style="float: left;margin-bottom: 10px;">
+      <el-option v-for="workshop in workshops" :key="workshop.name" :label="workshop.name" :value="workshop.id"></el-option>
     </el-select>
 
     <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
@@ -30,14 +30,12 @@ export default {
   data () {
     return {
       loading: false,
-      seachName: 'A车间',
-      seachId: '',
-      LinesTable: [],
+      workshopId: '',
       tableData: [],
       lineMachines: {}, // 机台数
       MachinesNum: [],
       allData: {},
-      options: {}
+      workshops: []
     }
   },
   created () {
@@ -47,20 +45,15 @@ export default {
   methods: {
     getPlan () { // 获取select数据
       this.$api.getWorkShopsLine().then(res => {
-        this.LinesTable = res.data
-        this.options = res.data.map(item => {
-          return {name: item.name}
-        })
+        this.workshops = res.data
+        if (this.workshops.length > 0) {
+          this.workshopId = this.workshops[0].id
+        }
       })
     },
     getLinePlans () {
       this.loading = true
-      for (let i = 0; i < this.options.length; i++) {
-        if (this.LinesTable[i].name === this.seachName) {
-          this.seachId = this.LinesTable[i].id
-        }
-      }
-      this.$api.getLinePlans(this.seachId).then(res => {
+      this.$api.getLinePlans(this.workshopId).then(res => {
         this.allData = res.data
         this.tableData = res.data.items.sort((x, y) => { return this.util.getNum(x.line.name) - this.util.getNum(y.line.name) })
         for (let j = 0; j < this.tableData.length; j++) {

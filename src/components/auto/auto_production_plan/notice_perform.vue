@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column label="操作" width="160">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.noticeId !== noticeId && scope.row.startDate < startDate" type="primary" @click="perform(scope.row)" size="small">执行</el-button>
+          <el-button v-if="(!scope.row.noticeId) || (scope.row.noticeId !== noticeId && scope.row.startDate < startDate)" type="primary" @click="perform(scope.row)" size="small">执行</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -142,7 +142,7 @@ export default {
       this.multipleSelection = val
     },
     judgeSelected (row, index) {
-      return row.noticeId !== this.noticeId && row.startDate < this.startDate
+      return (!row.noticeId) || (row.noticeId !== this.noticeId && row.startDate < this.startDate)
     }
   }
 }

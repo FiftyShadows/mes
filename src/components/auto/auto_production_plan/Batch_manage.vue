@@ -33,16 +33,15 @@
 
     <el-dialog title="新 增" :visible.sync="dialogVisibleAdd" width="40%">
       <el-form :model="form" ref="form" :rules="rules" class="demo-ruleForm">
-        <el-form-item label="车间" :label-width="formLabelWidth" prop="workshopName">
-          <el-select v-model="form.workshopName" clearable placeholder="请选择" style="float: left;">
-            <el-option v-for="item in options1" :key="item.name" :label="item.name" :value="item.name">
+        <el-form-item label="车间" :label-width="formLabelWidth" prop="workshopId">
+          <el-select v-model="form.workshopId" clearable placeholder="请选择" style="float: left;">
+            <el-option v-for="workshop in workshops" :key="workshop.name" :label="workshop.name" :value="workshop.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="产品" :label-width="formLabelWidth" prop="productName">
-          <el-select v-model="form.productName" clearable placeholder="请选择" style="float: left;">
-            <el-option label="POY" value="POY"></el-option>
-            <el-option label="FDY" value="FDY"></el-option>
+        <el-form-item label="产品" :label-width="formLabelWidth" prop="productId">
+          <el-select v-model="form.productId" clearable placeholder="请选择" style="float: left;">
+            <el-option v-for="product in products" :key="product.id" :label="product.name" :value="product.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="批号" :label-width="formLabelWidth" prop="batchNo" required>
@@ -75,16 +74,15 @@
 
     <el-dialog title="修 改" :visible.sync="dialogVisibleSave" width="40%" @close="closeDialog()">
       <el-form :model="form2" :rules="rules" ref="form2" class="demo-ruleForm">
-        <el-form-item label="车间" :label-width="formLabelWidth" prop="workshopName">
-          <el-select v-model="form2.workshopName" clearable placeholder="请选择" style="float: left;">
-            <el-option v-for="item in options1" :key="item.name" :label="item.name" :value="item.name">
+        <el-form-item label="车间" :label-width="formLabelWidth" prop="workshopId">
+          <el-select v-model="form2.workshopId" clearable placeholder="请选择" style="float: left;">
+            <el-option v-for="workshop in workshops" :key="workshop.name" :label="workshop.name" :value="workshop.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="产品" :label-width="formLabelWidth" prop="workshopName">
-          <el-select v-model="form2.productName" clearable placeholder="请选择" style="float: left;">
-            <el-option label="POY" value="POY"></el-option>
-            <el-option label="FDY" value="FDY"></el-option>
+        <el-form-item label="产品" :label-width="formLabelWidth" proholeNump="productId">
+          <el-select v-model="form2.productId" clearable placeholder="请选择" style="float: left;">
+            <el-option v-for="product in products" :key="product.id" :label="product.name" :value="product.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="批号" :label-width="formLabelWidth" prop="batchNo">
@@ -130,12 +128,13 @@ export default {
       dialogVisibleAdd: false,
       dialogVisibleSave: false,
       formLabelWidth: '120px',
-      options1: {},
       pageSize: '20',
       first: '0',
+      products: [],
+      workshops: [],
       form: {
-        workshopName: '',
-        productName: '',
+        workshopId: '',
+        productId: '',
         batchNo: '',
         spec: '',
         silkWeight: '',
@@ -145,8 +144,8 @@ export default {
         note: ''
       },
       form2: {
-        workshopName: '',
-        productName: '',
+        workshopId: '',
+        productId: '',
         batchNo: '',
         spec: '',
         silkWeight: '',
@@ -155,12 +154,9 @@ export default {
         centralValue: '',
         note: ''
       },
-      FDYID: '5b6d021dee3d0a28f417c218',
-      POYID: '5b6d0218ee3d0a28f417c210',
-      productID: '',
       rules: {
-        workshopName: [{ required: true, message: '必输项...', trigger: 'change' }],
-        productName: [{ required: true, message: '必输项...', trigger: 'change' }],
+        workshopId: [{ required: true, message: '必输项...', trigger: 'change' }],
+        productId: [{ required: true, message: '必输项...', trigger: 'change' }],
         batchNo: [{ required: true, message: '必输项...', trigger: 'blur' }],
         spec: [{ required: true, message: '必输项...', trigger: 'blur' }],
         silkWeight: [{ required: true, message: '必输项...', trigger: 'blur' }],
@@ -180,9 +176,10 @@ export default {
     })
     this.getBatch(this.pageSize, this.first, this.seacrhBatch)
     this.$api.getWorkShopsLine().then(res => { // 获取select
-      this.options1 = res.data.map(item => {
-        return {name: item.name}
-      })
+      this.workshops = res.data
+    })
+    this.$api.getProduct().then(res => {
+      this.products = res.data
     })
   },
   methods: {
@@ -212,20 +209,16 @@ export default {
     },
     openSaveBatch (row) {
       this.form2 = row
-      this.form2.workshopName = row.workshop.name
-      this.form2.productName = row.product.name
+      this.form2.workshopId = row.workshop.id
+      this.form2.productId = row.product.id
       this.dialogVisibleSave = true
     },
     SaveBatch (formName) {
-      this.choseName()
-      for (let i = 0; i < this.tableData.length; i++) {
-        if (this.tableData[i].workshop.name === this.form2.workshopName) {
-          this.form2.workshop = this.tableData[i].workshop
-        }
+      this.form2.workshop = {
+        id: this.form2.workshopId
       }
       this.form2.product = {
-        id: this.productID,
-        name: this.form2.productName
+        id: this.form2.productId
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -256,17 +249,11 @@ export default {
       })
     },
     AddBatch (formName) {
-      this.choseName()
-      for (let i = 0; i < this.tableData.length; i++) {
-        if (this.tableData[i].workshop.name === this.form.workshopName) {
-          this.form.workshop = this.tableData[i].workshop
-        }
+      this.form.workshop = {
+        id: this.form.workshopId
       }
       this.form.product = {
-        createDateTime: new Date().getTime(),
-        modifyDateTime: new Date().getTime(),
-        id: this.productID,
-        name: this.form.productName
+        id: this.form.productId
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -283,13 +270,6 @@ export default {
           return false
         }
       })
-    },
-    choseName () {
-      if (this.form.productName === 'FDY') {
-        this.productID = this.FDYID
-      } else {
-        this.productID = this.POYID
-      }
     },
     handleSizeChange (val) {
       this.pageSize = val

@@ -14,9 +14,17 @@
         <div class="silkCarRecord" v-if="silkCarRecord">
             <h3>丝车条码：{{silkCarRecord.silkCar.code}} — {{silkCarRecord.silkCar.number}} — {{silkCarRecord.batch.spec}}</h3>
             <h4>丝车车次：{{silkCarRecord.id}} <el-tag size="mini">{{doffingType}}</el-tag></h4>
-          <el-select v-model="process" placeholder="请选择" clearable class="selected" @change="productProcess">
-            <el-option v-for="item in selected" :key="item.id" :label="item.name" :value="item.name"></el-option>
-          </el-select>
+          <!--<el-select v-model="process" placeholder="请选择" clearable class="selected" @change="productProcess">-->
+            <!--<el-option v-for="item in selected" :key="item.id" :label="item.name" :value="item.name"></el-option>-->
+          <!--</el-select>-->
+          <el-dropdown class="selected" @command="productProcess">
+            <span class="el-dropdown-link">
+              工序操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown" style="width: 100px">
+              <el-dropdown-item v-for="item in selected" :key="item.id" :command="item.name">{{item.name}}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
         <div class="checkBoxA">
           <el-checkbox :indeterminateA="isIndeterminateA" v-model="checkAllA" class="checkAll">A面--全选</el-checkbox>
@@ -218,6 +226,8 @@ export default {
       })
     },
     productProcess (val) { // 打开event弹框
+      console.log(val)
+      this.process = val
       this.dialogName = val
       this.EventsForm.name = this.silkCarRecord.silkCar.code
       this.EventsForm.id = this.silkCarRecord.id
@@ -363,9 +373,16 @@ export default {
         }
         .selected {
           position: absolute;
-          right: 10px;
+          right: 20px;
           top: 10px;
           width: 100px;
+        }
+        .el-dropdown-link {
+          cursor: pointer;
+          color: #409EFF;
+        }
+        .el-icon-arrow-down {
+          font-size: 12px;
         }
       }
     }

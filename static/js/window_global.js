@@ -1,8 +1,8 @@
 // 正式部署
-// const auto = window.document.location.href + 'api'
+// const auto = 'http://' + window.document.location.host + '/' + 'api'
 // const auto = 'http://192.168.129.90:9998/api'
-const auto = 'http://192.168.1.105:9998/api'
-// const auto = 'http://localhost'
+// const auto = 'http://192.168.1.111:9998/api'
+const auto = 'http://localhost:9998/api'
 // 吴炯接口地址
 // const ware = 'http://192.168.126.205:8080'
 // 张凯文接口地址

@@ -2,22 +2,25 @@
   <div>
     <template v-for="(silkRuntime,index) in silkRuntimes">
       <el-checkbox :key="index" v-if="silkRuntime.sideType === sideType && silkRuntime.row === row && silkRuntime.col === col" style="overflow: hidden" border :label="row + '×' + col" v-model="checked"></el-checkbox>
-      <!--<el-checkbox style="overflow: hidden" border :label="row + '×' + col" v-model="checked"></el-checkbox>-->
     </template>
     <div class="silk">
       <template v-for="(silkRuntime,index) in silkRuntimes" style="text-align: center">
         <span :key="index" style="color: #F56C6C; font-weight: bolder;" v-if="silkRuntime && silkRuntime.sideType === sideType && silkRuntime.row === row && silkRuntime.col === col">
         {{silkRuntime.silk.lineMachine.line.name}}-{{silkRuntime.silk.spindle}}/{{silkRuntime.silk.lineMachine.item}}
-        <!--{{silkRuntime.silk.id}}-->
-          <span v-if="!!silkRuntime.silk.code">{{silkRuntime.silk.code}}</span>
+          <span @dblclick="showQrCode(silkRuntime.silk.code)" v-if="!!silkRuntime.silk.code">{{silkRuntime.silk.code}}</span>
+          <!--<el-button size="mini" @click="showQrCode(silkRuntime.silk.code)" v-if="!!silkRuntime.silk.code">{{silkRuntime.silk.code}}</el-button>-->
         </span>
       </template>
     </div>
+    <qr-code-dialog ref="qrCode"></qr-code-dialog>
   </div>
 </template>
 
 <script>
+import QrCodeDialog from '../../common/qr-code-dialog'
+
 export default {
+  components: {QrCodeDialog},
   name: 'checkBox',
   props: ['row', 'col', 'silkRuntimes', 'sideType', 'checkAll'],
   data () {
@@ -59,6 +62,9 @@ export default {
     }
   },
   methods: {
+    showQrCode (code) {
+      this.$refs.qrCode.showDialog(code)
+    }
   }
 }
 </script>

@@ -60,6 +60,7 @@ export default {
   axios,
   // =========================================== 自动化 ===========================================
   getAuth () {
+    console.log(`${baseAutoUrl}/auth`)
     return axios.get(`${baseAutoUrl}/auth`)
   },
   // 当前--搜索
@@ -145,6 +146,9 @@ export default {
   // 机台管理--添加
   AddMachine (data) {
     return axios.post(`${baseAutoUrl}/lineMachines`, data)
+  },
+  batchAddMachine (data) {
+    return axios.post(`${baseAutoUrl}/batchLineMachines`, data)
   },
   // 机台管理--修改
   saveMachine (data) {
@@ -266,13 +270,13 @@ export default {
 
   // 暂存箱管理--获取暂存箱列表
   getTemporaryBoxs (data) {
-    return axios.get(`${baseAutoUrl}/temporaryBoxs`, data)
+    return axios.get(`${baseAutoUrl}/temporaryBoxes`, data)
   },
   addTemporaryBox (data) {
-    return axios.post(`${baseAutoUrl}/temporaryBoxs`, data)
+    return axios.post(`${baseAutoUrl}/temporaryBoxes`, data)
   },
   updateTemporaryBox (data) {
-    return axios.put(`${baseAutoUrl}/temporaryBoxs/${data.id}`, data)
+    return axios.put(`${baseAutoUrl}/temporaryBoxes/${data.id}`, data)
   },
 
   // 车间生产计划

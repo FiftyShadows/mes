@@ -36,11 +36,12 @@
               height="500"
               ref="multipleTable"
               @selection-change="handleSelectionChange"
-              :default-sort = "{prop: 'lineMachine.line.name',prop: 'lineMachine.item',prop: 'doffingNum'}">
+              :default-sort = "{prop: 'lineMachine.line.name',prop: 'lineMachine.item',prop: 'doffingNum'}"
+              @expand-change="expandChange">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column type="expand" width="55" toggleRowExpansion="test">
-        <template slot-scope="scope">
-          <el-table :data="scope.row.silkInfo" border style="width: 100%" @selection-change="handleSelectionChange" class="demo-table-expand">
+      <el-table-column type="expand" width="55">
+        <template>
+          <el-table :data="silkInfo" border style="width: 100%" @selection-change="handleSelectionChange" class="demo-table-expand">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="code" label="丝锭编码"></el-table-column>
             <el-table-column prop="spindle" label="丝锭号" width="180"></el-table-column>
@@ -71,6 +72,7 @@ export default {
   name: 'silkPrint',
   data () {
     return {
+      silkInfo: [],
       formInline: {
         lineId: '',
         lineMachineId: '',
@@ -141,14 +143,6 @@ export default {
       }
       this.$api.getSilkBarCodes(params).then(res => {
         this.tableData = res.data.silkBarcodes
-        this.tableData.forEach((item, i) => {
-          this.$api.getSilkDetail(item.id).then(res => {
-            let obj = this.tableData.find(it => it.id === item.id)
-            if (obj) {
-              obj.silkInfo = res.data
-            }
-          })
-        })
         this.total = parseInt(res.data.count)
       })
     },
@@ -173,6 +167,11 @@ export default {
         return ''
       }
       return moment(date).format('YYYY-MM-DD')
+    },
+    expandChange (row, expandedRows) {
+      this.$api.getSilkDetail(row.id).then(res => {
+        this.silkInfo = res.data
+      })
     }
   }
 }

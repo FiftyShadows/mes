@@ -95,7 +95,7 @@
             </span>
           </el-dialog>
           <div style="float: left;">
-            <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
+            <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入线别" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
               <el-option v-for="item in linesOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
             </el-select>
           </div>
@@ -131,7 +131,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="批号" :label-width="formLabelWidth" required>
-            <el-select v-model="form1.batch.batchNo" filterable remote reserve-keyword placeholder="请输入位号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
+            <el-select v-model="form1.batch.batchNo" filterable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
               <el-option v-for="item in optionsItem" :key="item.id" :label="item.batchNo" :value="item.batchNo"></el-option>
             </el-select>
           </el-form-item>
@@ -181,7 +181,7 @@
             </span>
           </el-dialog>
           <div style="float: left;">
-            <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入位号" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
+            <el-select v-model="seachLine" filterable clearable remote reserve-keyword placeholder="请输入线别" :remote-method="getLinesList" @change="getLinesData()" :loading="lineLoading">
               <el-option v-for="item in linesOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
             </el-select>
           </div>
@@ -368,6 +368,7 @@ export default {
           })
         })
       } else {
+        this.seachLine = ''
         this.innerVisible = true
       }
     },
@@ -445,6 +446,7 @@ export default {
       }
     },
     getLinesData () { // 搜索线别
+      this.data = []
       let id
       for (let item of this.linesOptions) {
         if (item.name === this.seachLine) {
@@ -452,16 +454,20 @@ export default {
         }
       }
       this.$api.getLinesData(id).then(res => {
+        console.log(res.data)
         if (res.data.length !== 0) {
           // this.data = this.data.concat(res.data)
-          for (let i of res.data) { // 此处如果使用concat multipleSelection会变为【】
-            this.data.push(i)
-          }
+          // for (let i of res.data) { // 此处如果使用concat multipleSelection会变为【】
+          //   this.data.push(i)
+          // }
+          this.data = res.data.sort((a, b) => {
+            return a.item - b.item
+          })
         } else {
         }
       })
     },
-    addLines () { // 新增线别
+    addLines () { // 新增机台
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].name === this.Lines.name) {
           this.Lines.line = this.options[i]

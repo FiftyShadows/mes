@@ -185,7 +185,7 @@ export default {
             }
           })
           console.log(params)
-          this.$api.batchAddSilkBarCodes(params).then(res => {
+          this.$api.batchAddSilkBarCodes({commands: params}).then(res => {
             this.$emit('update:dialogVisible', false)
             this.$message({message: '成功生成条码', type: 'success'})
           })

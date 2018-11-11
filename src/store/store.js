@@ -34,6 +34,7 @@ import SlikCar from '@/components/auto/auto_configuration/silkCar_manage'
 import WorkshopManage from '@/components/auto/auto_configuration/workshop_manage'
 import PackageClass from '@/components/auto/auto_configuration/package_class'
 import TemporaryBox from '@/components/auto/auto_configuration/temporary_box'
+import SapStorage from '@/components/auto/auto_configuration/sap_storage'
 
 Vue.use(Vuex)
 let addRouter = (state) => {
@@ -134,6 +135,11 @@ let addRouter = (state) => {
                 path: 'TemporaryBox',
                 name: '暂存箱管理',
                 component: TemporaryBox,
+                class: 'el-icon-location'
+              }, {// SAP库存地
+                path: 'SapStorage',
+                name: 'SAP库存地',
+                component: SapStorage,
                 class: 'el-icon-location'
               }
             ]

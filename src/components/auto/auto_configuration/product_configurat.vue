@@ -130,7 +130,7 @@
         <el-form-item label="" :label-width="formLabelWidthcode">
           <el-tag type="info" style="float: left; width: 100%;text-align: left;">
             {{productProesses.formConfig.name ? productProesses.formConfig.name : '表单模板'}}
-            <el-button size="mini" type="danger" style="float: right;" @click="dialogVisibleForm = true; isNewForm = true">修改</el-button>
+            <el-button size="mini" type="danger" style="float: right;" @click="dialogVisibleForm = true;">修改</el-button>
           </el-tag>
           <template v-if="productProesses.formConfig">
             <div class="Form" v-for="item in productProesses.formConfig.formFieldConfigs" :key="item.id">
@@ -209,23 +209,17 @@
       </span>
     </el-dialog>
     <el-dialog title="表单模板选择" :visible.sync="dialogVisibleForm">
-      <el-select v-model="value" v-if="!isNewForm" filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod" :loading="loading" @change="choseForm()">
+      <el-select v-model="value" filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod" :loading="loading" @change="choseForm()">
         <el-option v-for="item in optionsForm" :key="item.id" :label="item.name" :value="item.name">
           {{item.name}}
           <el-button type="primary" icon="el-icon-edit" circle @click="saveOptionsFormItem(item.name)" :change="false" style="float: right;" size="mini"></el-button>
         </el-option>
       </el-select>
-      <el-select v-model="value" v-else filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod" :loading="loading" @change="choseNewForm()">
-        <el-option v-for="item in optionsForm" :key="item.id" :label="item.name" :value="item.name">
-          {{item.name}}
-          <el-button type="primary" icon="el-icon-edit" @click="saveOptionsFormItem(item.name)" style="float: right; z-index: 999;" size="mini"></el-button>
-        </el-option>
-      </el-select>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogVisibleCreate = true">新建表单</el-button>
+        <el-button type="primary" @click="dialogVisibleCreate = true;isNewForm = true;createform = {name: '',formFieldConfigs: [] }; showCode = []">新建表单</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="新建模板" :visible.sync="dialogVisibleCreate">
+    <el-dialog :title="isNewForm?'新建模板':'修改模板'" :visible.sync="dialogVisibleCreate">
       <el-form :model="createform" :rules="exceptionsRules" ref="createform" label-width="100px" class="demo-ruleForm">
         <el-form-item label="名称" prop="name" :label-width="formLabelWidth">
           <el-input v-model="createform.name" auto-complete="off" clearable></el-input>
@@ -256,7 +250,7 @@
         <el-form-item label="名称" prop="name" :label-width="formLabelWidthcode">
           <el-input v-model="createCode.name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="是否必输" prop="required" :label-width="formLabelWidthcode">
+        <el-form-item label="是否必输" :label-width="formLabelWidthcode">
           <el-checkbox v-model="createCode.required" label="必输项" border style="float:left;"></el-checkbox>
         </el-form-item>
         <el-form-item label="值类型" prop="valueType" :label-width="formLabelWidthcode">
@@ -412,7 +406,6 @@ export default {
       exceptionsRules: {
         name: [{ required: true, message: '必输项', trigger: 'blur' }],
         sortBy: [{ type: 'number', required: true, message: '请输入数字', trigger: 'blur' }],
-        required: [{ required: true, message: '必选项', trigger: 'change' }],
         valueType: [{ required: true, message: '必选项', trigger: 'change' }],
         inputType: [{ required: true, message: '必选项', trigger: 'change' }]
       }
@@ -605,6 +598,7 @@ export default {
           this.dialogVisibleCreate = false
           this.dialogVisibleForm = false
           this.formFieldConfigs = []
+          this.isNewForm = false
         })
       }
     },
@@ -873,11 +867,27 @@ export default {
         } else {
           this.$message.error('无法新建，请配置选项值!')
         }
+      } else if (this.createCode.inputType === 'DEFAULT') {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (this.isSave) {
+              this.showCode[this.index] = this.createCode
+              this.dialogVisibleNewCode = false
+              this.isSave = false
+            } else {
+              this.showCode.push(this.createCode)
+              this.dialogVisibleNewCode = false
+            }
+          } else {
+            return false
+          }
+        })
       }
     },
     addFormcode () { // 添加方法
       this.createform.formFieldConfigs = this.showCode
-      this.$api.addCode(this.createform).then(res => {
+      console.log(this.createform)
+      this.$api.saveCode(this.createform).then(res => {
         this.$notify({
           title: '成功',
           message: '添加成功',
@@ -903,7 +913,6 @@ export default {
       this.dialogVisibleNewCode = true
     },
     deletedCode (i, row) {
-      // this.createform.formFieldConfigs.splice(i, 1)
       this.showCode.splice(i, 1)
     },
     addSelectOptions () {

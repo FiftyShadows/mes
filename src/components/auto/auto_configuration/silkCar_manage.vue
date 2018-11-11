@@ -9,7 +9,10 @@
     <el-button type="primary" @click="dialogFormVisibleAdd = true" style="float: right;margin-bottom: 10px;margin-right: 10px;">新 增</el-button>
 
     <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500">
-      <el-table-column fixed prop="code" label="丝车条码">
+      <el-table-column fixed label="丝车条码">
+        <template slot-scope="scope">
+          <span @dblclick="showQrCode(scope.row.code)">{{scope.row.code}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="number" label="丝车编号">
       </el-table-column>
@@ -118,10 +121,14 @@
         <el-button type="primary" @click="saveSilks('form1')">确 定</el-button>
       </div>
     </el-dialog>
+    <qr-code-dialog ref="qrCode"></qr-code-dialog>
   </div>
 </template>
 <script>
+import QrCodeDialog from '../../common/qr-code-dialog'
+
 export default {
+  components: {QrCodeDialog},
   name: 'silkCar',
   data () {
     return {
@@ -348,6 +355,9 @@ export default {
       this.first = (--val) * this.pageSize
       console.log(`当前页: ${this.first}`)
       this.getSilks(this.pageSize, this.first, this.silk)
+    },
+    showQrCode (code) {
+      this.$refs.qrCode.showDialog(code)
     }
   }
 }

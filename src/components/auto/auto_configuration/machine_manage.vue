@@ -1,16 +1,19 @@
 <!-- 机台管理 -->
 <template>
   <div class="machine">
-    <el-select v-model="name" filterable remote reserve-keyword placeholder="请输入车间" :remote-method="remoteMethod" @change="getMachine()" :loading="loading" style="float:left;">
+    <el-select v-model="name" filterable remote reserve-keyword placeholder="请输入线别" :remote-method="remoteMethod" @change="getMachine()" :loading="loading" style="float:left;">
       <el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>
     </el-select>
-    <!--<el-select v-model="name" clearable placeholder="请选择" style="float: left;margin-bottom: 10px;" @change="getMachine()">-->
-      <!--<el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>-->
-    <!--</el-select>-->
     <el-button type="primary" icon="el-icon-plus" style="float:right;margin-bottom: 10px;" @click="dialogVisibleAdd = true">批量</el-button>
     <el-button type="primary" icon="el-icon-plus" @click="dialogVisibleSingleAdd = true" style="float: right; margin-right: 10px;margin-bottom: 10px;"></el-button>
     <el-button type="success" icon="el-icon-printer" style="float: right; margin-right: 10px;margin-bottom: 10px;" @click="batchPrint()" circle></el-button>
-    <el-table :data="tableData" v-loading="loading" border :stripe="true" style="width: 100%" height="500" @selection-change="handleSelectionChange">
+    <el-table :data="tableData"
+              v-loading="loading"
+              border :stripe="true"
+              style="width: 100%"
+              height="500"
+              @selection-change="handleSelectionChange"
+              :default-sort="{prop: 'item'}">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column fixed prop="id" label="ID" min-width="250">
@@ -48,8 +51,6 @@
             <el-tag type="danger" style="font-weight: bold;">{{item}}</el-tag>
             <div style="float: right;">
               <el-button icon="el-icon-upload2 icon" size="mini" type="primary" v-if="form.spindleSeq.indexOf(item) != 0" @click="up(index)" circle></el-button>
-              <!-- <i class="el-icon-upload2 icon" v-if="form.spindleSeq.indexOf(item) != 0" @click="up(index)"></i> -->
-              <!-- <i class="el-icon-download icon" v-if="form.spindleSeq.indexOf(item) != form.spindleNum-1" @click="down(index)"></i> -->
               <el-button type="danger" icon="el-icon-download icon" size="mini" v-if="form.spindleSeq.indexOf(item) != form.spindleNum-1" @click="down(index)" circle></el-button>
             </div>
           </el-tag>
@@ -68,9 +69,6 @@
             <el-option v-for="item in arrLineName" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="机台位号" :label-width="formLabelWidth" prop="item" required>
-          <el-input-number v-model="form.item" :min="1" label="输入锭数..." style="float: left;"></el-input-number>
-        </el-form-item> -->
         <el-form-item label="批量机台(num)" :label-width="formLabelWidth" prop="items" required>
           <el-input v-model.number="form.items.startItem" auto-complete="off" style="width: 80px;float: left;"></el-input>
           <span style="float: left;"> —— </span>
@@ -90,7 +88,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisibleSingleAdd = false">取 消</el-button>
+        <el-button @click="dialogVisibleAdd = false">取 消</el-button>
         <el-button type="primary" @click="AddBatchMachine('form')">确 定</el-button>
       </span>
     </el-dialog>
@@ -125,10 +123,13 @@
         <el-button type="primary" @click="saveMachine('form1')">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!--<div id="test"></div>-->
   </div>
 </template>
 <script>
 import printMachine from '../../common/print_machine'
+// import QRCode from 'qrcodejs2'
 export default {
   name: 'machine',
   components: {
@@ -172,7 +173,10 @@ export default {
     }
   },
   created () {
-    // this.getSelected()
+    // setTimeout(()=>{
+    //   let test = new QRCode(document.getElementById('test'), {text: 'sdfsdfs'})
+    //   console.log(test)
+    // },2000)
   },
   methods: {
     // getSelected () { // 获取selet
@@ -239,6 +243,7 @@ export default {
         if (valid) {
           let regPos = /^\d+$/
           if (regPos.test(this.form.items.endItem) && regPos.test(this.form.items.startItem.toString())) {
+            let array = []
             for (let i = 0; i <= this.form.items.endItem - this.form.items.startItem; i++) {
               this.form.item = this.form.items.startItem + i
               console.log(this.form.item)
@@ -247,16 +252,21 @@ export default {
                   this.form.line = this.arrLineName[j]
                 }
               }
-              this.$api.AddMachine({
+              array.push({
                 item: this.form.item,
                 line: this.form.line,
                 spindleNum: this.form.spindleNum,
                 spindleSeq: this.form.spindleSeq
-              }).then(res => {
-                this.dialogVisibleAdd = false
-                this.getMachine()
               })
+              // this.$api.AddMachine().then(res => {
+              //   this.dialogVisibleAdd = false
+              //   this.getMachine()
+              // })
             }
+            this.$api.batchAddMachine({commands: array}).then(res => {
+              this.dialogVisibleAdd = false
+              this.getMachine()
+            })
           } else {
             this.$message.error('机台需要输入数字！')
           }
