@@ -189,6 +189,7 @@ export default {
             this.$emit('update:dialogVisible', false)
             this.$message({message: '成功生成条码', type: 'success'})
           })
+          this.$emit('search', '')
         } else {
           return false
         }

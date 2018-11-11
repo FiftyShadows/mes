@@ -2,7 +2,7 @@
   <div>
     <el-form :inline="true" :model="formInline" class="form-inline">
       <el-form-item>
-        <el-select v-model="formInline.lineId" placeholder="请选择线别" clearable @change="getMachines">
+        <el-select v-model="formInline.lineId" clearable filterable remote reserve-keyword placeholder="请输入线别" :remote-method="remoteMethod" @change="getMachine()" :loading="loading" style="float:left;">
           <el-option v-for="line in lines" :key="line.id" :label="line.name" :value="line.id"></el-option>
         </el-select>
       </el-form-item>
@@ -60,7 +60,7 @@
     </el-table>
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-sizes="[20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 10px;">
     </el-pagination>
-      <create-barcode-dialog :dialogVisible.sync="dialogVisible"></create-barcode-dialog>
+      <create-barcode-dialog @search="search()" :dialogVisible.sync="dialogVisible"></create-barcode-dialog>
   </div>
 </template>
 <script>
@@ -83,9 +83,6 @@ export default {
       pageSize: 50,
       total: 0,
       pickerOptions: {
-        disabledDate (time) {
-          return time.getTime() > Date.now()
-        },
         shortcuts: [{
           text: '今天',
           onClick (picker) {
@@ -116,11 +113,12 @@ export default {
   },
   created () {
     this.getSelected()
+    this.search()
   },
   methods: {
     getSelected () { // 获取selet
       this.$api.getSelected().then(res => {
-        this.lines = res.data.lines
+        this.lines.push(res.data.lines[0])
         this.formInline.lineId = this.lines[0].id
         this.getMachines()
       })
@@ -133,8 +131,9 @@ export default {
         })
       }
     },
-    search () {
+    search (lineId) {
       let params = {
+        lineId: this.formInline.lineId,
         lineMachineId: this.formInline.lineMachineId,
         doffingNum: this.formInline.doffingNum,
         codeDate: this.formInline.date,
@@ -172,13 +171,28 @@ export default {
       this.$api.getSilkDetail(row.id).then(res => {
         this.silkInfo = res.data
       })
+    },
+    remoteMethod (query) {
+      if (query !== '') {
+        this.loading = true
+        let params = {
+          q: query
+        }
+        this.$api.getCompleteLine(params).then(res => {
+          if (res.errorCode === 'E00000') {
+            this.$message.error(res.errorMessage)
+          } else {
+            this.loading = false
+            this.lines = res.data
+          }
+        })
+      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
   .form-inline {
-    margin-left: -160px;
   }
   .el-input-number {
     width: 130px;

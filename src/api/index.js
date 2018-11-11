@@ -104,7 +104,11 @@ export default {
   },
   // 获取标样丝列表
   getDyeingSample (params) {
-    return axios.get(`${baseAutoUrl}/dyeingSamples`, params)
+    return axios({
+      method: 'get',
+      url: `${baseAutoUrl}/dyeingSamples`,
+      params: params
+    })
   },
   // 车间管理--获取数据
   getWorkShopsLine () {
@@ -278,7 +282,16 @@ export default {
   updateTemporaryBox (data) {
     return axios.put(`${baseAutoUrl}/temporaryBoxes/${data.id}`, data)
   },
-
+  // SAP库存地管理
+  // getSapStorage (lgort) {
+  //   return axios.get(`${baseAutoUrl}/sapT001ls/${lgort}`)
+  // },
+  getSapStorages () {
+    return axios.get(`${baseAutoUrl}/sapT001ls`)
+  },
+  createSapStorage (data) {
+    return axios.post(`${baseAutoUrl}/sapT001ls`, data)
+  },
   // 车间生产计划
   getLinePlans (data) {
     return axios.get(`${baseAutoUrl}/reports/workshopProductPlanReport?workshopId=${data}`)

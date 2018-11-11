@@ -1,24 +1,24 @@
 <!-- 标样丝管理界面 -->
 <template>
   <div>
-    <el-form :inline="true">
+    <el-form :inline="true" :model="searchForm">
       <el-form-item style="float:left;">
-        <el-select v-model="searchForm.batchId" filterable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" :loading="loading" style="float:left;">
+        <el-select v-model="searchForm.batchId" clearable filterable remote reserve-keyword placeholder="请输入批号" :remote-method="remoteMethod" @change="getSearchData()" :loading="loading" style="float:left;">
           <el-option v-for="batch in batches" :key="batch.id" :label="batch.batchNo" :value="batch.batchNo"></el-option>
         </el-select>
-        <el-input v-model="batchNo" placeholder="请输入批号"></el-input>
       </el-form-item>
     </el-form>
-    <el-table ref="multipleTable" :data="tableData" style="width: 100%" @selection-change="handleSelectionChange" border>
+    <el-table ref="multipleTable" :data="tableData" height="500" style="width: 100%" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="silk.batch.batchNo" label="批号" width="180"></el-table-column>
-      <el-table-column prop="silk.batch.spec" label="规格" width="180"></el-table-column>
+      <el-table-column prop="silk.code" label="丝锭条码" width="150"></el-table-column>
+      <el-table-column prop="silk.batch.batchNo" label="批号" width="150"></el-table-column>
+      <el-table-column prop="silk.batch.spec" label="规格" width="150"></el-table-column>
       <el-table-column prop="silk.batch.tubeColor" label="管色" width="180"></el-table-column>
       <el-table-column prop="silk.lineMachine.line.name" label="线别" width="180"></el-table-column>
       <el-table-column prop="silk.lineMachine.item" label="位号"></el-table-column>
       <el-table-column prop="silk.lineMachine.spindleNum" label="总锭数"></el-table-column>
       <el-table-column prop="silk.lineMachine.spindleNum" label="剩余锭数"></el-table-column>
-      <el-table-column prop="createDateTime" label="日期" width="180"></el-table-column>
+      <el-table-column prop="createDateTime" :formatter="dateFormate" label="日期" width="180"></el-table-column>
     </el-table>
     <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
   </div>
@@ -37,16 +37,25 @@ export default {
       pageNum: 1,
       batchNo: '',
       batches: [],
+      tableData: [],
+      searchForm: {},
       loading: false
     }
   },
   created () {
+    this.getSearchData()
   },
   methods: {
     getSearchData () {
-      let params = {}
+      let params = {
+        first: (this.pageNum - 1) * this.pageSize,
+        pageSize: this.pageSize,
+        batchId: this.searchForm.batchId
+      }
       this.$api.getDyeingSample(params).then(res => {
+        console.log(res.data)
         this.tableData = res.data.dyeingSamples
+        this.total = res.data.count
       })
     },
     remoteMethod (query) {
@@ -68,9 +77,13 @@ export default {
         this.batches = []
       }
     },
+    dateFormate (row, column) {
+      return this.util.formatDate(row.createDateTime, 'yyyy-MM-dd')
+    },
     changePage (value) {
       this.pageNum = value.pageNum
       this.pageSize = value.pageSize
+      this.getSearchData()
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
