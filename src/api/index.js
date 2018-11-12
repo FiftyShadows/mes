@@ -584,6 +584,15 @@ export default {
   deliveryOrderPost (data) { // 销售调拨单--取消过账 / 过账
     return axios.post(`${baseWareUrl}/mes/requisition/Allocation/deliveryOrderPost`, data)
   },
+  reverseAll (data) { // 销售调拨单--货物退回
+    return axios.post(`${baseWareUrl}/mes/trans/outbound/reverseAll`, data)
+  },
+  reverseOne (data) { // 销售调拨单--拣配冲销
+    return axios.post(`${baseWareUrl}/mes/trans/outbound/reverseOne`, data)
+  },
+  transfer (data) { // 销售调拨单--货物转移
+    return axios.post(`${baseWareUrl}/mes/trans/outbound/transfer`, data)
+  },
 
   selectDelivery (data) { // 拣配调拨单--查询数据
     return axios.post(`${baseWareUrl}/mes/trans/outbound/selectDelivery`, data)

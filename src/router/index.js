@@ -67,7 +67,7 @@ import ReturngoodsRequisition from '@/components/ware/ware_transfers/returngoods
 import PickMatch from '@/components/ware/ware_transfers/pickMatch_requisition/pickMatch_requisition'
 // 盘点SAP
 import InventorySAP from '@/components/ware/ware_inventory_SAP/inventorySAP/index'
-import api from '../api'
+// import api from '../api'
 // import store from '../store/store'
 
 Vue.use(Router)

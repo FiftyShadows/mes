@@ -34,7 +34,7 @@
         </el-dropdown> -->
         <el-dropdown @command="handleCommand" placement="bottom">
           <span class="el-dropdown-link">
-            <i class="namelogo"></i>{{loginname}}
+            <i class="el-icon-caret-right"></i>{{loginname}}<i class="el-icon-caret-left"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="a">修改密码</el-dropdown-item>
@@ -223,6 +223,8 @@ export default {
         type: 'warning'
       }).then(() => {
         localStorage.removeItem('token')
+        localStorage.removeItem('userId')
+        localStorage.removeItem('loginname')
         this.$message({
           type: 'success',
           message: '已退出仓储系统'
@@ -385,7 +387,7 @@ body > .el-container {
   position: absolute;
   right: 0px;
   top: 12px;
-  width: 120px;
+  width: 180px;
   height: 25px;
 }
 .el-dropdown-link {
@@ -395,6 +397,8 @@ body > .el-container {
   cursor: pointer;
   color: white;
   font-weight: bold;
+  display: inline-block;
+  width: 80px;
 }
 .namelogo {}
 /* 路由出口 */

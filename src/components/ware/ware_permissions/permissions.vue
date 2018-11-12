@@ -41,7 +41,7 @@
       </el-table-column>
       <el-table-column prop="remark" label="备注" width="200">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="250">
+      <el-table-column fixed="right" label="操作" width="300">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="saveUser(scope.row)">修改</el-button>
           <el-button type="danger" size="small" @click="deleteUser(scope.row)">删除</el-button>

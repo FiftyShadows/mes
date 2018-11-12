@@ -65,27 +65,31 @@
       </el-table-column>
       <el-table-column prop="hyRequisition.loading_spot" label="装载点/接收点" min-width="120">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" min-width="150">
+      <el-table-column fixed="right" label="操作" min-width="300">
         <template slot-scope="scope">
           <el-button type="text" v-if="scope.row.hyRequisition.status === '已过账'" @click="cancelPosting(scope.row)" size="small">取消过账</el-button>
           <el-button type="text" v-if="scope.row.hyRequisition.status === '已拣配'" @click="posting(scope.row)" size="small">过账</el-button>
+          <el-button type="text" v-if="scope.row.hyRequisition.status === '已拣配'" @click="transfer(scope.row)" size="small">货物转移</el-button>
           <el-button type="text" v-if="scope.row.hyRequisition.status === '已调拨'" @click="openDetil(scope.row)" size="small">调拨单明细</el-button>
-          <el-button type="text" v-if="scope.row.hyRequisition.status === '未处理'" @click="openDetil(scope.row)" size="small">出货安排</el-button>
+          <el-button type="text" v-if="scope.row.hyRequisition.status === '已调拨'" @click="returngoods(scope.row)" size="small">货物退回</el-button>
         </template>
       </el-table-column>
     </el-table>
     <DialogDetials ref="showDetail"></DialogDetials>
+    <Dialogtransfer ref="transfer" @seachdata="seachTableData"></Dialogtransfer>
     <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
   </div>
 </template>
 <script>
 import Pagination from '../../../common/pagination.vue'
 import DialogDetials from './Dialog_salesDetial'
+import Dialogtransfer from './Dialog_transfergoods'
 import moment from 'moment' // 处理时间
 export default {
   components: {
     Pagination,
-    DialogDetials
+    DialogDetials,
+    Dialogtransfer
   },
   name: 'sales_requisition',
   data () {
@@ -110,6 +114,7 @@ export default {
       pageNum: 0,
       pageSize: 10,
       total: 0,
+      userId: '',
       rules: {
         factory: {required: true, message: '必输项', trigger: 'blur'}
         // date: {required: true, message: '必输项', trigger: 'change'},
@@ -122,6 +127,7 @@ export default {
   },
   created () {
     this.getSelectBatchNoList()
+    this.userId = window.localStorage.userId
   },
   methods: {
     dateFormat (row, column) {
@@ -194,6 +200,36 @@ export default {
     openDetil (row) {
       console.log(row)
       this.$refs.showDetail.show(row)
+    },
+    transfer (row) {
+      this.$refs.transfer.show(row, this.userId)
+    },
+    returngoods (row) {
+      this.$confirm('此操作将退回货物, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.reverseAll({
+          deliveryBill: row.hyRequisition.requisitionId,
+          userId: this.userId
+        }).then(res => {
+          console.log(res)
+          if (res.data.status === '200') {
+            this.$notify({
+              type: 'success',
+              title: '成功',
+              msg: res.data.msg
+            })
+            this.seachTableData()
+          } else {
+            this.$notify.error({
+              title: '错误',
+              message: res.data.msg
+            })
+          }
+        })
+      }).catch(_ => {})
     },
     posting (row) {
       console.log(row)
