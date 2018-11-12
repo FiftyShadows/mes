@@ -76,7 +76,7 @@ export default {
         status: '',
         type: '',
         remark: '',
-        userId: 1
+        userId: ''
       },
       dialogVisible: false,
       roleOptions: [],
@@ -112,6 +112,7 @@ export default {
       console.log(res)
       this.roleOptions = res.data.data
     })
+    this.registeredForm.userId = window.localStorage.userId
   },
   methods: {
     show (row) {

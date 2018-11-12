@@ -394,6 +394,12 @@ export default {
   updateUser (data) { // 修改用户
     return axios.post(`${baseWareUrl}/mes/system/user/updateUser`, data)
   },
+  updatePassword (data) { // 更新密码
+    return axios.post(`${baseWareUrl}/mes/system/user/updatePassword`, data)
+  },
+  resetPassword (data) { // 重置用户密码
+    return axios.post(`${baseWareUrl}/mes/system/user/resetPassword`, data)
+  },
   getDict (data) { // 通用下拉菜单
     return axios.post(`${baseWareUrl}/mes/system/dict/getDict`, data)
   },
@@ -450,6 +456,13 @@ export default {
   },
   getSelectStorageList (data) { // 库位计划--查询关联仓库的库位
     return axios.post(`${baseWareUrl}/mes/warehouseInfo/storage/selectStorageList`, data)
+  },
+
+  selectAllInboune (data) { // 库位明细--查询
+    return axios.post(`${baseWareUrl}/mes/report/InboundReport/selectAllInboune`, data)
+  },
+  selectInbouneDetail (data) { // 库位明细--明细
+    return axios.post(`${baseWareUrl}/mes/report/InboundReport/selectInbouneDetail`, data)
   },
 
   getMaterialList (data) { // sap信息--物料查询

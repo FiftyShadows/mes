@@ -1,17 +1,17 @@
 <template>
   <!-- 新增用户 -->
   <div class="new">
-    <el-dialog title="新增用户" :visible.sync="dialogVisible" width="30%">
-      <el-form :model="registeredForm" :rules="rules" ref="registeredForm" label-width="100px" class="demo-ruleForm">
+    <el-dialog title="新增用户" :visible.sync="dialogVisible" width="40%">
+      <el-form :model="registeredForm" status-icon :rules="rules" ref="registeredForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="登陆名" prop="loginname">
           <el-input v-model="registeredForm.loginname" class="input" clearable placeholder="请输入用户名"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
+        <!-- <el-form-item label="密码" prop="pass">
           <el-input type="password" v-model="registeredForm.pass" class="input" clearable placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkpass">
           <el-input type="password" v-model="registeredForm.checkpass" class="input" clearable placeholder="请再次确认密码"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="姓名" prop="name">
           <el-input v-model="registeredForm.name" class="input" clearable placeholder="请输入姓名"></el-input>
         </el-form-item>
@@ -36,7 +36,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input type="textarea" v-model="registeredForm.remark"></el-input>
+          <el-input type="textarea" v-model="registeredForm.remark" class="input"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -80,7 +80,7 @@ export default {
         status: '',
         type: '',
         remark: '',
-        userId: 1
+        userId: ''
       },
       dialogVisible: false,
       roleOptions: [],
@@ -116,6 +116,7 @@ export default {
       console.log(res)
       this.roleOptions = res.data.data
     })
+    this.registeredForm.userId = window.localStorage.userId
   },
   methods: {
     show () {
@@ -156,7 +157,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .input {
-  width: 200px;
-  float: left;
+  width: 80%;
+  // float: left;
 }
 </style>

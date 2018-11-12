@@ -101,7 +101,8 @@ export default {
         requisitionId: '',
         customerName: '',
         batchNo: '',
-        createTime: ''
+        createTime: '',
+        requisitionType: 'DELIVERY' // 注:{“DELIVERY”:交货 ,    ” SENDBACK:退货”}
       },
       tableData: [],
       batchNoOptions: [],
