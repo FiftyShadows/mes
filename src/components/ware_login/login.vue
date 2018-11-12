@@ -52,7 +52,7 @@ export default {
               })
               window.localStorage.loginname = this.loginForm.username
               this.$store.state.isWareLogin = true
-              this.$store.state.userId = res.data.data.userId
+              window.localStorage.userId = res.data.data.userId
               this.$router.replace('/') // 跳home页
             } else {
               this.$notify.error({

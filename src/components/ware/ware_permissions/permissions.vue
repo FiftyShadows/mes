@@ -41,10 +41,11 @@
       </el-table-column>
       <el-table-column prop="remark" label="备注" width="200">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="180">
+      <el-table-column fixed="right" label="操作" width="250">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="saveUser(scope.row)">修改</el-button>
           <el-button type="danger" size="small" @click="deleteUser(scope.row)">删除</el-button>
+          <el-button type="warning" size="small" @click="resetPassword(scope.row)">重置密码</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,10 +73,12 @@ export default {
       loading: false,
       // formLabelWidth: '120px',
       typeOptions: [],
-      tableData: []
+      tableData: [],
+      userId: ''
     }
   },
   created () {
+    this.userId = window.localStorage.userId
     this.$api.getDict({key: '类型'}).then(res => {
       console.log(res)
       this.typeOptions = res.data.data
@@ -111,6 +114,32 @@ export default {
     saveUser (row) {
       this.$refs.DialogsaveUser.show(row)
     },
+    resetPassword (row) {
+      this.$confirm('此操作将重置用户密码, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.resetPassword({
+          id: row.id,
+          userId: this.userId
+        }).then(res => {
+          if (res.data.status === '200') {
+            this.$notify({
+              type: 'success',
+              title: '成功',
+              message: res.data.msg
+            })
+            this.seachTableData()
+          } else {
+            this.$notify.error({
+              title: '错误',
+              message: res.data.msg
+            })
+          }
+        })
+      }).catch(() => {})
+    },
     deleteUser (row) {
       this.$confirm('此操作将删除用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -119,7 +148,7 @@ export default {
       }).then(() => {
         this.$api.deleteUser({
           id: row.id,
-          userId: 1
+          userId: this.userId
         }).then(res => {
           if (res.data.status === '200') {
             this.$notify({

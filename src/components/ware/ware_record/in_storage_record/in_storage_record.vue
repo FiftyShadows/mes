@@ -1,13 +1,13 @@
 <template>
   <div class="prepare">
-    <el-form :model="seachForm" :rules="rules" ref="seachForm" label-width="10px" class="demo-ruleForm">
+    <el-form :model="seachForm" ref="seachForm" label-width="10px">
       <el-form-item label="" prop="houseName" class="floatLeft">
         <el-select v-model="seachForm.houseName" filterable clearable placeholder="请选择仓库">
           <el-option v-for="item in houseNameList" :key="item.houseName" :label="item.houseName" :value="item.houseName"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="Batch" class="floatLeft">
-        <el-select v-model="seachForm.batchNo" filterable clearable placeholder="请选择批号">
+        <el-select v-model="seachForm.sublotNumber" filterable clearable placeholder="请选择批号">
           <el-option v-for="item in batchNoOptions" :key="item.batchNo" :label="item.batchNo" :value="item.batchNo"></el-option>
         </el-select>
       </el-form-item>
@@ -16,35 +16,23 @@
           <el-option v-for="item in productOptions" :key="item.productName" :label="item.productName" :value="item.productName"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="" prop="classes" class="floatLeft">
-        <el-select v-model="seachForm.classes" filterable clearable placeholder="请选择班次">
-          <el-option v-for="item in classesOptions" :key="item.id" :label="item.classes" :value="item.classes"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="" prop="level" class="floatLeft">
-        <el-select v-model="seachForm.level" filterable clearable placeholder="请选择等级">
-          <el-option v-for="item in levelOptions" :key="item.id" :label="item.level" :value="item.level"></el-option>
-        </el-select>
-      </el-form-item>
-      <!-- <el-form-item label="" prop="lotNumber" class="floatLeft">
+      <el-form-item label="" prop="lotNumber" class="floatLeft">
         <el-input v-model="seachForm.lotNumber" placeholder="请输入码单号"></el-input>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="" class="floatLeft">
-        <el-date-picker v-model="seachForm.productTime" type="date" placeholder="选择生产日期" style="width: 190px;">
-        </el-date-picker>
+        <el-form-item prop="startTime">
+          <el-date-picker type="date" placeholder="开始日期" v-model="seachForm.startTime" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;"></el-date-picker>
+        </el-form-item>
       </el-form-item>
-      <el-form-item label="" prop="startTime" class="floatLeft">
-        <el-date-picker v-model="seachForm.startTime" type="date" placeholder="选择开始入库时间" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="" prop="endTime" class="floatLeft">
-        <el-date-picker v-model="seachForm.endTime" type="date" placeholder="选择结束入库时间" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;">
-        </el-date-picker>
+      <el-form-item label="" class="floatLeft">
+        <el-form-item prop="endTime">
+          <el-date-picker type="date" placeholder="结束日期" v-model="seachForm.endTime" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 190px;"></el-date-picker>
+        </el-form-item>
       </el-form-item>
       <el-form-item style="float: left;">
         <el-button type="primary" icon="el-icon-search" @click="seachTableData()" circle></el-button>
-        <!-- <el-button type="primary">入库</el-button>
-        <el-button type="warning">修改</el-button> -->
+        <!-- <el-button type="primary" @click="openStorage()">入库</el-button> -->
+        <!-- <el-button type="warning">修改</el-button> -->
       </el-form-item>
     </el-form>
     <el-table :data="tableData" v-loading="loading" tooltip-effect="dark" border @selection-change="handleSelectionChange" style="width: 100%" height="500" stripe>
@@ -52,55 +40,46 @@
       </el-table-column>
       <el-table-column prop="houseName" label="仓库" width="120">
       </el-table-column>
-      <!-- <el-table-column prop="lotNumber" label="码单" width="80">
-      </el-table-column> -->
+      <el-table-column prop="lotNumber" label="码单" min-width="300">
+      </el-table-column>
       <el-table-column prop="sublotNumber" label="批号" width="150">
       </el-table-column>
       <el-table-column prop="spec" label="规格" min-width="150">
       </el-table-column>
-      <el-table-column prop="count" label="箱数" width="100">
+      <el-table-column prop="saleType" label="销售类型" width="100">
       </el-table-column>
-      <el-table-column prop="storageName" label="库位号" width="120">
+      <el-table-column prop="level" label="等级" width="100">
       </el-table-column>
-      <el-table-column prop="sumWeight" label="总重量" width="120">
-      </el-table-column>
-      <el-table-column prop="level" label="等级" width="150">
-      </el-table-column>
-      <el-table-column prop="yoke" label="托盘类型" width="150">
+      <el-table-column prop="yoke" label="托盘类型" width="120">
       </el-table-column>
       <el-table-column prop="packageType" label="包装类型" width="150">
       </el-table-column>
-      <!-- <el-table-column prop="spec" label="打包时间" width="150">
-      </el-table-column> -->
-      <!-- <el-table-column fixed="right" label="操作" width="140">
-        <template slot-scope="scope">
-          <el-button type="primary" @click="openDetil(scope.row)" size="small">码单明细</el-button>
-        </template>
-      </el-table-column> -->
+      <el-table-column prop="transDate" label="入库时间" :formatter="dateFormat" min-width="200">
+      </el-table-column>
+      <el-table-column prop="username" label="操作员" width="100">
+      </el-table-column>
     </el-table>
+    <!-- <DialogStorage ref="dialog_storage" @seachtabledata="seachTableData()"></DialogStorage> -->
     <Pagination :total="total" :page-size="pageSize" :page-num="pageNum" @changePage="changePage"></Pagination>
-    <!-- <DialogMX ref="detail"></DialogMX> -->
   </div>
 </template>
 <script>
 // import {mapActions, mapGetters} from 'vuex'
-import DialogMX from './dialog_MX'
+import moment from 'moment' // 处理时间
+// import DialogStorage from './Dialog_in_storage'
 import Pagination from '../../../common/pagination.vue'
 export default {
   components: {
-    Pagination,
-    DialogMX
+    Pagination
+    // DialogStorage
   },
   data () {
     return {
       loading: false,
       seachForm: { // 搜索列表数据
-        batchNo: '', // 批次
+        sublotNumber: '', // 批次
         houseName: '', // 仓库
         productName: '', // 品名
-        classes: '', // 班次
-        level: '', // 等级
-        productTime: '', // 生产日期
         startTime: '',
         endTime: '',
         lotNumber: '' // 码单号
@@ -108,29 +87,26 @@ export default {
       batchNoOptions: [], // 批号选择列表
       houseNameList: [], // 仓库列表
       productOptions: [], // 品名列表
-      classesOptions: [], // 班次列表
-      levelOptions: [], // 等级列表
       tableData: [], // 列表数据
       pageNum: 1, // 当前页数
       pageSize: 10, // 默认每页显示条数
-      total: 0, // 总数
-      rules: {
-        // startTime: {required: true, message: '必输项', trigger: 'change'},
-        // endTime: {required: true, message: '必输项', trigger: 'change'}
-      }
+      total: 0 // 总数
     }
   },
   created () {
-    this.seachTableData()
     this.getHouseNameList()
-    this.getSelectBatchNoList()
-    this.getSelectProductList()
-    this.getSelectClassesList()
-    this.getSelectLevelList()
-  },
-  mounted () {
+    this.getSelectOublotNumberList()
+    this.getSelectProductNameList()
+    this.seachTableData()
   },
   methods: {
+    dateFormat (row, column) {
+      var date = row[column.property]
+      if (date === undefined) {
+        return ''
+      }
+      return moment(date).format('YYYY-MM-DD HH:mm:ss')
+    },
     getHouseNameList () {
       this.$api.getHouseNameList().then(res => {
         if (res.data.status === '200') {
@@ -143,10 +119,12 @@ export default {
         }
       })
     },
-    getSelectBatchNoList () {
-      this.$api.selectBatchNoList().then(res => {
+    getSelectOublotNumberList () {
+      this.$api.getSelectOublotNumberList({
+        houseName: this.seachForm.houseName
+      }).then(res => {
         if (res.data.status === '200') {
-          console.log(res)
+          // console.log(res)
           this.batchNoOptions = res.data.data
         } else {
           this.$notify.error({
@@ -156,36 +134,13 @@ export default {
         }
       })
     },
-    getSelectProductList () {
-      this.$api.selectProductList().then(res => {
+    getSelectProductNameList () {
+      this.$api.getSelectProductNameList({
+        houseName: this.seachForm.houseName,
+        sublotNumber: this.seachForm.sublotNumber
+      }).then(res => {
         if (res.data.status === '200') {
           this.productOptions = res.data.data
-        } else {
-          this.$notify.error({
-            title: '错误',
-            message: res.data.msg
-          })
-        }
-      })
-    },
-    getSelectClassesList () {
-      this.$api.selectClassesList().then(res => {
-        if (res.data.status === '200') {
-          console.log(res)
-          this.classesOptions = res.data.data
-        } else {
-          this.$notify.error({
-            title: '错误',
-            message: res.data.msg
-          })
-        }
-      })
-    },
-    getSelectLevelList () {
-      this.$api.selectLevelList().then(res => {
-        if (res.data.status === '200') {
-          console.log(res)
-          this.levelOptions = res.data.data
         } else {
           this.$notify.error({
             title: '错误',
@@ -197,14 +152,11 @@ export default {
     seachTableData () {
       this.loading = true
       this.$api.getPageInroundRecordList({
-        classes: this.seachForm.classes,
+        sublotNumber: this.seachForm.sublotNumber,
         houseName: this.seachForm.houseName,
-        sublotNumber: this.seachForm.batchNo,
-        productName: this.seachForm.productName,
+        lotNumber: this.seachForm.lotNumber,
         startTime: this.seachForm.startTime,
         endTime: this.seachForm.endTime,
-        productTime: this.seachForm.productTime,
-        level: this.seachForm.level,
         pageNum: this.pageNum,
         pageSize: this.pageSize,
         synSap: 'Y' // 待入库为N，已入库为Y
@@ -212,7 +164,6 @@ export default {
         console.log(res)
         this.loading = false
         if (res.data.status === '200') {
-          // console.log(res.data.data.data)
           if (!res.data.data.data) {
             this.$notify({
               type: 'warning',
@@ -223,6 +174,7 @@ export default {
             this.tableData = res.data.data.data.list
             this.total = res.data.data.data.total
           }
+          // console.log(this.tableData)
         } else {
           this.$notify.error({
             title: '失败',
@@ -236,11 +188,11 @@ export default {
       this.pageSize = value.pageSize
       this.seachTableData()
     },
-    openDetil (row) { // 打开码单明细
-      this.$refs.detail.show(row.sublotNumber)
-    },
     handleSelectionChange (val) {
       console.log(val)
+    },
+    openStorage () {
+      this.$refs.dialog_storage.show()
     }
   }
 }

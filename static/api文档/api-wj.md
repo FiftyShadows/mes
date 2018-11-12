@@ -478,3 +478,232 @@ http://localhost:8080/mes/trans/outbound/selectDeliveryDetail
     },
     "token": null
 }
+
+
+1.库存查询
+post请求
+http://localhost:8080/mes/report/InboundReport/selectAllInboune
+传入参数：
+{
+           "houseName"：//仓库信息
+           "classes"：//班次
+           "sublotNumber"://批号
+           "createTime"://生产日期（2018-10-20 00:00:00）
+           "startTime"://入库开始时间（2018-10-20 00:00:00）
+           "endTime"://入库结束时间（2018-10-20 00:00:00）
+           "level"://产品等级
+           "status"://盘点状态(要传 "n"or"y" )
+           "pageSize":6
+           "pageNum":1
+}
+返回值：
+   {
+    "status": "200",
+    "msg": "查询成功",
+    "data": {
+        "pageNum": 1,
+        "pageSize": 6,
+        "size": 5,
+        "startRow": 1,
+        "endRow": 5,
+        "total": 5,
+        "pages": 1,
+        "list": [
+            {
+                "sumCount": 1,
+                "preStorage": "B001",
+                "synSAP": "Y",
+                "level": "AA",
+                "classes": "甲",
+                "yoke": "塑料托盘",
+                "count": 1,
+                "lotNumber": "020120181013GB31503B110055",
+                "packageType": "人工打包",
+                "spec": "305dtex/96f",
+                "houseName": "B车间仓库",
+                "netWeight": 720,
+                "lgort": "纺丝B成品库",
+                "createTime": "2018-11-07T05:05:19.000+0000",
+                "transDate": "2018-10-12T16:00:00.000+0000",
+                "sublotNumber": "GB31503",
+                "sumNetWeight": 720,
+                "inBoundTime": "2018-11-07T05:07:00.000+0000"
+            },
+            {
+                "sumCount": 5,
+                "preStorage": "B001",
+                "synSAP": "N",
+                "level": "B",
+                "classes": "乙",
+                "yoke": "塑料托盘",
+                "count": 1,
+                "lotNumber": "020120181015GB31503B120107",
+                "packageType": "自动打包",
+                "spec": "305dtex/96f",
+                "houseName": "B车间仓库",
+                "netWeight": 720,
+                "lgort": "纺丝B成品库",
+                "createTime": "2018-11-07T04:58:06.000+0000",
+                "transDate": "2018-10-14T16:00:00.000+0000",
+                "sublotNumber": "GB31503",
+                "sumNetWeight": 3600,
+                "inBoundTime": "2018-11-07T04:59:46.000+0000"
+            },
+            {
+                "sumCount": 11,
+                "preStorage": "B001",
+                "synSAP": "Y",
+                "level": "AA",
+                "classes": "甲",
+                "yoke": "塑料托盘",
+                "count": 1,
+                "lotNumber": "020120181015GB31503B110025",
+                "packageType": "自动打包",
+                "spec": "305dtex/96f",
+                "houseName": "B车间仓库",
+                "netWeight": 720,
+                "lgort": "纺丝B成品库",
+                "createTime": "2018-11-07T05:01:32.000+0000",
+                "transDate": "2018-10-14T16:00:00.000+0000",
+                "sublotNumber": "GB31503",
+                "sumNetWeight": 7920,
+                "inBoundTime": "2018-11-07T05:03:12.000+0000"
+            },
+            {
+                "sumCount": 13,
+                "preStorage": "B001",
+                "synSAP": "Y",
+                "level": "AA",
+                "classes": "丙",
+                "yoke": "木架托盘",
+                "count": 1,
+                "lotNumber": "020120181015GB31503B230065",
+                "packageType": "人工打包",
+                "spec": "305dtex/96f",
+                "houseName": "B车间仓库",
+                "netWeight": 720,
+                "lgort": "纺丝B成品库",
+                "createTime": "2018-11-07T05:00:48.000+0000",
+                "transDate": "2018-10-14T16:00:00.000+0000",
+                "sublotNumber": "GB31503",
+                "sumNetWeight": 9360,
+                "inBoundTime": "2018-11-07T05:02:28.000+0000"
+            },
+            {
+                "sumCount": 14,
+                "preStorage": "B001",
+                "synSAP": "Y",
+                "level": "AA",
+                "classes": "乙",
+                "yoke": "木架托盘",
+                "count": 1,
+                "lotNumber": "020120181022GB31503B220097",
+                "packageType": "自动打包",
+                "spec": "305dtex/96f",
+                "houseName": "B车间仓库",
+                "netWeight": 720,
+                "lgort": "纺丝B成品库",
+                "createTime": "2018-11-07T05:04:03.000+0000",
+                "transDate": "2018-10-21T16:00:00.000+0000",
+                "sublotNumber": "GB31503",
+                "sumNetWeight": 10080,
+                "inBoundTime": "2018-11-07T05:05:44.000+0000"
+            }
+        ],
+        "prePage": 0,
+        "nextPage": 0,
+        "isFirstPage": true,
+        "isLastPage": true,
+        "hasPreviousPage": false,
+        "hasNextPage": false,
+        "navigatePages": 8,
+        "navigatepageNums": [
+            1
+        ],
+        "navigateFirstPage": 1,
+        "navigateLastPage": 1,
+        "lastPage": 1,
+        "firstPage": 1
+    },
+    "token": null
+}
+
+1.库存详情查询
+
+post请求
+http://localhost:8080//mes/report/InboundReport/selectInbouneDetail
+传入参数：
+{
+           "houseName"：//仓库信息
+           "classes"：//班次
+           "sublotNumber"://批号
+           "createTime"://生产日期（2018-10-20 00:00:00）
+           "startTime"://入库开始时间（2018-10-20 00:00:00）
+           "endTime"://入库结束时间（2018-10-20 00:00:00）
+           "level"://产品等级
+           "status"://盘点状态(要传 "n"or"y" )
+		      //具体信息添加内容（不可以少的）
+            "spec"：//打包规格
+           "packageType"：//打包类型
+            "yoke"：//托盘
+           "preStorage"：//库位号
+           "pageSize":6
+           "pageNum":1
+}
+返回值：
+
+{
+    "status": "200",
+    "msg": "查询成功",
+    "data": {
+        "pageNum": 6,
+        "pageSize": 1,
+        "size": 1,
+        "startRow": 6,
+        "endRow": 6,
+        "total": 44,
+        "pages": 44,
+        "list": [
+            {
+                "preStorage": "B001",
+                "synSAP": "Y",
+                "level": "AA",
+                "classes": "丙",
+                "yoke": "塑料托盘",
+                "count": 1,
+                "lotNumber": "020120181022GB31503B230009",
+                "packageType": "自动打包",
+                "spec": "305dtex/96f",
+                "houseName": "B车间仓库",
+                "netWeight": 720,
+                "lgort": "纺丝B成品库",
+                "createTime": "2018-11-08T02:23:20.000+0000",
+                "transDate": "2018-10-21T16:00:00.000+0000",
+                "sublotNumber": "GB31503",
+                "inBoundTime": "2018-11-08T02:25:01.000+0000"
+            }
+        ],
+        "prePage": 5,
+        "nextPage": 7,
+        "isFirstPage": false,
+        "isLastPage": false,
+        "hasPreviousPage": true,
+        "hasNextPage": true,
+        "navigatePages": 8,
+        "navigatepageNums": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ],
+        "navigateFirstPage": 2,
+        "navigateLastPage": 9,
+        "lastPage": 9,
+        "firstPage": 2
+    },
+    "token": null
+}

@@ -2,10 +2,12 @@
   <div class="main">
     <el-container>
       <el-header height="50px">
-        <router-link to="/">
-          <img class="logo" v-if="!isCollapse"  src="../assets/logo.png" alt="hengyi">
-          <img class="logo" v-else src="../assets/logo_mini.png" alt="hengyi">
-        </router-link>
+          <router-link to="/">
+            <el-tooltip class="item" effect="dark" content="高新 Version0.0.1" placement="bottom-end">
+              <img class="logo" v-if="!isCollapse"  src="../assets/logo.png" alt="hengyi">
+              <img class="logo" v-else src="../assets/logo_mini.png" alt="hengyi">
+            </el-tooltip>
+          </router-link>
         <!-- <span class="Verison">高新 Verison0.0.1</span> -->
         <!-- <router-link to="/help">
           <i class="head_help el-icon-question"></i>
@@ -22,12 +24,20 @@
         <el-tooltip class="item" effect="dark" content="退出登录" placement="bottom-end">
           <img class="outLogin" src="../assets/outLogin.png" @click="clear()" alt="退出登录">
         </el-tooltip>
-        <el-dropdown class="login" v-if="loginname">
+        <!-- <el-dropdown class="login" v-if="loginname" @command="savePass">
           <el-button type="primary">
             {{loginname}}
           </el-button>
+          <el-dropdown-menu slot="savePass">
+            <el-dropdown-item command="savePass">修改密码</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown> -->
+        <el-dropdown @command="handleCommand" placement="bottom">
+          <span class="el-dropdown-link">
+            <i class="namelogo"></i>{{loginname}}
+          </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item >修改密码</el-dropdown-item>
+            <el-dropdown-item command="a">修改密码</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -138,12 +148,17 @@
         </el-container>
       </el-container>
     </el-container>
+    <Dialogsavepass ref="Dialogsavepass"></Dialogsavepass>
   </div>
 </template>
 <script>
+import Dialogsavepass from './ware_login/savePassword'
 import { mapGetters } from 'vuex'
 export default {
   name: 'index',
+  components: {
+    Dialogsavepass
+  },
   computed: {
     ...mapGetters({
       routers: 'routers'
@@ -179,17 +194,22 @@ export default {
         type: 'warning'
       }).then().catch()
     },
-    handleCommand (command) {
-      if (command === 'login') {
-        // this.$refs.login.show()
-        this.$router.replace('/login')
-      } else if (command === 'registered') {
-        // this.$refs.registered.show()
-      }
-    },
+    // handleCommand (command) {
+    //   if (command === 'login') {
+    //     // this.$refs.login.show()
+    //     this.$router.replace('/login')
+    //   } else if (command === 'registered') {
+    //     // this.$refs.registered.show()
+    //   }
+    // },
     download (command) {
       if (command === 'userBook') {
         window.open('static/introduction/自动化操作手册.html')
+      }
+    },
+    handleCommand (command) {
+      if (command === 'a') {
+        this.$refs.Dialogsavepass.show()
       }
     },
     handleOpen (key, keyPath) {
@@ -359,6 +379,24 @@ body > .el-container {
 //   left: 130px;
 //   height: 20px;
 // }
+.el-dropdown {
+  display: inline-block;
+  font-size: 24px;
+  position: absolute;
+  right: 0px;
+  top: 12px;
+  width: 120px;
+  height: 25px;
+}
+.el-dropdown-link {
+  position: absolute;
+  right: 50px;
+  top: 0px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+.namelogo {}
 /* 路由出口 */
 .child_router {
   color: #303133;
