@@ -1,5 +1,10 @@
 <template>
   <div class="FB_reason">
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="float: left;margin-top: 10px; font-weight: bolder;">
+      <el-breadcrumb-item>仓储</el-breadcrumb-item>
+      <el-breadcrumb-item>库位库存</el-breadcrumb-item>
+      <el-breadcrumb-item>翻包原因</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-button type="primary" class="addReason" @click="dialogAddFormVisible = true" icon="el-icon-plus" circle></el-button>
     <el-table :data="tableData" v-loading="loading" border style="width: 100%" height="500" stripe>
       <el-table-column prop="id" label="编号" width="80">

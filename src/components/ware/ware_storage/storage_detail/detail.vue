@@ -1,5 +1,10 @@
 <template>
-  <div class="detil">
+  <div class="detail">
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="font-weight: bolder;margin-bottom: 20px;margin-top: 10px;">
+      <el-breadcrumb-item>仓储</el-breadcrumb-item>
+      <el-breadcrumb-item>库位库存</el-breadcrumb-item>
+      <el-breadcrumb-item>库位明细</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-form :model="seachForm" ref="seachForm" label-width="10px">
       <el-form-item label="" prop="classes" style="float: left;width: 150px;">
         <el-select v-model="seachForm.classes" clearable placeholder="请选择班次">
@@ -98,7 +103,7 @@ export default {
     Pagination,
     Dialoglotnumber
   },
-  name: 'detil',
+  name: 'detail',
   data () {
     return {
       seachForm: { // 搜索列表数据

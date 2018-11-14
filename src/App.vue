@@ -42,4 +42,7 @@ a {
   background-color: #409EFF;
   color: #fff;
 }
+.el-table th>.cell {
+  text-align: center;
+}
 </style>

@@ -1,5 +1,10 @@
 <template>
   <div class="prepare">
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom: 20px; margin-top: 10px; font-weight: bolder;">
+      <el-breadcrumb-item>仓储</el-breadcrumb-item>
+      <el-breadcrumb-item>仓储记录</el-breadcrumb-item>
+      <el-breadcrumb-item>入库记录</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-form :model="seachForm" ref="seachForm" label-width="10px">
       <el-form-item label="" prop="houseName" class="floatLeft">
         <el-select v-model="seachForm.houseName" filterable clearable placeholder="请选择仓库">

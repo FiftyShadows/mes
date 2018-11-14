@@ -9,7 +9,7 @@
           </el-tooltip>
         </router-link>
         <span class="Version">高新 Version0.0.1</span>
-        <el-dropdown class="others" @command="download" v-if="!$store.state.isWareLogin">
+        <el-dropdown class="others" @command="download" v-if="!loginname">
           <el-button type="primary">
             文档介绍
           </el-button>
@@ -323,6 +323,10 @@ body > .el-container {
   font-weight: bold;
   display: inline-block;
   // width: 100px;
+  &:hover {
+    // top: -3px;
+    border-bottom: 2px solid white;
+  }
 }
 .namelogo {}
 /* 路由出口 */

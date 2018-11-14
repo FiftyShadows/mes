@@ -1,6 +1,11 @@
 <template>
   <!-- 拣配调拨单 -->
   <div class="sales_requisition">
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom: 20px; margin-top: 10px; font-weight: bolder;">
+      <el-breadcrumb-item>仓储</el-breadcrumb-item>
+      <el-breadcrumb-item>调拨处理</el-breadcrumb-item>
+      <el-breadcrumb-item>拣配调拨单</el-breadcrumb-item>
+    </el-breadcrumb>
     <!-- 表单获取 -->
     <el-form :inline="true" :rules="rules" ref="salesForm" :model="salesForm" label-width="10px" class="demo-form-inline demo-ruleForm form">
       <el-form-item label="" prop="requisitionId" class="iptfloat">

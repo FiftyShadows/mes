@@ -1,6 +1,11 @@
 <template>
   <!-- SAP信息 -->
   <div class="autoPackage">
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom: 20px; margin-top: 10px; font-weight: bolder;">
+      <el-breadcrumb-item>仓储</el-breadcrumb-item>
+      <el-breadcrumb-item>库位库存</el-breadcrumb-item>
+      <el-breadcrumb-item>SAP信息</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-tabs type="border-card">
       <el-tab-pane label="物料查询">
         <Material></Material>

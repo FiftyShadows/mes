@@ -1,6 +1,11 @@
 <template>
   <!-- 退货调拨单 -->
   <div class="returngoods_requisition">
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom: 20px; margin-top: 10px; font-weight: bolder;">
+      <el-breadcrumb-item>仓储</el-breadcrumb-item>
+      <el-breadcrumb-item>调拨处理</el-breadcrumb-item>
+      <el-breadcrumb-item>退货调拨单</el-breadcrumb-item>
+    </el-breadcrumb>
     <!-- 同步调拨单 -->
     <el-card class="box-card">
       <el-form :inline="true" :rules="rules" ref="sametimeForm" :model="sametimeForm" label-width="10px" class="demo-form-inline demo-ruleForm" style="float: left;">

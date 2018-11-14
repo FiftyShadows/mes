@@ -1,5 +1,10 @@
 <template>
   <div>
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom: 20px; margin-top: 10px; font-weight: bolder;">
+      <el-breadcrumb-item>仓储</el-breadcrumb-item>
+      <el-breadcrumb-item>用户</el-breadcrumb-item>
+      <el-breadcrumb-item>用户维护</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-form :model="seachForm" ref="seachForm" label-width="10px" class="demo-ruleForm">
       <el-form-item label="" prop="name" class="floatLeft">
         <el-input v-model="seachForm.name" placeholder="请输入姓名"></el-input>

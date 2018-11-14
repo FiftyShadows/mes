@@ -1,5 +1,11 @@
 <template>
+  <!-- 仓库维护 -->
   <div class="warehouse">
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="float: left;margin-top: 10px; font-weight: bolder;">
+      <el-breadcrumb-item>仓储</el-breadcrumb-item>
+      <el-breadcrumb-item>库位库存</el-breadcrumb-item>
+      <el-breadcrumb-item>仓库维护</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-button type="primary" icon="el-icon-plus" @click="openAdd()" style="float: right;margin-bottom: 10px;" circle></el-button>
     <el-table :data="tableData" border style="width: 100%" height="500" stripe>
       <el-table-column prop="" label="编号">
