@@ -59,9 +59,9 @@
       </el-table-column>
       <el-table-column prop="hyRequisition.plateNumber" label="车牌号" min-width="150">
       </el-table-column>
-      <el-table-column prop="hyRequisition.isInnersale" label="是否内销">
+      <el-table-column prop="hyRequisition.isInnersale" label="是否内销" min-width="100">
       </el-table-column>
-      <el-table-column prop="hyRequisition.status" label="状态">
+      <el-table-column prop="hyRequisition.status" label="状态" min-width="100">
       </el-table-column>
       <el-table-column prop="hyRequisition.loading_spot" label="装载点/接收点" min-width="120">
       </el-table-column>

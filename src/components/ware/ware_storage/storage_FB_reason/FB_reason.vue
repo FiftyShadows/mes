@@ -9,10 +9,10 @@
       </el-table-column>
       <el-table-column prop="reason" label="批号">
       </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="160">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="openSave(scope.row)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteReason(scope.row)">删除</el-button>
+          <el-button type="primary" size="small" @click="openSave(scope.row)">修改</el-button>
+          <el-button type="danger" size="small" @click="deleteReason(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

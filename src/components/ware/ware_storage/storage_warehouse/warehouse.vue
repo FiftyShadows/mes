@@ -30,9 +30,9 @@
       </el-table-column>
       <el-table-column prop="type" label="全切片库容(包)" min-width="150">
       </el-table-column>
-      <el-table-column fixed="right" label="操作">
+      <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="deleteWarehouse(scope.row)">删除</el-button>
+          <el-button type="primary" size="small" @click="deleteWarehouse(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

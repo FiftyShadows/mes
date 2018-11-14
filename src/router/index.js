@@ -378,7 +378,7 @@ router.beforeEach((to, from, next) => { // 全局路由钩子  如果localStorag
   if (to.name === 'login') {
     next()
   } else {
-    if (window.localStorage.token || to.name === 'registered') {
+    if (window.sessionStorage.token || to.name === 'registered') {
       next()
     } else {
       next('login')

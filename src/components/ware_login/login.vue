@@ -28,6 +28,7 @@ export default {
         username: '',
         password: ''
       },
+      waremenu: [], // 返回的仓储菜单
       rules: {
         username: { required: true, message: '请输入用户名', trigger: 'blur' },
         password: { required: true, message: '请输入密码', trigger: 'blur' }
@@ -45,14 +46,33 @@ export default {
           }).then(res => {
             console.log(res)
             if (res.data.status === '200') {
-              this.$api.axios.defaults.headers.common['Authorization'] = window.localStorage.token = 'Bearer ' + res.data.token
+              this.$api.axios.defaults.headers.common['Authorization'] = window.sessionStorage.token = 'Bearer ' + res.data.token
               this.$notify.success({
                 title: '欢迎',
                 message: '已登录'
               })
-              window.localStorage.loginname = this.loginForm.username
+              window.sessionStorage.loginname = this.loginForm.username
               this.$store.state.isWareLogin = true
-              window.localStorage.userId = res.data.data.userId
+              // 处理返回菜单
+              this.waremenu = res.data.data.menu
+              let index = [] // 主目录
+              for (let i = 0; i < this.waremenu.length; i++) { // 获取所有主目录
+                if (this.waremenu[i].remark === '主') {
+                  this.waremenu[i].children = [] // 存储子菜单
+                  index.push(this.waremenu[i])
+                }
+              }
+              for (let i = 0; i < this.waremenu.length; i++) {
+                for (let j = 0; j < index.length; j++) { // 获取所有子目录
+                  if (Number(this.waremenu[i].remark) === index[j].id) {
+                    index[j].children.push(this.waremenu[i])
+                  }
+                }
+              }
+              console.log(index)
+              window.sessionStorage.wareRouters = JSON.stringify(index)
+
+              window.sessionStorage.userId = res.data.data.userId
               this.$router.replace('/') // 跳home页
             } else {
               this.$notify.error({

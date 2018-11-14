@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="货物转移" :visible.sync="dialogTableVisible">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="新调拨单号" prop="newDeliveryBill ">
+      <el-form-item label="新调拨单号" prop="newDeliveryBill">
         <el-input v-model="ruleForm.newDeliveryBill" clearable placeholder="请输入新调拨单号"></el-input>
       </el-form-item>
       <el-form-item>

@@ -19,7 +19,7 @@ import global from '../../static/js/window_global'
 
 // 自动化Token
 // axios.defaults.headers.common['Authorization'] = 'Bearer ' + Token
-axios.defaults.headers.common['Authorization'] = window.localStorage.token ? window.localStorage.token : '' // 直接从localStorage获取token
+axios.defaults.headers.common['Authorization'] = window.sessionStorage.token ? window.sessionStorage.token : '' // 直接从sessionStorage获取token
 // 仓储Token
 // axios.defaults.headers.common['Authorization'] = Token
 axios.defaults.timeout = 3000

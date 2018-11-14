@@ -2,16 +2,13 @@
   <div class="main">
     <el-container>
       <el-header height="50px">
-          <router-link to="/">
-            <el-tooltip class="item" effect="dark" content="高新 Version0.0.1" placement="bottom-end">
-              <img class="logo" v-if="!isCollapse"  src="../assets/logo.png" alt="hengyi">
-              <img class="logo" v-else src="../assets/logo_mini.png" alt="hengyi">
-            </el-tooltip>
-          </router-link>
-        <!-- <span class="Verison">高新 Verison0.0.1</span> -->
-        <!-- <router-link to="/help">
-          <i class="head_help el-icon-question"></i>
-        </router-link> -->
+        <router-link to="/">
+          <el-tooltip class="item" effect="dark" content="高新 Version0.0.1" placement="bottom-end">
+            <img class="logo" v-if="!isCollapse"  src="../assets/logo.png" alt="hengyi">
+            <img class="logo" v-else src="../assets/logo_mini.png" alt="hengyi">
+          </el-tooltip>
+        </router-link>
+        <span class="Version">高新 Version0.0.1</span>
         <el-dropdown class="others" @command="download" v-if="!$store.state.isWareLogin">
           <el-button type="primary">
             文档介绍
@@ -24,14 +21,6 @@
         <el-tooltip class="item" effect="dark" content="退出登录" placement="bottom-end">
           <img class="outLogin" src="../assets/outLogin.png" @click="clear()" alt="退出登录">
         </el-tooltip>
-        <!-- <el-dropdown class="login" v-if="loginname" @command="savePass">
-          <el-button type="primary">
-            {{loginname}}
-          </el-button>
-          <el-dropdown-menu slot="savePass">
-            <el-dropdown-item command="savePass">修改密码</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown> -->
         <el-dropdown @command="handleCommand" placement="bottom">
           <span class="el-dropdown-link">
             <i class="el-icon-caret-right"></i>{{loginname}}<i class="el-icon-caret-left"></i>
@@ -46,17 +35,12 @@
           <div class="radio" @click="radio()">
             <el-tooltip class="item" effect="dark" content="缩放" placement="right-start">
               <img :class="{'radio_img': true, 'radio_open': radio_open, 'radio_close': radio_close}" src="../assets/radio2.png" alt="">
-              <!-- <img class="radio_img radio_img_pickup" v-else src="../assets/radio2.png" alt=""> -->
             </el-tooltip>
           </div>
-          <!-- <el-menu-item index="1" disabled>
-            <i class="el-icon-d-caret"></i>
-            <span slot="title">自动化</span>
-          </el-menu-item> -->
             <!-- <li v-for="(router, index) in routers" :key="index">
               <el-menu-item :index="router.path" v-if="index === 0 || index === 1">
-              <i :class="router.class"></i>
-              <span slot="title">{{router.name}}</span>
+                <i :class="router.class"></i>
+                <span slot="title">{{router.name}}</span>
               </el-menu-item>
               <el-submenu :index="index.toString()" v-if="index != 0 && index != 1">
                 <template slot="title">
@@ -71,72 +55,13 @@
                 </el-menu-item-group>
               </el-submenu>
             </li> -->
-          <!-- <el-menu-item index="7"><i class="el-icon-setting">用户维护</el-menu-item> -->
-          <el-menu-item index="/permissions">
-            <i class="el-icon-edit"></i>
-            <span slot="title">用户维护</span>
-          </el-menu-item>
-          <el-submenu index="8">
-            <template slot="title">
+          <el-submenu :index="index.toString()" v-for="(item, index) in wareRouters" :key="index">
+            <template slot="title" v-if="item.remark === '主'">
               <i class="el-icon-menu"></i>
-              <span slot="title">包装计量</span>
+              <span slot="title">{{item.menuName}}</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/measurement/artificial"><i class="el-icon-setting"></i>包装唛头打印</el-menu-item>
-              <el-menu-item index="/measurement/shortSilk"><i class="el-icon-setting"></i>短丝唛头</el-menu-item>
-              <el-menu-item index="/measurement/smallPackage"><i class="el-icon-setting"></i>小包装唛头</el-menu-item>
-              <el-menu-item index="/measurement/BoxManagement"><i class="el-icon-setting"></i>暂存箱管理</el-menu-item>
-              <el-menu-item index="/measurement/PackagingRecords"><i class="el-icon-setting"></i>包装记录</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="9">
-            <template slot="title">
-              <i class="el-icon-menu"></i>
-              <span slot="title">库位库存</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/storage/warehouse"><i class="el-icon-setting"></i>仓库</el-menu-item>
-              <el-menu-item index="/storage/edit"><i class="el-icon-setting"></i>库位维护</el-menu-item>
-              <el-menu-item index="/storage/view"><i class="el-icon-setting"></i>库位视图</el-menu-item>
-              <el-menu-item index="/storage/plan"><i class="el-icon-setting"></i>库位计划</el-menu-item>
-              <el-menu-item index="/storage/detail"><i class="el-icon-setting"></i>库存明细</el-menu-item>
-              <el-menu-item index="/storage/trace"><i class="el-icon-setting"></i>箱包追溯</el-menu-item>
-              <el-menu-item index="/storage/SAPMessage"><i class="el-icon-setting"></i>SAP信息</el-menu-item>
-              <el-menu-item index="/storage/FBreason"><i class="el-icon-setting"></i>翻包原因</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="10">
-            <template slot="title">
-              <i class="el-icon-menu"></i>
-              <span slot="title">仓储记录</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/record/PrepareInStorage"><i class="el-icon-setting"></i>待入库</el-menu-item>
-              <el-menu-item index="/record/instorage"><i class="el-icon-setting"></i>入库记录</el-menu-item>
-              <el-menu-item index="/record/OutStorage"><i class="el-icon-setting"></i>出库记录</el-menu-item>
-              <el-menu-item index="/record/Returngoods"><i class="el-icon-setting"></i>退货记录</el-menu-item>
-              <el-menu-item index="/record/OnceAgainPackage"><i class="el-icon-setting"></i>翻包记录</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="11">
-            <template slot="title">
-              <i class="el-icon-menu"></i>
-              <span slot="title">调拨处理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/record/SalesRequisition"><i class="el-icon-setting"></i>销售调拨单</el-menu-item>
-              <el-menu-item index="/record/pickMatch"><i class="el-icon-setting"></i>拣配调拨单</el-menu-item>
-              <el-menu-item index="/record/ReturngoodsRequisition"><i class="el-icon-setting"></i>退货调拨单</el-menu-item>
-              <el-menu-item index="/record/SilkCarShipped"><i class="el-icon-setting"></i>丝车发运调拨单</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="12">
-            <template slot="title">
-              <i class="el-icon-menu"></i>
-              <span slot="title">盘点SAP</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/inventory/InventorySAP"><i class="el-icon-setting"></i>盘点</el-menu-item>
+            <el-menu-item-group v-for="(child,index) in item.children" :key="index">
+              <el-menu-item :index="child.url"><i class="el-icon-setting"></i>{{child.menuName}}</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
@@ -165,7 +90,9 @@ export default {
     })
   },
   created () {
-    this.loginname = window.localStorage.loginname
+    this.wareRouters = JSON.parse(window.sessionStorage.wareRouters)
+    console.log(this.wareRouters)
+    this.loginname = window.sessionStorage.loginname
     // console.log(window.localStorage.loginname)
   },
   data () {
@@ -173,7 +100,8 @@ export default {
       isCollapse: false,
       radio_open: false,
       radio_close: false,
-      loginname: null
+      loginname: null,
+      wareRouters: [] // 仓储目录
     }
   },
   methods: {
@@ -194,14 +122,6 @@ export default {
         type: 'warning'
       }).then().catch()
     },
-    // handleCommand (command) {
-    //   if (command === 'login') {
-    //     // this.$refs.login.show()
-    //     this.$router.replace('/login')
-    //   } else if (command === 'registered') {
-    //     // this.$refs.registered.show()
-    //   }
-    // },
     download (command) {
       if (command === 'userBook') {
         window.open('static/introduction/自动化操作手册.html')
@@ -222,9 +142,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('userId')
-        localStorage.removeItem('loginname')
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('userId')
+        sessionStorage.removeItem('loginname')
+        sessionStorage.removeItem('wareRouters')
         this.$message({
           type: 'success',
           message: '已退出仓储系统'
@@ -252,6 +173,23 @@ export default {
   right: 12px;
   z-index: 999;
   width: 30px;
+}
+.Version {
+  display: inline-block;
+  line-height: 50px;
+  font-size: 22px;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  animation: appear 1s;
+  animation-fill-mode : forwards;
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+    font-size: 30px;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* 整体框架 */
@@ -367,20 +305,6 @@ body > .el-container {
     min-width: 160px;
   }
 }
-.el-menu-item, .el-submenu__title {
-  // height: 40px;
-  // line-height: 40px;
-}
-.el-submenu__title {
-  height: 40px;
-  line-height: 40px;
-}
-// .Verison {
-//   position: absolute;
-//   top: 30px;
-//   left: 130px;
-//   height: 20px;
-// }
 .el-dropdown {
   display: inline-block;
   font-size: 24px;
@@ -398,7 +322,7 @@ body > .el-container {
   color: white;
   font-weight: bold;
   display: inline-block;
-  width: 80px;
+  // width: 100px;
 }
 .namelogo {}
 /* 路由出口 */

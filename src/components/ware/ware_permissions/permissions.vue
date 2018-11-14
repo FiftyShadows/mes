@@ -17,7 +17,7 @@
         <el-button type="primary" icon="el-icon-plus" @click="addUser()" circle></el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" v-loading="loading" style="width: 100%" border height="500">
+    <el-table :data="tableData" v-loading="loading" style="width: 100%" border height="500" stripe>
       <el-table-column prop="" label="编号" width="55">
         <template slot-scope="scope">
           <span>{{scope.$index+1}}</span>

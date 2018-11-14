@@ -9,19 +9,26 @@ export default {
   name: 'index'
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .index {
   width: 100%;
   height: 100%;
-  // margin-left: -20px;
-  // margin-top: -20px;
 }
 .img {
   display: inline-block;
   width: 100%;
   height: 100%;
-  // border: 1px solid black;
   background-image: url('../assets/index.jpg');
   background-size: cover;
+  animation: appear 1s;
+  animation-fill-mode : forwards;
+}
+@keyframes appear {
+  from {
+    opacity: .5;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

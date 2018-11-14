@@ -233,7 +233,8 @@ const store = new Vuex.Store({
     warehouseList: [], // 仓库列表
     silks: [],
     userInfo: {}, // 存储用户信息
-    routers: [] // 存储用户角色对应的路由
+    routers: [], // 存储用户角色对应的路由
+    wareRouters: [] // 仓储目录
   },
   getters: {
     batchList: state => state.batchList,

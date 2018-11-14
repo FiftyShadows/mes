@@ -20,9 +20,9 @@
       </el-table-column>
       <el-table-column prop="productType" label="成品类型">
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width="120">
+      <el-table-column label="操作" fixed="right" width="100">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="openSave(scope.row)">修改</el-button>
+          <el-button type="primary" size="small" @click="openSave(scope.row)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -272,8 +272,8 @@ export default {
 .planBatchNoList {
   display: inline-block;
   margin: auto;
-  width: 120px;
-  background-color: rgb(73, 71, 82);
+  width: 100px;
+  background-color: rgb(56, 55, 58);
   margin-bottom: 2px;
   margin-left: 2px;
   color: rgb(219, 216, 216);
